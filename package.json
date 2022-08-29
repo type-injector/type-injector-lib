@@ -3,15 +3,14 @@
   "version": "1.0.0",
   "description": "inject typescript classes recoursively",
   "main": "index.js",
-  "type": "module",
   "scripts": {
-    "test": "mocha -r ts-node/register -P ./tsconfig.spec.ts test.ts",
+    "test": "mocha -r ts-node/register ./test.ts",
     "test:watch": "watch-npm test",
     "lint": "eslint .eslintrc.cjs .",
     "build": "tsc -P tsconfig.build.json"
   },
   "watch": {
-    "build": {
+    "test": {
       "patterns": [
         "test.ts",
         "src"
@@ -42,7 +41,6 @@
     "@typescript-eslint/parser": "^5.35.1",
     "chai": "^4.3.6",
     "eslint": "^8.23.0",
-    "eslint-config-standard-with-typescript": "^22.0.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-n": "^15.2.5",
     "eslint-plugin-promise": "^6.0.1",
