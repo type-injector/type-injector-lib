@@ -1,0 +1,4 @@
+{
+    "eslint.alwaysShowStatus": false,
+    "eslint.format.enable": true
+}
