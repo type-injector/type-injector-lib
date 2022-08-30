@@ -3,7 +3,7 @@ import { Logger } from './logger';
 import { InjectConfig, TypeInjector } from './type-injector';
 
 describe('type injector basics', () => {
-  it('should be able to instanciate an injector', () => {
+  it('should be able to instantiate an injector', () => {
     const injector = new TypeInjector();
     expect(injector).to.exist;
   });
@@ -89,10 +89,10 @@ describe('type injector basics', () => {
   });
 
   /**
-   * cyclic dependencies are a code smell.
+   * Cyclic dependencies are a code smell.
    *
    * This inject implementation does not support cyclic dependencies
-   * so it will thorw a hard runtime error whenever it detects one.
+   * so it will throw a hard runtime error whenever it detects one.
    * The error should include the whole tree so it might help to solve
    * the issue.
    */
@@ -125,10 +125,10 @@ describe('type injector basics', () => {
       injector.get(ServiceA);
       expect.fail('no error thrown');
     } catch (e) {
-      const expectedMessage = 'dependency cycle detected: "ServiceA"\n'
-      + ' -> "TypeInjectorToken: ServiceC"\n'
-      + ' -> "ServiceB"\n'
-      + ' -> "ServiceA"\n';
+      const expectedMessage = 'dependency cycle detected: ServiceA\n'
+      + ' -> TypeInjectorToken: ServiceC\n'
+      + ' -> ServiceB\n'
+      + ' -> ServiceA\n';
       expect(e).to.include({ message: expectedMessage });
       expect(loggerCalls[0][0]).to.equal(expectedMessage);
     }

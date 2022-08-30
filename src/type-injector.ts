@@ -2,12 +2,12 @@ import { Logger } from './logger';
 
 export class TypeInjector {
   /**
-   * create a typed inject token for anything
+   * Create a typed inject token for anything.
    *
-   * this helper binds type information to a symbol so you can use that
+   * This helper binds type information to a symbol so you can use that
    * symbol to inject a typed value.
    * Because the TypeInjector has no information how to create this symbol,
-   * it has to be provided before it get's injected the first time.
+   * it has to be provided before it gets injected the first time.
    *
    * @param type can be an abstract class or a simple string
    * @returns a token that can be used to first provide then inject anything
@@ -17,7 +17,7 @@ export class TypeInjector {
   }
 
   /**
-   * provide an existing value for a given token
+   * Provide an existing value for a given token.
    *
    * This can be useful to provide an existing instance of a
    * service class, simple values like flags or configuration objects
@@ -33,7 +33,7 @@ export class TypeInjector {
   }
 
   /**
-   * provide a function that lazy create a value
+   * Provide a function that lazily create a value.
    *
    * The provided function will be called the first time the token is requested.
    *
@@ -47,7 +47,7 @@ export class TypeInjector {
   }
 
   /**
-   * provide an (alternative) implementation
+   * Provide an (alternative) implementation.
    *
    * This is a shortcut to create a factory for an implementation
    * that is injectable itself (has no constructor args / static inject config).
@@ -73,9 +73,9 @@ export class TypeInjector {
   }
 
   /**
-   * get something from the cdi
+   * Get something from the cdi.
    *
-   * might create a new instance or return an existing one.
+   * Might create a new instance or return an existing one.
    *
    * @param token
    * @returns
@@ -105,7 +105,7 @@ export class TypeInjector {
 
   private _create<T>(token: InjectToken<T>, initiator: Initiator): T {
     if (this._instancesInCreation.has(token)) {
-      throw new Error(this._createCycligErrorMessage(token));
+      throw new Error(this._createCyclicErrorMessage(token));
     }
     this._instancesInCreation.set(token, initiator);
 
@@ -121,7 +121,7 @@ export class TypeInjector {
     throw new Error('could not find a factory to create token');
   }
 
-  private _createCycligErrorMessage(token: InjectToken<unknown>) {
+  private _createCyclicErrorMessage(token: InjectToken<unknown>) {
     const nameOf = (arg: Initiator): string => {
       if (!arg) {
         return 'undefined';
@@ -138,7 +138,7 @@ export class TypeInjector {
     };
     const errorMsg = `dependency cycle detected: ${Array.from(this._instancesInCreation.keys())
       .concat(token)
-      .map((key) => `"${nameOf(key)}"`).join('\n -> ')}\n`;
+      .map((key) => nameOf(key)).join('\n -> ')}\n`;
     this.get(Logger).error(errorMsg);
     return errorMsg;
   }
@@ -156,7 +156,7 @@ const startOfCycle = 'startOfCycle' as const;
 /**
  * Every class can get an InjectableClass by adding a static injectConfig property.
  *
- * For classes that can get instanciated without constructor arguments it
+ * For classes that can get instantiated without constructor arguments it
  * is *not* required to add an injectConfig. An injectConfig is required to
  * tell the TypedInjector to use a constructor with arguments to create a
  * class instance.
@@ -169,15 +169,15 @@ export type InjectableClass<T> = (new (..._args: any[]) => T) & {
 
 export interface InjectConfig {
   /**
-   * inject tokens for all arguments required to create an injectable value.
+   * Inject tokens for all arguments required to create an injectable value.
    *
-   * - for classes the dependencies has to match the consturctor parameters
-   * - for all other functions (like factories) the tokens has to match the parameters
+   * - For classes the dependencies have to match the consturctor parameters
+   * - For all other functions (like factories) the tokens have to match the parameters
    *
-   * in both cases "match" means that the inject tokens return the right types of
+   * In both cases "match" means that the inject tokens return the right types of
    * all parameters in the same order as they are needed for the function/constructor call.
    *
-   * The dependencies of an inject token is not created before the inject token
+   * The dependencies of an inject token are not created before the inject token
    * itself gets created.
    */
   deps: InjectToken<unknown>[];

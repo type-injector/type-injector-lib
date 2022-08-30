@@ -30,8 +30,8 @@ describe('inject tokens', () => {
       }
     }
 
-    const injetor = new TypeInjector();
-    const instance = injetor.get(ComposedClassWithConfiguration);
+    const injector = new TypeInjector();
+    const instance = injector.get(ComposedClassWithConfiguration);
 
     expect(instance.simpleClass.prop).to.equal(givenSimpleClassPropValue);
   });
@@ -54,8 +54,8 @@ describe('inject tokens', () => {
       }
     }
 
-    const injetor = new TypeInjector();
-    const instance = injetor.get(ThirdPartyLibraryServiceWithInjectConfig);
+    const injector = new TypeInjector();
+    const instance = injector.get(ThirdPartyLibraryServiceWithInjectConfig);
 
     expect(instance.simpleClass.prop).to.equal(givenSimpleClassPropValue);
   });
