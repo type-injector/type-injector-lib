@@ -1,20 +1,62 @@
 import { Logger } from './logger';
 
 export class TypeInjector {
+  /**
+   * create a typed inject token for anything
+   *
+   * this helper binds type information to a symbol so you can use that
+   * symbol to inject a typed value.
+   * Because the TypeInjector has no information how to create this symbol,
+   * it has to be provided before it get's injected the first time.
+   *
+   * @param type can be an abstract class or a simple string
+   * @returns a token that can be used to first provide then inject anything
+   */
   static createToken<T>(type: (T & (abstract new (...args: any[]) => any) & { name: string }) | string): InjectToken<T extends abstract new (...args: any[]) => infer U ? U : T> {
     return Symbol.for(`TypeInjectorToken: ${typeof type === 'string' ? type : type.name}`);
   }
 
+  /**
+   * provide an existing value for a given token
+   *
+   * This can be useful to provide an existing instance of a
+   * service class, simple values like flags or configuration objects
+   * from the environment.
+   *
+   * @param token which is used to inject the value
+   * @param value that will get returned for the token
+   * @returns the Injector itself to allow chaining provides
+   */
   provideValue<T>(token: InjectToken<T>, value: T): TypeInjector {
     this._instances.set(token, value);
     return this;
   }
 
+  /**
+   * provide a function that lazy create a value
+   *
+   * The provided function will be called the first time the token is requested.
+   *
+   * @param token which is used to inject the value
+   * @param factory that creates something that matches the type of the token
+   * @returns the Injector itself to allow chaining provides
+   */
   provideFactory<T>(token: InjectToken<T>, factory: InjectFactory<T>): TypeInjector {
     this._factories.set(token, factory);
     return this;
   }
 
+  /**
+   * provide an (alternative) implementation
+   *
+   * This is a shortcut to create a factory for an implementation
+   * that is injectable itself (has no constructor args / static inject config).
+   * Like every factory it's called lazy on the first request of the token.
+   *
+   * @param token general class or created inject token for an interface
+   * @param impl to instanciate as soon as it's requested the first time
+   * @returns the Injector itself to allow chaining provides
+   */
   provideImplementation<T>(token: InjectToken<T>, impl: ConstructorWithoutArguments<T> | InjectableClass<T>) {
     if (hasInjectConfig(impl)) {
       this._factories.set(token, {
@@ -30,6 +72,14 @@ export class TypeInjector {
     return this;
   }
 
+  /**
+   * get something from the cdi
+   *
+   * might create a new instance or return an existing one.
+   *
+   * @param token
+   * @returns
+   */
   get<T>(token: InjectToken<T>): T {
     return this._get(token, 'startOfCycle');
   }
@@ -103,11 +153,33 @@ export class TypeInjector {
 
 const startOfCycle = 'startOfCycle' as const;
 
+/**
+ * Every class can get an InjectableClass by adding a static injectConfig property.
+ *
+ * For classes that can get instanciated without constructor arguments it
+ * is *not* required to add an injectConfig. An injectConfig is required to
+ * tell the TypedInjector to use a constructor with arguments to create a
+ * class instance.
+ *
+ * @see {@link InjectConfig InjectConfig}
+ */
 export type InjectableClass<T> = (new (..._args: any[]) => T) & {
   injectConfig: InjectConfig;
 }
 
 export interface InjectConfig {
+  /**
+   * inject tokens for all arguments required to create an injectable value.
+   *
+   * - for classes the dependencies has to match the consturctor parameters
+   * - for all other functions (like factories) the tokens has to match the parameters
+   *
+   * in both cases "match" means that the inject tokens return the right types of
+   * all parameters in the same order as they are needed for the function/constructor call.
+   *
+   * The dependencies of an inject token is not created before the inject token
+   * itself gets created.
+   */
   deps: InjectToken<unknown>[];
 }
 
