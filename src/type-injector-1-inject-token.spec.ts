@@ -72,32 +72,44 @@ describe('inject tokens', () => {
 
       expect(result).to.equal(givenBooleanValue);
     });
+
+    it('should be possible to inject functions', () => {
+      let expectedResult = 'initial value';
+      const providedFunction = () => expectedResult;
+      const tokenForFunction = TypeInjector.createToken<() => string>('any unique string');
+
+      const injector = new TypeInjector()
+        .provideValue(tokenForFunction, providedFunction)
+      ;
+      const fn = injector.get(tokenForFunction);
+      expectedResult = 'current value';
+      const actualResult = fn();
+
+      expect(actualResult).to.equal(expectedResult);
+    });
+
+    it('should be possible to inject any object', () => {
+      const providedObject = { prop: 'initial value' };
+      const tokenForObject = TypeInjector.createToken<{ prop: string }>('any unique string');
+
+      const injector = new TypeInjector()
+        .provideValue(tokenForObject, providedObject)
+      ;
+      const instance = injector.get(tokenForObject);
+
+      expect(instance === providedObject).to.be.true;
+    });
   });
 
-  it('should be possible to inject functions', () => {
-    let expectedResult = 'initial value';
-    const providedFunction = () => expectedResult;
-    const tokenForFunction = TypeInjector.createToken<() => string>('any unique string');
+  it('will throw an error for tokens that are not provided (yet)', () => {
+    const unknownToken = TypeInjector.createToken('unknown');
+    const injector = new TypeInjector();
 
-    const injector = new TypeInjector()
-      .provideValue(tokenForFunction, providedFunction)
-    ;
-    const fn = injector.get(tokenForFunction);
-    expectedResult = 'current value';
-    const actualResult = fn();
-
-    expect(actualResult).to.equal(expectedResult);
-  });
-
-  it('should be possible to inject any object', () => {
-    const providedObject = { prop: 'initial value' };
-    const tokenForObject = TypeInjector.createToken<{ prop: string }>('any unique string');
-
-    const injector = new TypeInjector()
-      .provideValue(tokenForObject, providedObject)
-    ;
-    const instance = injector.get(tokenForObject);
-
-    expect(instance === providedObject).to.be.true;
+    try {
+      injector.get(unknownToken);
+      expect.fail('did not throw');
+    } catch (e) {
+      expect((e as {message: string}).message).to.include('could not find a factory');
+    }
   });
 });

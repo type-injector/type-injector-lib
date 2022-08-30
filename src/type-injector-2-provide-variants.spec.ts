@@ -64,8 +64,9 @@ describe('provide variants', () => {
 
       const injector = new TypeInjector();
       injector.provideImplementation(myServiceInjectToken, MyServiceImpl);
+      const instance = injector.get(myServiceInjectToken);
 
-      expect(injector.get(myServiceInjectToken).typeName).to.equal('SpecialImpl');
+      expect(instance.typeName).to.equal('SpecialImpl');
     });
   });
 });
