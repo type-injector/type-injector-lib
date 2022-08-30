@@ -72,7 +72,6 @@ export class TypeInjector {
   }
 
   private _createCycligErrorMessage(token: InjectToken<unknown>) {
-    this.get(Logger).error('dependency cycle', this._instancesInCreation.keys());
     const nameOf = (arg: Initiator): string => {
       if (!arg) {
         return 'undefined';
@@ -87,7 +86,11 @@ export class TypeInjector {
           return arg.name;
       }
     };
-    return `dependency cycle: ${Array.from(this._instancesInCreation.keys()).map((key) => nameOf(key)).join('->')}`;
+    const errorMsg = `dependency cycle detected: ${Array.from(this._instancesInCreation.keys())
+      .concat(token)
+      .map((key) => `"${nameOf(key)}"`).join('\n -> ')}\n`;
+    this.get(Logger).error(errorMsg);
+    return errorMsg;
   }
 
   private _get<T>(token: InjectToken<T>, initiator: Initiator): T {
