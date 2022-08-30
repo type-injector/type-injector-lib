@@ -1,6 +1,10 @@
 import { Logger } from './logger';
 
 export class TypeInjector {
+  static createToken<T>(type: (T & (abstract new (...args: any[]) => any) & { name: string }) | string): InjectToken<T extends abstract new (...args: any[]) => infer U ? U : T> {
+    return Symbol.for(`TypeInjectorToken: ${typeof type === 'string' ? type : type.name}`);
+  }
+
   provideValue<T>(token: InjectToken<T>, value: T): TypeInjector {
     this._instances.set(token, value);
     return this;

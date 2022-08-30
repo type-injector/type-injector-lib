@@ -4,7 +4,7 @@
   "description": "inject typescript classes recoursively",
   "main": "index.js",
   "scripts": {
-    "test": "mocha -r ts-node/register ./test.ts",
+    "test": "mocha -r ts-node/register ./test.ts ./src/**/*.spec.ts",
     "test:watch": "watch-npm test",
     "lint": "eslint .eslintrc.cjs .",
     "build": "tsc -P tsconfig.build.json"
