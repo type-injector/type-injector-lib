@@ -1,6 +1,5 @@
 import { expect } from 'chai';
-import { Logger } from './logger';
-import { InjectConfig, TypeInjector } from './type-injector';
+import { InjectConfig, Logger, TypeInjector } from './index';
 
 describe('type injector basics', () => {
   it('should be able to instantiate an injector', () => {

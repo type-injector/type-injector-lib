@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { InjectConfig, TypeInjector } from './type-injector';
+import { InjectConfig, TypeInjector } from './index';
 
 describe('inject tokens', () => {
   it('should be possible to use any constructor without arguments as inject token', () => {
