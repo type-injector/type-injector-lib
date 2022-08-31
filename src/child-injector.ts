@@ -105,6 +105,17 @@ export class ChildInjector extends TypeInjector {
     }
   }
 
+  protected _createDependencyErrorEntry(token: InjectToken<unknown>, factory: InjectFactory<unknown>): string {
+    let text = super._createDependencyErrorEntry(token, factory);
+
+    const factoryScope = factory.scope?.description || 'top level injector';
+    if (factoryScope) {
+      text += `\n      scope: '${factoryScope}'`;
+    }
+
+    return text;
+  }
+
   protected _create<T>(token: InjectToken<T>): T {
     return this._createWithSource(token).instance;
   }

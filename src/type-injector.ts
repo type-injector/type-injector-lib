@@ -112,7 +112,9 @@ export class TypeInjector {
 
   protected _markAsInCreation(token: InjectToken<unknown>, factory: InjectFactory<unknown>) {
     if (this._instancesInCreation.has(token)) {
-      throw new Error(this._createCyclicErrorMessage(token, factory));
+      const errorMessage = this._createCyclicErrorMessage(token, factory);
+      this.get(Logger).error(errorMessage);
+      throw new Error(errorMessage);
     }
     this._instancesInCreation.set(token, { factory });
   }
@@ -142,26 +144,25 @@ export class TypeInjector {
     }
   };
 
+  protected _createDependencyErrorEntry(token: InjectToken<unknown>, factory: InjectFactory<unknown>) {
+    const tokenName = this._nameOf(token);
+    const factoryName = factory.label || factory.create.name;
+
+    let text = `\n -> ${tokenName}`;
+    text += `\n      factory: ${factoryName}`;
+    return text;
+  }
+
   private _createCyclicErrorMessage(token: InjectToken<unknown>, factory: InjectFactory<unknown>) {
     if (token === Logger) {
       this.provideValue(Logger, new Logger());
     }
-    const inCreation = Array.from(this._instancesInCreation.entries()).concat([[token, { factory }]]);
-    const dependencyPath = inCreation.map(([token, { factory }]) => {
-      const tokenName = this._nameOf(token);
-      const factoryName = factory.label || factory.create.name;
-      const factoryScope = factory.scope?.description;
-
-      let text = `\n -> ${tokenName}`;
-      if (factoryScope) {
-        text += `\n      scope: '${factoryScope}'`;
-      }
-      text += `\n      factory: ${factoryName}`;
-      return text;
-    });
-    const errorMsg = `dependency cycle detected:${dependencyPath.join('\n')}\n\n`;
-    this.get(Logger).error(errorMsg);
-    return errorMsg;
+    const dependencyPath = Array.from(this._instancesInCreation.entries())
+      .concat([[token, { factory }]])
+      .map(([token, { factory }]) => this._createDependencyErrorEntry(token, factory))
+      .join('\n')
+    ;
+    return `dependency cycle detected:${dependencyPath}\n\n`;
   }
 }
 

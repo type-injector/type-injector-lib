@@ -30,6 +30,11 @@ import { ChildInjector, InjectConfig, Logger, TypeInjector } from './index';
  * Summary:
  * You should carefully think about introducing scopes and which scopes
  * you need. They add much complexity but might have large advantages, too.
+ *
+ * Remark:
+ * 99% of scope implementation is in child-injector.ts. If you do not use
+ * scopes at all and you use some kind of tree shaking, your tree shaking
+ * should be able to exclude this code from your compilation unit.
  */
 describe('scopes', () => {
   /**
@@ -438,17 +443,19 @@ describe('scopes', () => {
         const expectedMessage = 'dependency cycle detected:\n'
           + ' -> ServiceA\n'
           + '      factory: ServiceA.injectConfig\n'
+          + '      scope: \'top level injector\'\n'
           + '\n'
           + ' -> TypeInjectorToken: ServiceC\n'
-          + '      scope: \'mid level\'\n'
           + '      factory: provideImpl: SpecialServiceC\n'
+          + '      scope: \'mid level\'\n'
           + '\n'
           + ' -> ServiceB\n'
-          + '      scope: \'very special\'\n'
           + '      factory: provideImpl: SpecialServiceB\n'
+          + '      scope: \'very special\'\n'
           + '\n'
           + ' -> ServiceA\n'
           + '      factory: ServiceA.injectConfig\n'
+          + '      scope: \'top level injector\'\n'
           + '\n'
         ;
 //        console.log('test\n----\n' + loggerCalls[0][0] + '\n-----\n');
