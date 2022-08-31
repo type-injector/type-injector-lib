@@ -313,5 +313,61 @@ describe('scopes', () => {
 
       expect(content === givenContent).to.be.true;
     });
+
+    it('should detect dependency cycles across different scopes', () => {
+      const serviceC = TypeInjector.createToken<ServiceC>('ServiceC');
+      class ServiceA {
+        static injectConfig: InjectConfig = { deps: [serviceC] };
+        constructor(
+          public serviceC: ServiceC,
+        ) {}
+      }
+      class ServiceB {}
+      class ServiceC {}
+
+      const loggerCalls = [] as Parameters<Logger['error']>[];
+      const topLevelInjector = new TypeInjector()
+        .provideValue(Logger, { error: (...args) => { loggerCalls.push(args) } } as Logger)
+        .provideImplementation(serviceC, ServiceC)
+      ;
+
+      class SpecialServiceC extends ServiceC {
+        static injectConfig: InjectConfig = { deps: [ServiceB] };
+        constructor(
+          public serviceB: ServiceB,
+        ) {
+          super();
+        }
+      }
+      const midLevelInjector = ChildInjector.withIdent(Symbol.for('mid level')).from(topLevelInjector)
+        .provideImplementation(serviceC, SpecialServiceC)
+      ;
+
+      class SpecialServiceB extends ServiceB {
+        static injectConfig: InjectConfig = { deps: [ServiceA] };
+        constructor(
+          public serviceA: ServiceA,
+        ) {
+          super();
+        }
+      }
+      const verySpecialInjector = ChildInjector.withIdent(Symbol.for('very special')).from(midLevelInjector)
+        .provideImplementation(ServiceB, SpecialServiceB)
+      ;
+
+      expect(() => topLevelInjector.get(ServiceA)).not.to.throw();
+      expect(() => midLevelInjector.get(ServiceA)).not.to.throw();
+      try {
+        verySpecialInjector.get(ServiceA);
+        expect.fail('no error thrown');
+      } catch (e) {
+        const expectedMessage = 'dependency cycle detected: ServiceA (created by ServiceA.injectConfig)\n'
+        + ' -> TypeInjectorToken: ServiceC (created by provideImpl: SpecialServiceC)\n'
+        + ' -> ServiceB (created by provideImpl: SpecialServiceB)\n'
+        + ' -> ServiceA (created by ServiceA.injectConfig)\n';
+        expect(e).to.include({ message: expectedMessage });
+        expect(loggerCalls[0][0]).to.equal(expectedMessage);
+      }
+    });
   });
 });

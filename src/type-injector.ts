@@ -1,6 +1,5 @@
-import { ConstructorWithoutArguments, InjectableClass, InjectFactory, InjectToken } from './public-base';
-import { hasInjectConfig, Initiator, startOfCycle } from './private-base';
 import { Logger } from './logger';
+import { ConstructorWithoutArguments, InjectableClass, InjectFactory, InjectToken } from './type-injector.model';
 
 export class TypeInjector {
   /**
@@ -60,15 +59,14 @@ export class TypeInjector {
    * @returns the Injector itself to allow chaining provides
    */
   provideImplementation<T>(token: InjectToken<T>, impl: ConstructorWithoutArguments<T> | InjectableClass<T>) {
+    const label = `provideImpl: ${impl.name}`;
     if (hasInjectConfig(impl)) {
       this._factories.set(token, {
-        ...impl.injectConfig,
-        create: (...args: any[]) => new impl(...args),
+        label, create: (...args: any[]) => new impl(...args), ...impl.injectConfig,
       });
     } else {
       this._factories.set(token, {
-        deps: [],
-        create: () => new impl(),
+        label, deps: [], create: () => new impl(),
       });
     }
     return this;
@@ -83,12 +81,17 @@ export class TypeInjector {
    * @returns
    */
   get<T>(token: InjectToken<T>): T {
-    return this._get(token, startOfCycle);
+    return this._instances.has(token)
+      ? this._instances.get(token) as T
+      : this._create(token)
+    ;
   }
 
   protected _factories = new Map<InjectToken<any>, InjectFactory<any>>();
   protected _instances = new Map<InjectToken<any>, any>();
-  private _instancesInCreation = new Map<InjectToken<any>, any>();
+  private _instancesInCreation = new Map<InjectToken<unknown>, {
+    factory: InjectFactory<unknown>,
+  }>()
 
   getFactory<T>(token: InjectToken<T>): InjectFactory<T> {
     const providedFactory = this._factories.get(token);
@@ -100,6 +103,7 @@ export class TypeInjector {
       const config = hasInjectConfig(token) ? token.injectConfig : { deps: [] };
       return {
         ...config,
+        label: `${token.name}.injectConfig`,
         create: (...params: any[]) => new token(...params) as any as T,
       }
     }
@@ -107,22 +111,22 @@ export class TypeInjector {
     throw new Error('could not find a factory to create token: ' + this._nameOf(token));
   }
 
-  protected _markAsInCreation(token: InjectToken<unknown>, initiator: Initiator) {
+  protected _markAsInCreation(token: InjectToken<unknown>, factory: InjectFactory<unknown>) {
     if (this._instancesInCreation.has(token)) {
-      throw new Error(this._createCyclicErrorMessage(token));
+      throw new Error(this._createCyclicErrorMessage(token, factory));
     }
-    this._instancesInCreation.set(token, initiator);
+    this._instancesInCreation.set(token, { factory });
   }
 
   protected _finishedCreation(token: InjectToken<unknown>) {
     this._instancesInCreation.delete(token);
   }
 
-  protected _create<T>(token: InjectToken<T>, initiator: Initiator): T {
-    this._markAsInCreation(token, initiator);
-
+  protected _create<T>(token: InjectToken<T>): T {
     const factory = this.getFactory(token);
-    const params = factory.deps.map((dep) => this._get(dep, token));
+    this._markAsInCreation(token, factory);
+
+    const params = factory.deps.map((dep) => this.get(dep));
     const created = factory.create(...params);
     this._instances.set(token, created);
 
@@ -139,18 +143,19 @@ export class TypeInjector {
     }
   };
 
-  private _createCyclicErrorMessage(token: InjectToken<unknown>) {
-    const errorMsg = `dependency cycle detected: ${Array.from(this._instancesInCreation.keys())
-      .concat(token)
-      .map((key) => this._nameOf(key)).join('\n -> ')}\n`;
+  private _createCyclicErrorMessage(token: InjectToken<unknown>, factory: InjectFactory<unknown>) {
+    const inCreation = Array.from(this._instancesInCreation.entries()).concat([[token, { factory }]]);
+    const dependencyPath = inCreation.map(([token, { factory }]) => {
+      const tokenName = this._nameOf(token);
+      const factoryName = factory.label || factory.create.name;
+      return `${tokenName} (created by ${factoryName})`;
+    });
+    const errorMsg = `dependency cycle detected: ${dependencyPath.join('\n -> ')}\n`;
     this.get(Logger).error(errorMsg);
     return errorMsg;
   }
+}
 
-  protected _get<T>(token: InjectToken<T>, initiator: Initiator): T {
-    return this._instances.has(token)
-      ? this._instances.get(token) as T
-      : this._create(token, initiator)
-    ;
-  }
+function hasInjectConfig<T>(token: unknown): token is InjectableClass<T> {
+  return !!(token as Partial<InjectableClass<T>>).injectConfig;
 }

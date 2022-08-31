@@ -1,4 +1,4 @@
 export * from './child-injector';
-export * from './public-base';
+export * from './type-injector.model';
 export * from './logger';
 export * from './type-injector';

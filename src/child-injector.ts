@@ -1,5 +1,4 @@
-import { Initiator } from './private-base';
-import { InjectFactory, InjectToken } from './public-base';
+import { InjectFactory, InjectToken } from './type-injector.model';
 import { TypeInjector } from './type-injector';
 
 export class ChildInjector extends TypeInjector {
@@ -29,9 +28,9 @@ export class ChildInjector extends TypeInjector {
     return this._factories.get(token) as InjectFactory<T> || this._parent.getFactory(token);
   }
 
-  private _createInOwnScope<T>(token: InjectToken<T>, initiator: Initiator, factory: InjectFactory<T>): InstanceWithSource<T> {
-    this._markAsInCreation(token, initiator);
-    const args = factory.deps.map((dep) => this._get(dep, token));
+  private _createInOwnScope<T>(token: InjectToken<T>, factory: InjectFactory<T>): InstanceWithSource<T> {
+    this._markAsInCreation(token, factory);
+    const args = factory.deps.map((dep) => this.get(dep));
     const created = factory.create(...args);
     this._ownInstances.push(created);
     this._instances.set(token, created);
@@ -78,32 +77,32 @@ export class ChildInjector extends TypeInjector {
    * @param token
    * @param initiator
    */
-  private _hasOwnDependencies(token: InjectToken<unknown>, initiator: Initiator, factory: InjectFactory<unknown>): boolean {
-    this._markAsInCreation(token, initiator);
+  private _hasOwnDependencies(token: InjectToken<unknown>, factory: InjectFactory<unknown>): boolean {
+    this._markAsInCreation(token, factory);
     const hasOwnDependencies = factory.deps.some((dep) => {
-      const instance = this._get(dep, token);
+      const instance = this.get(dep);
       return this._ownInstances.includes(instance);
     });
     this._finishedCreation(token);
     return hasOwnDependencies;
   }
 
-  private _createWithSource<T>(token: InjectToken<T>, initiator: Initiator): InstanceWithSource<T> {
+  private _createWithSource<T>(token: InjectToken<T>): InstanceWithSource<T> {
     const providedFactory = this._factories.get(token);
     if (providedFactory) {
-      return this._createInOwnScope<T>(token, initiator, providedFactory);
+      return this._createInOwnScope<T>(token, providedFactory);
     }
 
     const parentFactory = this._parent.getFactory<T>(token);
-    if (this._hasOwnDependencies(token, initiator, parentFactory)) {
-      return this._createInOwnScope(token, initiator, parentFactory);
+    if (this._hasOwnDependencies(token, parentFactory)) {
+      return this._createInOwnScope(token, parentFactory);
     } else {
       return this._useInstanceFromParentScope(token);
     }
   }
 
-  protected _create<T>(token: InjectToken<T>, initiator: Initiator): T {
-    return this._createWithSource(token, initiator).instance;
+  protected _create<T>(token: InjectToken<T>): T {
+    return this._createWithSource(token).instance;
   }
 }
 

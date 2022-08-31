@@ -8,7 +8,7 @@
  *
  * @see {@link InjectConfig InjectConfig}
  */
- export type InjectableClass<T> = (new (..._args: any[]) => T) & {
+export type InjectableClass<T> = (new (..._args: any[]) => T) & {
   injectConfig: InjectConfig;
 }
 
@@ -29,6 +29,7 @@ export interface InjectConfig {
 }
 
 export interface InjectFactory<T> extends InjectConfig {
+  label?: string,
   create: (...args: any[]) => T,
 }
 
