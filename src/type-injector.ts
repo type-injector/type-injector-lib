@@ -143,6 +143,9 @@ export class TypeInjector {
   };
 
   private _createCyclicErrorMessage(token: InjectToken<unknown>, factory: InjectFactory<unknown>) {
+    if (token === Logger) {
+      this.provideValue(Logger, new Logger());
+    }
     const inCreation = Array.from(this._instancesInCreation.entries()).concat([[token, { factory }]]);
     const dependencyPath = inCreation.map(([token, { factory }]) => {
       const tokenName = this._nameOf(token);
