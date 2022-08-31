@@ -299,5 +299,19 @@ describe('scopes', () => {
       expect(businessServiceFromTopLevel.extLogger.logger instanceof SpecialLogger).to.be.false;
       expect(businessServiceFromChild.extLogger.logger instanceof SpecialLogger).to.be.true;
     });
+
+    it('should lookup parnet factory recursively', () => {
+      const givenContent = { desc: 'given content' };
+      const contentToken = TypeInjector.createToken<typeof givenContent>('content token');
+      const topLevelInjector = new TypeInjector()
+        .provideFactory(contentToken, { deps: [], create: () => givenContent})
+      ;
+      const midLevelInjector = ChildInjector.withIdent(Symbol.for('mid level')).from(topLevelInjector);
+      const verySpecialInjector = ChildInjector.withIdent(Symbol.for('very special')).from(midLevelInjector);
+
+      const content = verySpecialInjector.get(contentToken);
+
+      expect(content === givenContent).to.be.true;
+    });
   });
 });

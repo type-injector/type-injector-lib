@@ -25,6 +25,10 @@ export class ChildInjector extends TypeInjector {
     return super.provideValue(token, value);
   }
 
+  getFactory<T>(token: InjectToken<T>): InjectFactory<T> {
+    return this._factories.get(token) as InjectFactory<T> || this._parent.getFactory(token);
+  }
+
   private _createInOwnScope<T>(token: InjectToken<T>, initiator: Initiator, factory: InjectFactory<T>): InstanceWithSource<T> {
     this._markAsInCreation(token, initiator);
     const args = factory.deps.map((dep) => this._get(dep, token));
