@@ -24,6 +24,10 @@ export class ChildInjector extends TypeInjector {
     return super.provideValue(token, value);
   }
 
+  provideFactory<T>(token: InjectToken<T>, factory: InjectFactory<T>): TypeInjector {
+    return super.provideFactory(token, {...factory, scope: this.ident });
+  }
+
   getFactory<T>(token: InjectToken<T>): InjectFactory<T> {
     return this._factories.get(token) as InjectFactory<T> || this._parent.getFactory(token);
   }

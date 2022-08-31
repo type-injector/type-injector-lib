@@ -361,10 +361,23 @@ describe('scopes', () => {
         verySpecialInjector.get(ServiceA);
         expect.fail('no error thrown');
       } catch (e) {
-        const expectedMessage = 'dependency cycle detected: ServiceA (created by ServiceA.injectConfig)\n'
-        + ' -> TypeInjectorToken: ServiceC (created by provideImpl: SpecialServiceC)\n'
-        + ' -> ServiceB (created by provideImpl: SpecialServiceB)\n'
-        + ' -> ServiceA (created by ServiceA.injectConfig)\n';
+        const expectedMessage = 'dependency cycle detected:\n'
+          + ' -> ServiceA\n'
+          + '      factory: ServiceA.injectConfig\n'
+          + '\n'
+          + ' -> TypeInjectorToken: ServiceC\n'
+          + '      scope: \'mid level\'\n'
+          + '      factory: provideImpl: SpecialServiceC\n'
+          + '\n'
+          + ' -> ServiceB\n'
+          + '      scope: \'very special\'\n'
+          + '      factory: provideImpl: SpecialServiceB\n'
+          + '\n'
+          + ' -> ServiceA\n'
+          + '      factory: ServiceA.injectConfig\n'
+          + '\n'
+        ;
+//        console.log('test\n----\n' + loggerCalls[0][0] + '\n-----\n');
         expect(e).to.include({ message: expectedMessage });
         expect(loggerCalls[0][0]).to.equal(expectedMessage);
       }

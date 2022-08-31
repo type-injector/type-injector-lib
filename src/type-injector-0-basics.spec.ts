@@ -121,10 +121,21 @@ describe('type injector basics', () => {
       injector.get(ServiceA);
       expect.fail('no error thrown');
     } catch (e) {
-      const expectedMessage = 'dependency cycle detected: ServiceA (created by ServiceA.injectConfig)\n'
-      + ' -> TypeInjectorToken: ServiceC (created by provideImpl: ServiceC)\n'
-      + ' -> ServiceB (created by ServiceB.injectConfig)\n'
-      + ' -> ServiceA (created by ServiceA.injectConfig)\n';
+      const expectedMessage = 'dependency cycle detected:\n'
+        + ' -> ServiceA\n'
+        + '      factory: ServiceA.injectConfig\n'
+        + '\n'
+        + ' -> TypeInjectorToken: ServiceC\n'
+        + '      factory: provideImpl: ServiceC\n'
+        + '\n'
+        + ' -> ServiceB\n'
+        + '      factory: ServiceB.injectConfig\n'
+        + '\n'
+        + ' -> ServiceA\n'
+        + '      factory: ServiceA.injectConfig\n'
+        + '\n'
+      ;
+//      console.log('test\n----\n' + loggerCalls[0][0] + '\n-----\n');
       expect(e).to.include({ message: expectedMessage });
       expect(loggerCalls[0][0]).to.equal(expectedMessage);
     }

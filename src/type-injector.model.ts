@@ -30,6 +30,7 @@ export interface InjectConfig {
 
 export interface InjectFactory<T> extends InjectConfig {
   label?: string,
+  scope?: symbol,
   create: (...args: any[]) => T,
 }
 

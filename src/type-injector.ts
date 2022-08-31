@@ -61,15 +61,14 @@ export class TypeInjector {
   provideImplementation<T>(token: InjectToken<T>, impl: ConstructorWithoutArguments<T> | InjectableClass<T>) {
     const label = `provideImpl: ${impl.name}`;
     if (hasInjectConfig(impl)) {
-      this._factories.set(token, {
+      return this.provideFactory(token, {
         label, create: (...args: any[]) => new impl(...args), ...impl.injectConfig,
       });
     } else {
-      this._factories.set(token, {
+      return this.provideFactory(token, {
         label, deps: [], create: () => new impl(),
       });
     }
-    return this;
   }
 
   /**
@@ -148,9 +147,16 @@ export class TypeInjector {
     const dependencyPath = inCreation.map(([token, { factory }]) => {
       const tokenName = this._nameOf(token);
       const factoryName = factory.label || factory.create.name;
-      return `${tokenName} (created by ${factoryName})`;
+      const factoryScope = factory.scope?.description;
+
+      let text = `\n -> ${tokenName}`;
+      if (factoryScope) {
+        text += `\n      scope: '${factoryScope}'`;
+      }
+      text += `\n      factory: ${factoryName}`;
+      return text;
     });
-    const errorMsg = `dependency cycle detected: ${dependencyPath.join('\n -> ')}\n`;
+    const errorMsg = `dependency cycle detected:${dependencyPath.join('\n')}\n\n`;
     this.get(Logger).error(errorMsg);
     return errorMsg;
   }
