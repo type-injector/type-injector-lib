@@ -1,7 +1,40 @@
 import { expect } from 'chai';
 import { ChildInjector, InjectConfig, Logger, TypeInjector } from './index';
 
+/**
+ * Scopes
+ *
+ * There are many examples where it's useful to create child injectors for different
+ * scopes:
+ * - creating an injector for a request context
+ * - creating an injector for a component context
+ * - creating an injector for a session context
+ * - creating an injector for an authenticated context
+ *
+ * Disadvantages:
+ * - Scopes increase complexity in resolving factories
+ *   so it takes more time to create new instances.
+ * - Scopes increase complexity in debugging and finding errors
+ * - Scopes increase the difficulty to predict runtime behavior
+ *
+ * Advantages:
+ * - Scopes can provide more specific informations like:
+ *   * auth tokens
+ *   * logged in user id
+ *   * request urls / parameters
+ * - Scopes can change general behavior
+ *   * Debug-Scope --> verbose Logging
+ * - Scopes can get clean up so all objects that contain informations
+ *   of that scopes will get destroyed (e.g. auth/user)
+ *
+ * Summary:
+ * You should carefully think about introducing scopes and which scopes
+ * you need. They add much complexity but might have large advantages, too.
+ */
 describe('scopes', () => {
+  /**
+   * That is the same as using no scopes and very easy to handle:
+   */
   describe('using a single scope', () => {
     it('should always return the same instance', () => {
       class BaseService {
@@ -14,8 +47,45 @@ describe('scopes', () => {
 
       expect(base1 === base2).to.be.true;
     });
+
+    it('should not matter in which order you provide factories/values/implementations', () => {
+      // GIVEN:
+      const injectToken = {
+        logger: TypeInjector.createToken<Logger>('logger'),
+        logFn: TypeInjector.createToken<(msg: string) => void>('log fn'),
+      };
+      const injector = new TypeInjector();
+
+      let lastLoggedInfo: string | false = false;
+      class MockedLogger extends Logger {
+        info(message: string): void {
+          lastLoggedInfo = message;
+        }
+      }
+
+      // WHEN:
+      // 1. provide a function that is using the logger
+      injector.provideFactory(injectToken.logFn, {
+        deps: [injectToken.logger],
+        create: (logger: Logger) => (msg: string) => logger.info(msg),
+      });
+
+      // 2. change the used logger
+      injector.provideImplementation(injectToken.logger, MockedLogger);
+
+      // 3. use the injector to create the logFn
+      injector.get(injectToken.logFn)('my message');
+
+      // THEN:
+      // logFn should use the replaced logger implementation:
+      expect(lastLoggedInfo).to.equal('my message');
+    });
   });
 
+  /**
+   * If you create a scope you will get an child injector which
+   * might provide additional informations
+   */
   describe('child injector', () => {
     it('should be possible to create a child injector', () => {
       const givenAuthToken = 'hack_me¯\\_(ツ)_/¯s';
@@ -45,11 +115,15 @@ describe('scopes', () => {
         ) {}
       }
 
+      // the authorized injector will combine its own information (authToken)
+      // with the information of the parent injector (base url)
       const instance = authorizedInjector.get(ServiceA);
       expect(instance.baseUrl).to.equal(givenBaseUrl);
       expect(instance.authToken).to.equal(givenAuthToken);
 
       try {
+        // the parent injector will still not know anything about the auth token
+        // and it won't hold any objects that need the auth token
         parentInjector.get(ServiceA);
         expect.fail('did not throw');
       } catch (e) {
