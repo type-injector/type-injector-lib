@@ -14,7 +14,7 @@ export class TypeInjector {
    * @returns a token that can be used to first provide then inject anything
    */
   static createToken<T>(type: (T & (abstract new (...params: any[]) => any) & { name: string }) | string): InjectToken<T extends abstract new (...args: any[]) => infer U ? U : T> {
-    return Symbol.for(`TypeInjectorToken: ${typeof type === 'string' ? type : type.name}`);
+    return Symbol.for(`TypeInjectorToken: ${typeof type === 'string' ? type : type.name}`) as symbol & { description: string };
   }
 
   /**
@@ -125,14 +125,16 @@ export class TypeInjector {
     return factory;
   }
 
-  protected _markAsInCreation(token: InjectToken<unknown>, factory: InjectFactory<unknown>) {
+  protected _markAsInCreation(token: InjectToken<unknown>, factory: InjectFactory<unknown>, scopeIdent?: symbol & { description: string }) {
     if (this._instancesInCreation.has(token)) {
       const errorMessage = this._createCyclicErrorMessage(token, factory);
       this.logger.error(errorMessage);
       throw new Error(errorMessage);
     }
     this._instancesInCreation.set(token, { factory });
-    this.logger.info?.(`start creation of ${this._createDependencyEntryLog(token, factory)}`);
+    this.logger.info?.((scopeIdent ? `'${scopeIdent.description}'` : 'top level injector')
+      + ` starts creation of ${this._createDependencyEntryLog(token, factory)}`
+    );
   }
 
   protected _finishedCreation(token: InjectToken<unknown>) {
@@ -160,9 +162,7 @@ export class TypeInjector {
   protected _nameOf = (token: InjectToken<unknown>): string => {
     switch (typeof token) {
       case 'symbol':
-        return token.description
-          || /* istanbul ignore next */ token.toString() // needed because description is declared as optional
-        ;
+        return token.description;
       case 'function':
         return token.name;
     }

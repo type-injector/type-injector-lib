@@ -36,4 +36,4 @@ export interface InjectFactory<T> extends InjectConfig {
 
 export type ConstructorWithoutArguments<T> = new () => T;
 
-export type InjectToken<T> = ConstructorWithoutArguments<T> | InjectableClass<T> | symbol;
+export type InjectToken<T> = ConstructorWithoutArguments<T> | InjectableClass<T> | (symbol & { description: string });

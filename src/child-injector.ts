@@ -6,7 +6,7 @@ export class ChildInjector extends TypeInjector {
   static withIdent(ident: symbol) {
     return {
       from(parent: TypeInjector): TypeInjector {
-        return new ChildInjector(ident, parent);
+        return new ChildInjector(ident as symbol & { description: string }, parent);
       }
     };
   }
@@ -14,7 +14,7 @@ export class ChildInjector extends TypeInjector {
   private _ownInstances = [] as any[];
 
   private constructor(
-    public readonly ident: symbol,
+    public readonly ident: symbol & { description: string },
     private _parent: TypeInjector,
   ) {
     super();
@@ -68,6 +68,10 @@ export class ChildInjector extends TypeInjector {
     }
   }
 
+  protected _markAsInCreation(token: InjectToken<unknown>, factory: InjectFactory<unknown>, scopeIdent = this.ident) {
+    super._markAsInCreation(token, factory, scopeIdent);
+  }
+
   /**
    * Checks if there are own/overridden dependencies.
    *
@@ -83,15 +87,20 @@ export class ChildInjector extends TypeInjector {
    * @param initiator
    */
   private _hasOwnDependencies(token: InjectToken<unknown>, factory: InjectFactory<unknown>): boolean {
-    token !== Logger && this.logger.info?.(`start dependency check of ${this._nameOf(token)} in '${this.ident.description || this.ident.toString()}'`);
+    token !== Logger && this.logger.info?.(`start dependency check of ${this._nameOf(token)} in '${this.ident.description}'`);
     this._markAsInCreation(token, factory);
-    const hasOwnDependencies = factory.deps.some((dep) => {
+    const dependencyInScope = factory.deps.find((dep) => {
       const instance = this.get(dep);
       return this._ownInstances.includes(instance);
     });
     this._abortedCreation(token);
-    token !== Logger && this.logger.info?.(`dependency check result: has${hasOwnDependencies ? ' ' : ' *no*'} overridden dependencies in '${this.ident.description || this.ident.toString()}'`);
-    return hasOwnDependencies;
+    token !== Logger && this.logger.info?.(
+      `dependency check result: '${this._nameOf(token)}' ${dependencyInScope
+        ? `depends on '${this._nameOf(dependencyInScope)}' provided`
+        : 'has *no* overridden dependencies'
+      } in '${this.ident.description}'`
+    );
+    return !!dependencyInScope;
   }
 
   private _createWithSource<T>(token: InjectToken<T>): InstanceWithSource<T> {
@@ -109,14 +118,9 @@ export class ChildInjector extends TypeInjector {
   }
 
   protected _createDependencyEntryLog(token: InjectToken<unknown>, factory: InjectFactory<unknown>): string {
-    let text = super._createDependencyEntryLog(token, factory);
-
-    const factoryScope = factory.scope?.description || 'top level injector';
-    if (factoryScope) {
-      text += `\n      scope: '${factoryScope}'`;
-    }
-
-    return text;
+    return super._createDependencyEntryLog(token, factory)
+      + `\n      scope: '${factory.scope?.description || 'top level injector'}'`
+    ;
   }
 
   protected _create<T>(token: InjectToken<T>): T {

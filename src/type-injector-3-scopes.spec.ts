@@ -466,6 +466,7 @@ describe('scopes', () => {
 
     it('should be possible to use a custom logger implementation to log the scope decission', () => {
       // GIVEN:
+      const givenBaseUrl = 'https://base.url';
       const injectToken = { baseUrl: TypeInjector.createToken<string>('base url') };
       class SimpleService {
         static injectConfig: InjectConfig = { deps: [injectToken.baseUrl]}
@@ -475,13 +476,13 @@ describe('scopes', () => {
       class VerboseLogger extends Logger {
         info = (message: string, ..._details: any[]) => {
           loggedInfo.push(message);
-          console.log(message, _details);
+          // console.log(message, _details);
         };
       }
 
       /**
        topLevelInjector (Logger -> VerboseLogger)
-        ├── midLevelInjector (baseUrl -> 'https://base.url')
+        ├── midLevelInjector (baseUrl -> givenBaseUrl)
         │   └── verySpecialInjector
         └── branchBInjector
       */
@@ -490,12 +491,15 @@ describe('scopes', () => {
       ;
 
       const midLevelInjector = ChildInjector.withIdent(Symbol.for('mid level')).from(topLevelInjector)
-        .provideValue(injectToken.baseUrl, 'https://base.url')
+        .provideValue(injectToken.baseUrl, givenBaseUrl)
       ;
       const verySpecialInjector = ChildInjector.withIdent(Symbol.for('very special')).from(midLevelInjector);
 
-      verySpecialInjector.get(SimpleService);
-      console.log(loggedInfo.join('\n\n'));
+      const simpleService = verySpecialInjector.get(SimpleService);
+      expect(simpleService.baseUrl).to.equal(givenBaseUrl);
+      expect(loggedInfo).to.include(
+        'dependency check result: \'SimpleService\' depends on \'TypeInjectorToken: base url\' provided in \'mid level\''
+      );
     });
   });
 });

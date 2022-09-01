@@ -55,7 +55,7 @@ describe('logger', () => {
       injector.get(injectToken.baseUrl);
       // console.log(JSON.stringify(infoMsgs));
       expect(infoMsgs[0]).to.equal('finished creation of Logger');
-      expect(infoMsgs[1]).to.match(/^start creation of \n -> TypeInjectorToken: base url/);
+      expect(infoMsgs[1]).to.match(/^top level injector starts creation of \n -> TypeInjectorToken: base url/);
       expect(infoMsgs[2]).to.equal('finished creation of TypeInjectorToken: base url');
     });
   });
