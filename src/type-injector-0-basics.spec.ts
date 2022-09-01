@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { InjectConfig, Logger, TypeInjector } from './index';
 
 describe('type injector basics', () => {
-  it('should get instanciated by the build pattern', () => {
+  it('should get instantiated by the builder pattern', () => {
     const injector = TypeInjector.build();
     expect(injector).to.exist;
   });

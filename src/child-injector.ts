@@ -20,7 +20,7 @@ export class ChildInjector extends TypeInjectorImpl {
               this._factories,
               this._instances,
             );
-            this._closeFactory();
+            this._closeBuilder();
             return childInjector;
           }
         }

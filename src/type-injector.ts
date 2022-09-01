@@ -22,7 +22,7 @@ export class TypeInjectorBuilder {
   }
 
   /**
-   * Provide a function that lazily create a value.
+   * Provide a function that lazily creates a value.
    *
    * The provided function will be called the first time the token is requested.
    *
@@ -40,7 +40,7 @@ export class TypeInjectorBuilder {
    *
    * This is a shortcut to create a factory for an implementation
    * that is injectable itself (has no constructor args / static inject config).
-   * Like every factory it's called lazy on the first request of the token.
+   * Like every factory it's called lazily on the first request of the token.
    *
    * @param token general class or created inject token for an interface
    * @param impl to instanciate as soon as it's requested the first time
@@ -59,7 +59,7 @@ export class TypeInjectorBuilder {
     }
   }
 
-  protected _closeFactory() {
+  protected _closeBuilder() {
     const alreadyCreatedInjector = () => {
       throw new Error('injector already built - no further configuration/builds possible');
     }
@@ -76,7 +76,7 @@ export class TypeInjectorBuilder {
    */
   build(): TypeInjector {
     const injector = new TypeInjectorImpl(this._factories, this._instances);
-    this._closeFactory();
+    this._closeBuilder();
     return injector;
   }
 }
@@ -110,10 +110,25 @@ export namespace TypeInjector {
     return Symbol.for(`TypeInjectorToken: ${typeof type === 'string' ? type : type.name}`) as symbol & { description: string };
   }
 
+  /**
+   * Starts the construction of a new injector.
+   *
+   * After calling construct you can chain several methods to
+   * configure the injector before you finally .build() it.
+   *
+   * @returns TypeInjectorBuilder
+   * @see {@link build()} - a shortcut to create an injector without configuration
+   */
   export function construct(): TypeInjectorBuilder {
     return new TypeInjectorBuilder();
   }
 
+  /**
+   * Shortcut to create an injector without configuration.
+   *
+   * @returns TypeInjector
+   * @see {@link construct()} - if you need to provide values, factories or override implementations
+   */
   export function build(): TypeInjector {
     return new TypeInjectorBuilder().build();
   }
