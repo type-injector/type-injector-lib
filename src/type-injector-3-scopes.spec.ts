@@ -521,4 +521,18 @@ describe('scopes', () => {
       );
     });
   });
+
+  it('should not be possible to build multiple child injectors with one factory', () => {
+    const topLevelInjector = TypeInjector.build();
+    const childInjectorFactory = ChildInjector.withIdent(Symbol.for('child scope')).from(topLevelInjector);
+    const firstChildInjector = childInjectorFactory.build();
+    expect(firstChildInjector).to.exist;
+
+    try {
+      childInjectorFactory.build();
+      expect.fail('no error thrown');
+    } catch (e) {
+      expect((e as { message: string}).message).to.include('already built');
+    }
+  });
 });

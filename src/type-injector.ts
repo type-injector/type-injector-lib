@@ -59,11 +59,25 @@ export class TypeInjectorFactory {
     }
   }
 
+  protected _closeFactory() {
+    const alreadyCreatedInjector = () => {
+      throw new Error('injector already built - no further configuration/builds possible');
+    }
+    this.provideFactory = alreadyCreatedInjector;
+    this.provideImplementation = alreadyCreatedInjector;
+    this.provideValue = alreadyCreatedInjector;
+    this.build = alreadyCreatedInjector;
+    this._factories = new Map();
+    this._instances = new Map();
+  }
+
   /**
    * Finish configuration of the TypeInjector
    */
   build(): TypeInjector {
-    return new TypeInjectorImpl(this._factories, this._instances);
+    const injector = new TypeInjectorImpl(this._factories, this._instances);
+    this._closeFactory();
+    return injector;
   }
 }
 

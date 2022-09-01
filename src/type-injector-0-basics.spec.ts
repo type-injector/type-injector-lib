@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { InjectConfig, Logger, TypeInjector } from './index';
 
 describe('type injector basics', () => {
-  it('should be able to instantiate an injector', () => {
+  it('should get instanciated by the build pattern', () => {
     const injector = TypeInjector.build();
     expect(injector).to.exist;
   });
@@ -60,7 +60,7 @@ describe('type injector basics', () => {
   /**
    * Inject simple values by symbol token:
    */
-  it('should be able to inject objects by token', () => {
+  it('should be possible to configure the injector during construction time to inject objects by token', () => {
     const injectTokens = {
       baseUrl: TypeInjector.createToken<string>('ServiceBaseUrl'),
     }
@@ -79,13 +79,34 @@ describe('type injector basics', () => {
     }
 
     const givenBaseUrl = 'http://given-base.url' as const;
-    const injector = TypeInjector.create()
-      .provideValue(injectTokens.baseUrl, givenBaseUrl)
-      .build()
-    ;
+    const injectorFactory = TypeInjector.create();
+    injectorFactory.provideValue(injectTokens.baseUrl, givenBaseUrl)
+    const injector = injectorFactory.build();
 
     const configurableService = injector.get(ConfigurableService);
     expect(configurableService.baseUrl).to.equal(givenBaseUrl);
+  });
+
+  it('should not be possible to continue configuration after build', () => {
+    const injectorFactory = TypeInjector.create();
+    injectorFactory.build();
+    try {
+      injectorFactory.provideValue(Logger, new Logger());
+      expect.fail('no error thrown');
+    } catch (e) {
+      expect((e as { message: string}).message).to.include('no further config')
+    }
+  });
+
+  it('should not be possible to build more than one injector from one configuration', () => {
+    const injectorFactory = TypeInjector.create();
+    injectorFactory.build();
+    try {
+      injectorFactory.build();
+      expect.fail('no error thrown');
+    } catch (e) {
+      expect((e as { message: string}).message).to.include('already built')
+    }
   });
 
   /**

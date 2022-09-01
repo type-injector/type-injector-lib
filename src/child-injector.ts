@@ -14,12 +14,14 @@ export class ChildInjector extends TypeInjectorImpl {
             )
           }
           build() {
-            return new ChildInjector(
+            const childInjector = new ChildInjector(
               ident as symbol & { description: string },
               parent as TypeInjectorImpl,
               this._factories,
               this._instances,
             );
+            this._closeFactory();
+            return childInjector;
           }
         }
       }
