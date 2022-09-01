@@ -1,7 +1,7 @@
 import { Logger } from './logger';
 import { ConstructorWithoutArguments, InjectableClass, InjectFactory, InjectToken } from './type-injector.model';
 
-export class TypeInjectorFactory {
+export class TypeInjectorBuilder {
   protected _instances = new Map<InjectToken<any>, any>();
   protected _factories = new Map<InjectToken<any>, InjectFactory<any>>();
 
@@ -16,7 +16,7 @@ export class TypeInjectorFactory {
    * @param value that will get returned for the token
    * @returns the Injector itself to allow chaining provides
    */
-  provideValue<T>(token: InjectToken<T>, value: T): TypeInjectorFactory {
+  provideValue<T>(token: InjectToken<T>, value: T): TypeInjectorBuilder {
     this._instances.set(token, value);
     return this;
   }
@@ -30,7 +30,7 @@ export class TypeInjectorFactory {
    * @param factory that creates something that matches the type of the token
    * @returns the Injector itself to allow chaining provides
    */
-   provideFactory<T>(token: InjectToken<T>, factory: InjectFactory<T>): TypeInjectorFactory {
+   provideFactory<T>(token: InjectToken<T>, factory: InjectFactory<T>): TypeInjectorBuilder {
     this._factories.set(token, factory);
     return this;
   }
@@ -46,7 +46,7 @@ export class TypeInjectorFactory {
    * @param impl to instanciate as soon as it's requested the first time
    * @returns the Injector itself to allow chaining provides
    */
-  provideImplementation<T>(token: InjectToken<T>, impl: ConstructorWithoutArguments<T> | InjectableClass<T>): TypeInjectorFactory {
+  provideImplementation<T>(token: InjectToken<T>, impl: ConstructorWithoutArguments<T> | InjectableClass<T>): TypeInjectorBuilder {
     const label = `provideImpl: ${impl.name}`;
     if (hasInjectConfig(impl)) {
       return this.provideFactory(token, {
@@ -110,12 +110,12 @@ export namespace TypeInjector {
     return Symbol.for(`TypeInjectorToken: ${typeof type === 'string' ? type : type.name}`) as symbol & { description: string };
   }
 
-  export function create(): TypeInjectorFactory {
-    return new TypeInjectorFactory();
+  export function create(): TypeInjectorBuilder {
+    return new TypeInjectorBuilder();
   }
 
   export function build(): TypeInjector {
-    return new TypeInjectorFactory().build();
+    return new TypeInjectorBuilder().build();
   }
 }
 

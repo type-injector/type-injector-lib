@@ -61,7 +61,7 @@ describe('scopes', () => {
         logger: TypeInjector.createToken<Logger>('logger'),
         logFn: TypeInjector.createToken<(msg: string) => void>('log fn'),
       };
-      const injectorFactory = TypeInjector.create();
+      const injectorBuilder = TypeInjector.create();
 
       let lastLoggedInfo: string | false = false;
       class MockedLogger extends Logger {
@@ -72,16 +72,16 @@ describe('scopes', () => {
 
       // WHEN:
       // 1. provide a function that is using the logger
-      injectorFactory.provideFactory(injectToken.logFn, {
+      injectorBuilder.provideFactory(injectToken.logFn, {
         deps: [injectToken.logger],
         create: (logger: Logger) => (msg: string) => logger.info?.(msg),
       });
 
       // 2. change the used logger
-      injectorFactory.provideImplementation(injectToken.logger, MockedLogger);
+      injectorBuilder.provideImplementation(injectToken.logger, MockedLogger);
 
       // 3. seal the injector
-      const injector = injectorFactory.build();
+      const injector = injectorBuilder.build();
 
       // 3. use the injector to create the logFn
       injector.get(injectToken.logFn)('my message');
@@ -524,12 +524,12 @@ describe('scopes', () => {
 
   it('should not be possible to build multiple child injectors with one factory', () => {
     const topLevelInjector = TypeInjector.build();
-    const childInjectorFactory = ChildInjector.withIdent(Symbol.for('child scope')).from(topLevelInjector);
-    const firstChildInjector = childInjectorFactory.build();
+    const childInjectorBuilder = ChildInjector.withIdent(Symbol.for('child scope')).from(topLevelInjector);
+    const firstChildInjector = childInjectorBuilder.build();
     expect(firstChildInjector).to.exist;
 
     try {
-      childInjectorFactory.build();
+      childInjectorBuilder.build();
       expect.fail('no error thrown');
     } catch (e) {
       expect((e as { message: string}).message).to.include('already built');

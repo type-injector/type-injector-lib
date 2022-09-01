@@ -79,19 +79,19 @@ describe('type injector basics', () => {
     }
 
     const givenBaseUrl = 'http://given-base.url' as const;
-    const injectorFactory = TypeInjector.create();
-    injectorFactory.provideValue(injectTokens.baseUrl, givenBaseUrl)
-    const injector = injectorFactory.build();
+    const injectorBuilder = TypeInjector.create();
+    injectorBuilder.provideValue(injectTokens.baseUrl, givenBaseUrl)
+    const injector = injectorBuilder.build();
 
     const configurableService = injector.get(ConfigurableService);
     expect(configurableService.baseUrl).to.equal(givenBaseUrl);
   });
 
   it('should not be possible to continue configuration after build', () => {
-    const injectorFactory = TypeInjector.create();
-    injectorFactory.build();
+    const injectorBuilder = TypeInjector.create();
+    injectorBuilder.build();
     try {
-      injectorFactory.provideValue(Logger, new Logger());
+      injectorBuilder.provideValue(Logger, new Logger());
       expect.fail('no error thrown');
     } catch (e) {
       expect((e as { message: string}).message).to.include('no further config')
@@ -99,10 +99,10 @@ describe('type injector basics', () => {
   });
 
   it('should not be possible to build more than one injector from one configuration', () => {
-    const injectorFactory = TypeInjector.create();
-    injectorFactory.build();
+    const injectorBuilder = TypeInjector.create();
+    injectorBuilder.build();
     try {
-      injectorFactory.build();
+      injectorBuilder.build();
       expect.fail('no error thrown');
     } catch (e) {
       expect((e as { message: string}).message).to.include('already built')

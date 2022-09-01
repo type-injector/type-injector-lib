@@ -1,13 +1,13 @@
 import { InjectFactory, InjectToken } from './type-injector.model';
-import { TypeInjector, TypeInjectorFactory, TypeInjectorImpl } from './type-injector';
+import { TypeInjector, TypeInjectorBuilder, TypeInjectorImpl } from './type-injector';
 import { Logger } from './logger';
 
 export class ChildInjector extends TypeInjectorImpl {
   static withIdent(ident: symbol) {
     return {
-      from(parent: TypeInjector): TypeInjectorFactory {
-        return new class extends TypeInjectorFactory {
-          provideFactory<T>(token: InjectToken<T>, factory: InjectFactory<T>): TypeInjectorFactory {
+      from(parent: TypeInjector): TypeInjectorBuilder {
+        return new class extends TypeInjectorBuilder {
+          provideFactory<T>(token: InjectToken<T>, factory: InjectFactory<T>): TypeInjectorBuilder {
             return super.provideFactory(
               token,
               { ...factory, scope: ident },
