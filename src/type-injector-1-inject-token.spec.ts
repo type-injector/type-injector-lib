@@ -8,7 +8,7 @@ describe('inject tokens', () => {
       prop = simpleClassPropValue;
     }
 
-    const injector = new TypeInjector();
+    const injector = TypeInjector.build();
     const instance = injector.get(SimpleClass);
 
     expect(instance.prop).to.equal(simpleClassPropValue);
@@ -30,7 +30,7 @@ describe('inject tokens', () => {
       }
     }
 
-    const injector = new TypeInjector();
+    const injector = TypeInjector.build();
     const instance = injector.get(ComposedClassWithConfiguration);
 
     expect(instance.simpleClass.prop).to.equal(givenSimpleClassPropValue);
@@ -50,11 +50,12 @@ describe('inject tokens', () => {
     }
     const thirdPartyLibraryService = TypeInjector.createToken(ThirdPartyLibraryService)
 
-    const injector = new TypeInjector()
+    const injector = TypeInjector.create()
       .provideFactory(thirdPartyLibraryService, {
         deps: [SimpleClass],
         create: (simpleClass) => new ThirdPartyLibraryService(simpleClass),
       })
+      .build()
     ;
     const instance = injector.get(thirdPartyLibraryService);
 
@@ -66,8 +67,9 @@ describe('inject tokens', () => {
       const givenBooleanValue = false;
       const tokenForBoolean = TypeInjector.createToken<boolean>('any unique string');
 
-      const injector = new TypeInjector()
+      const injector = TypeInjector.create()
         .provideValue(tokenForBoolean, givenBooleanValue)
+        .build()
       ;
       const result = injector.get(tokenForBoolean);
 
@@ -79,8 +81,9 @@ describe('inject tokens', () => {
       const providedFunction = () => expectedResult;
       const tokenForFunction = TypeInjector.createToken<() => string>('any unique string');
 
-      const injector = new TypeInjector()
+      const injector = TypeInjector.create()
         .provideValue(tokenForFunction, providedFunction)
+        .build()
       ;
       const fn = injector.get(tokenForFunction);
       expectedResult = 'current value';
@@ -93,8 +96,9 @@ describe('inject tokens', () => {
       const providedObject = { prop: 'initial value' };
       const tokenForObject = TypeInjector.createToken<{ prop: string }>('any unique string');
 
-      const injector = new TypeInjector()
+      const injector = TypeInjector.create()
         .provideValue(tokenForObject, providedObject)
+        .build()
       ;
       const instance = injector.get(tokenForObject);
 
@@ -104,7 +108,7 @@ describe('inject tokens', () => {
 
   it('will throw an error for tokens that are not provided (yet)', () => {
     const unknownToken = TypeInjector.createToken('unknown');
-    const injector = new TypeInjector();
+    const injector = TypeInjector.build();
 
     try {
       injector.get(unknownToken);

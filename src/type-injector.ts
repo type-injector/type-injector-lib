@@ -1,21 +1,9 @@
 import { Logger } from './logger';
 import { ConstructorWithoutArguments, InjectableClass, InjectFactory, InjectToken } from './type-injector.model';
 
-export class TypeInjector {
-  /**
-   * Create a typed inject token for anything.
-   *
-   * This helper binds type information to a symbol so you can use that
-   * symbol to inject a typed value.
-   * Because the TypeInjector has no information how to create this symbol,
-   * it has to be provided before it gets injected the first time.
-   *
-   * @param type can be an abstract class or a simple string
-   * @returns a token that can be used to first provide then inject anything
-   */
-  static createToken<T>(type: (T & (abstract new (...args: any[]) => any) & { name: string }) | string): InjectToken<T extends abstract new (...args: any[]) => infer U ? U : T> {
-    return Symbol.for(`TypeInjectorToken: ${typeof type === 'string' ? type : type.name}`) as symbol & { description: string };
-  }
+export class TypeInjectorFactory {
+  protected _instances = new Map<InjectToken<any>, any>();
+  protected _factories = new Map<InjectToken<any>, InjectFactory<any>>();
 
   /**
    * Provide an existing value for a given token.
@@ -28,7 +16,7 @@ export class TypeInjector {
    * @param value that will get returned for the token
    * @returns the Injector itself to allow chaining provides
    */
-  provideValue<T>(token: InjectToken<T>, value: T): TypeInjector {
+  provideValue<T>(token: InjectToken<T>, value: T): TypeInjectorFactory {
     this._instances.set(token, value);
     return this;
   }
@@ -42,7 +30,7 @@ export class TypeInjector {
    * @param factory that creates something that matches the type of the token
    * @returns the Injector itself to allow chaining provides
    */
-  provideFactory<T>(token: InjectToken<T>, factory: InjectFactory<T>): TypeInjector {
+   provideFactory<T>(token: InjectToken<T>, factory: InjectFactory<T>): TypeInjectorFactory {
     this._factories.set(token, factory);
     return this;
   }
@@ -58,7 +46,7 @@ export class TypeInjector {
    * @param impl to instanciate as soon as it's requested the first time
    * @returns the Injector itself to allow chaining provides
    */
-  provideImplementation<T>(token: InjectToken<T>, impl: ConstructorWithoutArguments<T> | InjectableClass<T>) {
+  provideImplementation<T>(token: InjectToken<T>, impl: ConstructorWithoutArguments<T> | InjectableClass<T>): TypeInjectorFactory {
     const label = `provideImpl: ${impl.name}`;
     if (hasInjectConfig(impl)) {
       return this.provideFactory(token, {
@@ -71,6 +59,53 @@ export class TypeInjector {
     }
   }
 
+  /**
+   * Finish configuration of the TypeInjector
+   */
+  build(): TypeInjector {
+    return new TypeInjectorImpl(this._factories, this._instances);
+  }
+}
+
+export interface TypeInjector {
+  /**
+   * Get something from the cdi.
+   *
+   * Might create a new instance or return an existing one.
+   *
+   * @param token
+   * @returns
+   */
+  get<T>(token: InjectToken<T>): T;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-namespace
+export namespace TypeInjector {
+   /**
+   * Create a typed inject token for anything.
+   *
+   * This helper binds type information to a symbol so you can use that
+   * symbol to inject a typed value.
+   * Because the TypeInjector has no information how to create this symbol,
+   * it has to be provided before it gets injected the first time.
+   *
+   * @param type can be an abstract class or a simple string
+   * @returns a token that can be used to first provide then inject anything
+   */
+  export function createToken<T>(type: (T & (abstract new (...args: any[]) => any) & { name: string }) | string): InjectToken<T extends abstract new (...args: any[]) => infer U ? U : T> {
+    return Symbol.for(`TypeInjectorToken: ${typeof type === 'string' ? type : type.name}`) as symbol & { description: string };
+  }
+
+  export function create(): TypeInjectorFactory {
+    return new TypeInjectorFactory();
+  }
+
+  export function build(): TypeInjector {
+    return new TypeInjectorFactory().build();
+  }
+}
+
+export class TypeInjectorImpl implements TypeInjector {
   /**
    * Get something from the cdi.
    *
@@ -86,8 +121,11 @@ export class TypeInjector {
     ;
   }
 
-  protected _factories = new Map<InjectToken<any>, InjectFactory<any>>();
-  protected _instances = new Map<InjectToken<any>, any>();
+  constructor(
+    protected _factories = new Map<InjectToken<any>, InjectFactory<any>>(),
+    protected _instances = new Map<InjectToken<any>, any>(),
+  ) {}
+
   private _instancesInCreation = new Map<InjectToken<unknown>, {
     factory: InjectFactory<unknown>,
   }>();

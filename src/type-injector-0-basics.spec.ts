@@ -3,7 +3,7 @@ import { InjectConfig, Logger, TypeInjector } from './index';
 
 describe('type injector basics', () => {
   it('should be able to instantiate an injector', () => {
-    const injector = new TypeInjector();
+    const injector = TypeInjector.build();
     expect(injector).to.exist;
   });
 
@@ -15,7 +15,7 @@ describe('type injector basics', () => {
   }
 
   it('should be able to inject a type without further configuration', () => {
-    const injector = new TypeInjector();
+    const injector = TypeInjector.build();
     const baseService = injector.get(BaseService);
     expect(baseService.isBaseService).to.equal(true);
   });
@@ -34,7 +34,7 @@ describe('type injector basics', () => {
   }
 
   it('should show compile error for classes that do not have an empty constructor nor an inject config', () => {
-    const injector = new TypeInjector();
+    const injector = TypeInjector.build();
 
     // @ts-expect-error shown by api
     injector.get(NotInjectable);
@@ -51,7 +51,7 @@ describe('type injector basics', () => {
   }
 
   it('should be able to inject types with an inject config', () => {
-    const injector = new TypeInjector();
+    const injector = TypeInjector.build();
 
     const composedService = injector.get(ComposedService);
     expect(composedService.baseService.isBaseService).to.equal(true);
@@ -79,8 +79,9 @@ describe('type injector basics', () => {
     }
 
     const givenBaseUrl = 'http://given-base.url' as const;
-    const injector = new TypeInjector()
+    const injector = TypeInjector.create()
       .provideValue(injectTokens.baseUrl, givenBaseUrl)
+      .build()
     ;
 
     const configurableService = injector.get(ConfigurableService);
@@ -111,11 +112,12 @@ describe('type injector basics', () => {
     }
 
     const loggerCalls = [] as Parameters<Logger['error']>[];
-    const injector = new TypeInjector()
+    const injector = TypeInjector.create()
       .provideValue(Logger, { error: (...args) => {
         loggerCalls.push(args);
       } } as Logger)
       .provideImplementation(serviceC, ServiceC)
+      .build()
     ;
     try {
       injector.get(ServiceA);
