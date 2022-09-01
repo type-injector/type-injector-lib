@@ -48,7 +48,7 @@ describe('scopes', () => {
         readonly isBaseService = true;
       }
 
-      const injector = new TypeInjector();
+      const injector = TypeInjector.build();
       const base1 = injector.get(BaseService);
       const base2 = injector.get(BaseService);
 
@@ -61,7 +61,7 @@ describe('scopes', () => {
         logger: TypeInjector.createToken<Logger>('logger'),
         logFn: TypeInjector.createToken<(msg: string) => void>('log fn'),
       };
-      const injector = new TypeInjector();
+      const injectorBuilder = TypeInjector.construct();
 
       let lastLoggedInfo: string | false = false;
       class MockedLogger extends Logger {
@@ -72,13 +72,16 @@ describe('scopes', () => {
 
       // WHEN:
       // 1. provide a function that is using the logger
-      injector.provideFactory(injectToken.logFn, {
+      injectorBuilder.provideFactory(injectToken.logFn, {
         deps: [injectToken.logger],
         create: (logger: Logger) => (msg: string) => logger.info?.(msg),
       });
 
       // 2. change the used logger
-      injector.provideImplementation(injectToken.logger, MockedLogger);
+      injectorBuilder.provideImplementation(injectToken.logger, MockedLogger);
+
+      // 3. seal the injector
+      const injector = injectorBuilder.build();
 
       // 3. use the injector to create the logFn
       injector.get(injectToken.logFn)('my message');
@@ -101,15 +104,17 @@ describe('scopes', () => {
       const authToken = TypeInjector.createToken<string>('auth token');
       const baseUrl = TypeInjector.createToken<string>('base url');
 
-      const parentInjector = new TypeInjector()
+      const parentInjector = TypeInjector.construct()
         .provideFactory(baseUrl, {
           deps: [],
           create: () => givenBaseUrl,
         })
+        .build()
       ;
       const authorizedScope = Symbol.for('authorized injection scope');
       const authorizedInjector = ChildInjector.withIdent(authorizedScope).from(parentInjector)
         .provideValue(authToken, givenAuthToken)
+        .build()
       ;
 
       class ServiceA {
@@ -154,7 +159,7 @@ describe('scopes', () => {
         isSpecial = false;
       }
       // The topLevelInjector has no special configuration:
-      const topLevelInjector = new TypeInjector();
+      const topLevelInjector = TypeInjector.build();
 
       // There's a SpecialSimpleService that is special:
       class SpecialSimpleService extends SimpleService {
@@ -163,6 +168,7 @@ describe('scopes', () => {
       // And there is a child injector that overrides the SimpleService implementation with the SpecialSimpleService implementation
       const childInjector = ChildInjector.withIdent(Symbol.for('child injector')).from(topLevelInjector)
         .provideImplementation(SimpleService, SpecialSimpleService)
+        .build()
       ;
 
       // WHEN:
@@ -194,7 +200,7 @@ describe('scopes', () => {
         ) {}
       }
       // The topLevelInjector has no special configuration:
-      const topLevelInjector = new TypeInjector()
+      const topLevelInjector = TypeInjector.build()
 
       // There's a SpecialLogger implementation:
       class SpecialLogger extends Logger {
@@ -203,6 +209,7 @@ describe('scopes', () => {
       // And there is a child injector that overrides the Logger implementation with the SpecialLogger implementation
       const childInjector = ChildInjector.withIdent(Symbol.for('child injector')).from(topLevelInjector)
         .provideImplementation(Logger, SpecialLogger)
+        .build()
       ;
 
       // WHEN:
@@ -235,9 +242,9 @@ describe('scopes', () => {
         ) {}
       }
       // The topLevelInjector has no special configuration:
-      const topLevelInjector = new TypeInjector();
+      const topLevelInjector = TypeInjector.build();
       // The childInjector has no special configuration either:
-      const childInjector = ChildInjector.withIdent(Symbol.for('child injector')).from(topLevelInjector);
+      const childInjector = ChildInjector.withIdent(Symbol.for('child injector')).from(topLevelInjector).build();
 
       // WHEN:
       // 1. Requesting an instance from child scope.
@@ -256,7 +263,7 @@ describe('scopes', () => {
     it('should skip intermediate layers', () => {
       // GIVEN:
       class SimpleService {}
-      const topLevelInjector = new TypeInjector();
+      const topLevelInjector = TypeInjector.build();
 
       /**
        topLevelInjector
@@ -264,10 +271,10 @@ describe('scopes', () => {
         │   └── verySpecialInjector
         └── branchBInjector
       */
-      const midLevelInjector = ChildInjector.withIdent(Symbol.for('mid level')).from(topLevelInjector);
-      const verySpecialInjector = ChildInjector.withIdent(Symbol.for('very special')).from(midLevelInjector);
+      const midLevelInjector = ChildInjector.withIdent(Symbol.for('mid level')).from(topLevelInjector).build();
+      const verySpecialInjector = ChildInjector.withIdent(Symbol.for('very special')).from(midLevelInjector).build();
 
-      const branchBInjector = ChildInjector.withIdent(Symbol.for('branch b')).from(topLevelInjector);
+      const branchBInjector = ChildInjector.withIdent(Symbol.for('branch b')).from(topLevelInjector).build();
 
       // WHEN:
       const instanceFromVerySpecialInjector = verySpecialInjector.get(SimpleService);
@@ -288,14 +295,15 @@ describe('scopes', () => {
         │   └── verySpecialInjector
         └── branchBInjector
       */
-      const topLevelInjector = new TypeInjector();
+      const topLevelInjector = TypeInjector.build();
 
       const midLevelInjector = ChildInjector.withIdent(Symbol.for('mid level')).from(topLevelInjector)
         .provideImplementation(SimpleService, SpecialService)
+        .build()
       ;
-      const verySpecialInjector = ChildInjector.withIdent(Symbol.for('very special')).from(midLevelInjector);
+      const verySpecialInjector = ChildInjector.withIdent(Symbol.for('very special')).from(midLevelInjector).build();
 
-      const branchBInjector = ChildInjector.withIdent(Symbol.for('branch b')).from(topLevelInjector);
+      const branchBInjector = ChildInjector.withIdent(Symbol.for('branch b')).from(topLevelInjector).build();
 
       // WHEN:
       const instanceFromBranchBInjector = branchBInjector.get(SimpleService);
@@ -321,14 +329,16 @@ describe('scopes', () => {
         ├── branchAInjector (SimpleService -> SpecialService)
         └── branchBInjector (SimpleService -> SpecialService)
       */
-      const topLevelInjector = new TypeInjector();
+      const topLevelInjector = TypeInjector.build();
 
       const branchAInjector = ChildInjector.withIdent(Symbol.for('branch a')).from(topLevelInjector)
         .provideImplementation(SimpleService, SpecialService)
+        .build()
       ;
 
       const branchBInjector = ChildInjector.withIdent(Symbol.for('branch b')).from(topLevelInjector)
         .provideImplementation(SimpleService, SpecialService)
+        .build()
       ;
 
       // WHEN:
@@ -363,11 +373,12 @@ describe('scopes', () => {
           public extLogger: ExtendedLogger,
         ) {}
       }
-      const topLevelInjector = new TypeInjector();
+      const topLevelInjector = TypeInjector.build();
 
       class SpecialLogger extends Logger {}
       const childInjector = ChildInjector.withIdent(Symbol.for('child')).from(topLevelInjector)
         .provideImplementation(Logger, SpecialLogger)
+        .build()
       ;
 
       // WHEN
@@ -384,11 +395,12 @@ describe('scopes', () => {
     it('should lookup parent factory recursively', () => {
       const givenContent = { desc: 'given content' };
       const contentToken = TypeInjector.createToken<typeof givenContent>('content token');
-      const topLevelInjector = new TypeInjector()
+      const topLevelInjector = TypeInjector.construct()
         .provideFactory(contentToken, { deps: [], create: () => givenContent})
+        .build()
       ;
-      const midLevelInjector = ChildInjector.withIdent(Symbol.for('mid level')).from(topLevelInjector);
-      const verySpecialInjector = ChildInjector.withIdent(Symbol.for('very special')).from(midLevelInjector);
+      const midLevelInjector = ChildInjector.withIdent(Symbol.for('mid level')).from(topLevelInjector).build();
+      const verySpecialInjector = ChildInjector.withIdent(Symbol.for('very special')).from(midLevelInjector).build();
 
       const content = verySpecialInjector.get(contentToken);
 
@@ -407,9 +419,10 @@ describe('scopes', () => {
       class ServiceC {}
 
       const loggerCalls = [] as Parameters<Logger['error']>[];
-      const topLevelInjector = new TypeInjector()
+      const topLevelInjector = TypeInjector.construct()
         .provideValue(Logger, { error: (...args) => { loggerCalls.push(args) } } as Logger)
         .provideImplementation(injectToken.serviceC, ServiceC)
+        .build()
       ;
 
       class SpecialServiceC extends ServiceC {
@@ -422,6 +435,7 @@ describe('scopes', () => {
       }
       const midLevelInjector = ChildInjector.withIdent(Symbol.for('mid level')).from(topLevelInjector)
         .provideImplementation(injectToken.serviceC, SpecialServiceC)
+        .build()
       ;
 
       class SpecialServiceB extends ServiceB {
@@ -434,6 +448,7 @@ describe('scopes', () => {
       }
       const verySpecialInjector = ChildInjector.withIdent(Symbol.for('very special')).from(midLevelInjector)
         .provideImplementation(ServiceB, SpecialServiceB)
+        .build()
       ;
 
       expect(() => topLevelInjector.get(ServiceA)).not.to.throw();
@@ -488,14 +503,16 @@ describe('scopes', () => {
         │   └── verySpecialInjector
         └── branchBInjector
       */
-      const topLevelInjector = new TypeInjector()
+      const topLevelInjector = TypeInjector.construct()
         .provideImplementation(Logger, VerboseLogger)
+        .build()
       ;
 
       const midLevelInjector = ChildInjector.withIdent(Symbol.for('mid level')).from(topLevelInjector)
         .provideValue(injectToken.baseUrl, givenBaseUrl)
+        .build()
       ;
-      const verySpecialInjector = ChildInjector.withIdent(Symbol.for('very special')).from(midLevelInjector);
+      const verySpecialInjector = ChildInjector.withIdent(Symbol.for('very special')).from(midLevelInjector).build();
 
       const simpleService = verySpecialInjector.get(SimpleService);
       expect(simpleService.baseUrl).to.equal(givenBaseUrl);
@@ -503,5 +520,19 @@ describe('scopes', () => {
         'dependency check result: \'SimpleService\' depends on \'TypeInjectorToken: base url\' provided in \'mid level\''
       );
     });
+  });
+
+  it('should not be possible to build multiple child injectors with one factory', () => {
+    const topLevelInjector = TypeInjector.build();
+    const childInjectorBuilder = ChildInjector.withIdent(Symbol.for('child scope')).from(topLevelInjector);
+    const firstChildInjector = childInjectorBuilder.build();
+    expect(firstChildInjector).to.exist;
+
+    try {
+      childInjectorBuilder.build();
+      expect.fail('no error thrown');
+    } catch (e) {
+      expect((e as { message: string}).message).to.include('already built');
+    }
   });
 });

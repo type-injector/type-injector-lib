@@ -1,32 +1,43 @@
 import { InjectFactory, InjectToken } from './type-injector.model';
-import { TypeInjector } from './type-injector';
+import { TypeInjector, TypeInjectorBuilder, TypeInjectorImpl } from './type-injector';
 import { Logger } from './logger';
 
-export class ChildInjector extends TypeInjector {
+export class ChildInjector extends TypeInjectorImpl {
   static withIdent(ident: symbol) {
     return {
-      from(parent: TypeInjector): TypeInjector {
-        return new ChildInjector(ident as symbol & { description: string }, parent);
+      from(parent: TypeInjector): TypeInjectorBuilder {
+        return new class extends TypeInjectorBuilder {
+          provideFactory<T>(token: InjectToken<T>, factory: InjectFactory<T>): TypeInjectorBuilder {
+            return super.provideFactory(
+              token,
+              { ...factory, scope: ident },
+            )
+          }
+          build() {
+            const childInjector = new ChildInjector(
+              ident as symbol & { description: string },
+              parent as TypeInjectorImpl,
+              this._factories,
+              this._instances,
+            );
+            this._closeBuilder();
+            return childInjector;
+          }
+        }
       }
     };
   }
 
-  private _ownInstances = [] as any[];
+  private _ownInstances: any[];
 
   private constructor(
     public readonly ident: symbol & { description: string },
-    private _parent: TypeInjector,
+    private _parent: TypeInjectorImpl,
+    _factories: Map<InjectToken<any>, InjectFactory<any>>,
+    _instances: Map<InjectToken<any>, any>,
   ) {
-    super();
-  }
-
-  provideValue<T>(token: InjectToken<T>, value: T): TypeInjector {
-    this._ownInstances.push(value);
-    return super.provideValue(token, value);
-  }
-
-  provideFactory<T>(token: InjectToken<T>, factory: InjectFactory<T>): TypeInjector {
-    return super.provideFactory(token, {...factory, scope: this.ident });
+    super(_factories, _instances);
+    this._ownInstances = Array.from(_instances.values());
   }
 
   getOptFactory<T>(token: InjectToken<T>): InjectFactory<T> {

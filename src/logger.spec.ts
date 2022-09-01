@@ -20,7 +20,7 @@ describe('logger', () => {
      * In its default configuration, the logger will only log errors to the console (stderr)
      */
     it('should log errors to console', () => {
-      const injector = new TypeInjector();
+      const injector = TypeInjector.build();
       const logger = injector.get(Logger);
 
       logger.error(givenErrorMessage);
@@ -29,7 +29,7 @@ describe('logger', () => {
     });
 
     it('will not log warnings nor info', () => {
-      const injector = new TypeInjector();
+      const injector = TypeInjector.build();
       const logger = injector.get(Logger);
 
       logger.warn?.(givenErrorMessage);
@@ -47,9 +47,10 @@ describe('logger', () => {
         info = (message: string, ..._details: any[]) => infoMsgs.push(message);
       }
       const injectToken = { baseUrl: TypeInjector.createToken('base url') };
-      const injector = new TypeInjector()
+      const injector = TypeInjector.construct()
         .provideImplementation(Logger, VerboseLogger)
         .provideFactory(injectToken.baseUrl, { deps: [], create: () => 'https://base.url/' })
+        .build()
       ;
 
       injector.get(injectToken.baseUrl);
@@ -82,8 +83,9 @@ describe('logger', () => {
       constructor( public logger: Logger ) {}
     }
 
-    const injector = new TypeInjector()
+    const injector = TypeInjector.construct()
       .provideImplementation(Logger, BuggyLogger)
+      .build()
     ;
 
     const origError = console.error;

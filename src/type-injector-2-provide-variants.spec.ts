@@ -6,8 +6,9 @@ describe('provide variants', () => {
     it('should be possible to provide a value', () => {
       const injectToken = TypeInjector.createToken<{ name: string}>('TestInjectToken');
       const givenValue = { name: 'givenValue' };
-      const injector = new TypeInjector()
+      const injector = TypeInjector.construct()
         .provideValue(injectToken, givenValue)
+        .build()
       ;
       expect(injector.get(injectToken) === givenValue).to.be.true;
     });
@@ -17,8 +18,9 @@ describe('provide variants', () => {
     }
 
     it('should always prefer provided values', () => {
-      const injector = new TypeInjector()
+      const injector = TypeInjector.construct()
         .provideValue(BaseService, { isProvided: true })
+        .build()
       ;
       expect(injector.get(BaseService).isProvided).to.be.true;
     });
@@ -30,7 +32,7 @@ describe('provide variants', () => {
       class FactoryResult {
         instanceCount = factoryCalls;
       }
-      const injector = new TypeInjector()
+      const injector = TypeInjector.construct()
         .provideFactory(FactoryResult, {
           deps: [],
           create: () => {
@@ -38,6 +40,7 @@ describe('provide variants', () => {
             return new FactoryResult();
           },
         })
+        .build()
       ;
       expect(factoryCalls).to.equal(0);
 
@@ -62,8 +65,10 @@ describe('provide variants', () => {
         readonly typeName = 'SpecialImpl';
       }
 
-      const injector = new TypeInjector();
-      injector.provideImplementation(myServiceInjectToken, MyServiceImpl);
+      const injector = TypeInjector.construct()
+        .provideImplementation(myServiceInjectToken, MyServiceImpl)
+        .build()
+      ;
       const instance = injector.get(myServiceInjectToken);
 
       expect(instance.typeName).to.equal('SpecialImpl');

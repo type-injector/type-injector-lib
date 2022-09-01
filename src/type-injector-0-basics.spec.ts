@@ -2,8 +2,8 @@ import { expect } from 'chai';
 import { InjectConfig, Logger, TypeInjector } from './index';
 
 describe('type injector basics', () => {
-  it('should be able to instantiate an injector', () => {
-    const injector = new TypeInjector();
+  it('should get instantiated by the builder pattern', () => {
+    const injector = TypeInjector.build();
     expect(injector).to.exist;
   });
 
@@ -15,7 +15,7 @@ describe('type injector basics', () => {
   }
 
   it('should be able to inject a type without further configuration', () => {
-    const injector = new TypeInjector();
+    const injector = TypeInjector.build();
     const baseService = injector.get(BaseService);
     expect(baseService.isBaseService).to.equal(true);
   });
@@ -34,7 +34,7 @@ describe('type injector basics', () => {
   }
 
   it('should show compile error for classes that do not have an empty constructor nor an inject config', () => {
-    const injector = new TypeInjector();
+    const injector = TypeInjector.build();
 
     // @ts-expect-error shown by api
     injector.get(NotInjectable);
@@ -51,7 +51,7 @@ describe('type injector basics', () => {
   }
 
   it('should be able to inject types with an inject config', () => {
-    const injector = new TypeInjector();
+    const injector = TypeInjector.build();
 
     const composedService = injector.get(ComposedService);
     expect(composedService.baseService.isBaseService).to.equal(true);
@@ -60,7 +60,7 @@ describe('type injector basics', () => {
   /**
    * Inject simple values by symbol token:
    */
-  it('should be able to inject objects by token', () => {
+  it('should be possible to configure the injector during construction time to inject objects by token', () => {
     const injectTokens = {
       baseUrl: TypeInjector.createToken<string>('ServiceBaseUrl'),
     }
@@ -79,12 +79,34 @@ describe('type injector basics', () => {
     }
 
     const givenBaseUrl = 'http://given-base.url' as const;
-    const injector = new TypeInjector()
-      .provideValue(injectTokens.baseUrl, givenBaseUrl)
-    ;
+    const injectorBuilder = TypeInjector.construct();
+    injectorBuilder.provideValue(injectTokens.baseUrl, givenBaseUrl)
+    const injector = injectorBuilder.build();
 
     const configurableService = injector.get(ConfigurableService);
     expect(configurableService.baseUrl).to.equal(givenBaseUrl);
+  });
+
+  it('should not be possible to continue configuration after build', () => {
+    const injectorBuilder = TypeInjector.construct();
+    injectorBuilder.build();
+    try {
+      injectorBuilder.provideValue(Logger, new Logger());
+      expect.fail('no error thrown');
+    } catch (e) {
+      expect((e as { message: string}).message).to.include('no further config')
+    }
+  });
+
+  it('should not be possible to build more than one injector from one configuration', () => {
+    const injectorBuilder = TypeInjector.construct();
+    injectorBuilder.build();
+    try {
+      injectorBuilder.build();
+      expect.fail('no error thrown');
+    } catch (e) {
+      expect((e as { message: string}).message).to.include('already built')
+    }
   });
 
   /**
@@ -111,11 +133,12 @@ describe('type injector basics', () => {
     }
 
     const loggerCalls = [] as Parameters<Logger['error']>[];
-    const injector = new TypeInjector()
+    const injector = TypeInjector.construct()
       .provideValue(Logger, { error: (...args) => {
         loggerCalls.push(args);
       } } as Logger)
       .provideImplementation(serviceC, ServiceC)
+      .build()
     ;
     try {
       injector.get(ServiceA);
