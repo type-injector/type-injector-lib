@@ -1,6 +1,5 @@
 import { expect } from 'chai';
-import { Logger } from './logger';
-import { InjectConfig, TypeInjector } from './type-injector';
+import { InjectConfig, Logger, TypeInjector } from './index';
 
 describe('type injector basics', () => {
   it('should be able to instantiate an injector', () => {
@@ -99,19 +98,16 @@ describe('type injector basics', () => {
   it('should show cyclic errors', () => {
     const serviceC = TypeInjector.createToken<ServiceC>('ServiceC');
     class ServiceA {
-      serviceC: ServiceC;
       static injectConfig: InjectConfig = { deps: [serviceC] };
-      constructor(serviceC: ServiceC) { this.serviceC = serviceC }
+      constructor( public serviceC: ServiceC ) {}
     }
     class ServiceB {
-      serviceA: ServiceA;
       static injectConfig: InjectConfig = { deps: [ServiceA] };
-      constructor(serviceA: ServiceA) { this.serviceA = serviceA }
+      constructor( public serviceA: ServiceA ) {}
     }
     class ServiceC {
-      serviceB: ServiceB;
       static injectConfig: InjectConfig = { deps: [ServiceB] };
-      constructor(serviceB: ServiceB) { this.serviceB = serviceB }
+      constructor( public serviceB: ServiceB ) {}
     }
 
     const loggerCalls = [] as Parameters<Logger['error']>[];
@@ -125,10 +121,21 @@ describe('type injector basics', () => {
       injector.get(ServiceA);
       expect.fail('no error thrown');
     } catch (e) {
-      const expectedMessage = 'dependency cycle detected: ServiceA\n'
-      + ' -> TypeInjectorToken: ServiceC\n'
-      + ' -> ServiceB\n'
-      + ' -> ServiceA\n';
+      const expectedMessage = 'dependency cycle detected:\n'
+        + ' -> ServiceA\n'
+        + '      factory: ServiceA.injectConfig\n'
+        + '\n'
+        + ' -> TypeInjectorToken: ServiceC\n'
+        + '      factory: provideImpl: ServiceC\n'
+        + '\n'
+        + ' -> ServiceB\n'
+        + '      factory: ServiceB.injectConfig\n'
+        + '\n'
+        + ' -> ServiceA\n'
+        + '      factory: ServiceA.injectConfig\n'
+        + '\n'
+      ;
+//      console.log('test\n----\n' + loggerCalls[0][0] + '\n-----\n');
       expect(e).to.include({ message: expectedMessage });
       expect(loggerCalls[0][0]).to.equal(expectedMessage);
     }

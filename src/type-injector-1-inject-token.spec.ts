@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { InjectConfig, TypeInjector } from './type-injector';
+import { InjectConfig, TypeInjector } from './index';
 
 describe('inject tokens', () => {
   it('should be possible to use any constructor without arguments as inject token', () => {
@@ -48,14 +48,15 @@ describe('inject tokens', () => {
         this.simpleClass = simpleClass;
       }
     }
-    class ThirdPartyLibraryServiceWithInjectConfig extends ThirdPartyLibraryService {
-      static injectConfig: InjectConfig = {
-        deps: [SimpleClass]
-      }
-    }
+    const thirdPartyLibraryService = TypeInjector.createToken(ThirdPartyLibraryService)
 
-    const injector = new TypeInjector();
-    const instance = injector.get(ThirdPartyLibraryServiceWithInjectConfig);
+    const injector = new TypeInjector()
+      .provideFactory(thirdPartyLibraryService, {
+        deps: [SimpleClass],
+        create: (simpleClass) => new ThirdPartyLibraryService(simpleClass),
+      })
+    ;
+    const instance = injector.get(thirdPartyLibraryService);
 
     expect(instance.simpleClass.prop).to.equal(givenSimpleClassPropValue);
   });

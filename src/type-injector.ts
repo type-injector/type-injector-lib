@@ -1,4 +1,5 @@
 import { Logger } from './logger';
+import { ConstructorWithoutArguments, InjectableClass, InjectFactory, InjectToken } from './type-injector.model';
 
 export class TypeInjector {
   /**
@@ -13,7 +14,7 @@ export class TypeInjector {
    * @returns a token that can be used to first provide then inject anything
    */
   static createToken<T>(type: (T & (abstract new (...args: any[]) => any) & { name: string }) | string): InjectToken<T extends abstract new (...args: any[]) => infer U ? U : T> {
-    return Symbol.for(`TypeInjectorToken: ${typeof type === 'string' ? type : type.name}`);
+    return Symbol.for(`TypeInjectorToken: ${typeof type === 'string' ? type : type.name}`) as symbol & { description: string };
   }
 
   /**
@@ -58,18 +59,16 @@ export class TypeInjector {
    * @returns the Injector itself to allow chaining provides
    */
   provideImplementation<T>(token: InjectToken<T>, impl: ConstructorWithoutArguments<T> | InjectableClass<T>) {
+    const label = `provideImpl: ${impl.name}`;
     if (hasInjectConfig(impl)) {
-      this._factories.set(token, {
-        ...impl.injectConfig,
-        create: (...args: any[]) => new impl(...args),
+      return this.provideFactory(token, {
+        label, create: (...args: any[]) => new impl(...args), ...impl.injectConfig,
       });
     } else {
-      this._factories.set(token, {
-        deps: [],
-        create: () => new impl(),
+      return this.provideFactory(token, {
+        label, deps: [], create: () => new impl(),
       });
     }
-    return this;
   }
 
   /**
@@ -81,117 +80,112 @@ export class TypeInjector {
    * @returns
    */
   get<T>(token: InjectToken<T>): T {
-    return this._get(token, 'startOfCycle');
+    return this._instances.has(token)
+      ? this._instances.get(token) as T
+      : this._create(token)
+    ;
   }
 
-  private _factories = new Map<InjectToken<any>, InjectFactory<any>>();
-  private _instances = new Map<InjectToken<any>, any>();
-  private _instancesInCreation = new Map<InjectToken<any>, any>();
+  protected _factories = new Map<InjectToken<any>, InjectFactory<any>>();
+  protected _instances = new Map<InjectToken<any>, any>();
+  private _instancesInCreation = new Map<InjectToken<unknown>, {
+    factory: InjectFactory<unknown>,
+  }>();
+  private _initialLogger = new Logger();
+  protected get logger(): Logger {
+    if (this._instancesInCreation.has(Logger)) {
+      return this._initialLogger;
+    }
+    const logger = this.get(Logger);
+    Object.defineProperty(this, 'logger', { value: logger });
+    return logger;
+  }
 
-  private _getFactory<T>(token: InjectToken<T>) {
+  getOptFactory<T>(token: InjectToken<T>): InjectFactory<T> | undefined {
     const providedFactory = this._factories.get(token);
     if (providedFactory) {
-      return providedFactory;
+      return providedFactory as InjectFactory<T>;
     }
 
     if (typeof token === 'function') {
       const config = hasInjectConfig(token) ? token.injectConfig : { deps: [] };
       return {
         ...config,
+        label: `${token.name}.injectConfig`,
         create: (...args: any[]) => new token(...args) as any as T,
       }
     }
   }
 
-  private _create<T>(token: InjectToken<T>, initiator: Initiator): T {
+  private _getFactory<T>(token: InjectToken<T>): InjectFactory<T> {
+    const factory = this.getOptFactory(token);
+    if (!factory) {
+      throw new Error('could not find a factory to create token: ' + this._nameOf(token));
+    }
+    return factory;
+  }
+
+  protected _markAsInCreation(token: InjectToken<unknown>, factory: InjectFactory<unknown>, scopeIdent?: symbol & { description: string }) {
     if (this._instancesInCreation.has(token)) {
-      throw new Error(this._createCyclicErrorMessage(token));
+      const errorMessage = this._createCyclicErrorMessage(token, factory);
+      this.logger.error(errorMessage);
+      throw new Error(errorMessage);
     }
-    this._instancesInCreation.set(token, initiator);
+    this._instancesInCreation.set(token, { factory });
+    this.logger.info?.((scopeIdent ? `'${scopeIdent.description}'` : 'top level injector')
+      + ` starts creation of ${this._createDependencyEntryLog(token, factory)}`
+    );
+  }
 
+  protected _finishedCreation(token: InjectToken<unknown>) {
+    this._instancesInCreation.delete(token);
+    this.logger.info?.(`finished creation of ${this._nameOf(token)}`)
+  }
+
+  protected _abortedCreation(token: InjectToken<unknown>) {
+    this._instancesInCreation.delete(token);
+    token !== Logger && this.logger.info?.(`aborted creation of ${this._nameOf(token)}`)
+  }
+
+  protected _create<T>(token: InjectToken<T>): T {
     const factory = this._getFactory(token);
-    if (factory) {
-      const args = factory.deps.map((dep) => this._get(dep, token));
-      const created = factory.create(...args) as T;
-      this._instancesInCreation.delete(token);
-      this._instances.set(token, created);
-      return created;
+    this._markAsInCreation(token, factory);
+
+    const args = factory.deps.map((dep) => this.get(dep));
+    const created = factory.create(...args);
+    this._instances.set(token, created);
+
+    this._finishedCreation(token);
+    return created;
+  }
+
+  protected _nameOf = (token: InjectToken<unknown>): string => {
+    switch (typeof token) {
+      case 'symbol':
+        return token.description;
+      case 'function':
+        return token.name;
     }
+  };
 
-    throw new Error('could not find a factory to create token');
+  protected _createDependencyEntryLog(token: InjectToken<unknown>, factory: InjectFactory<unknown>) {
+    const tokenName = this._nameOf(token);
+    const factoryName = factory.label || factory.create.name;
+
+    let text = `\n -> ${tokenName}`;
+    text += `\n      factory: ${factoryName}`;
+    return text;
   }
 
-  private _createCyclicErrorMessage(token: InjectToken<unknown>) {
-    const nameOf = (arg: Initiator): string => {
-      if (!arg) {
-        return 'undefined';
-      }
-      if (arg === startOfCycle) {
-        return nameOf(token);
-      }
-      switch (typeof arg) {
-        case 'symbol':
-          return arg.description || arg.toString() || 'unknown';
-        case 'function':
-          return arg.name;
-      }
-    };
-    const errorMsg = `dependency cycle detected: ${Array.from(this._instancesInCreation.keys())
-      .concat(token)
-      .map((key) => nameOf(key)).join('\n -> ')}\n`;
-    this.get(Logger).error(errorMsg);
-    return errorMsg;
-  }
-
-  private _get<T>(token: InjectToken<T>, initiator: Initiator): T {
-    return this._instances.has(token)
-      ? this._instances.get(token) as T
-      : this._create(token, initiator)
+  private _createCyclicErrorMessage(token: InjectToken<unknown>, factory: InjectFactory<unknown>) {
+    const dependencyPath = Array.from(this._instancesInCreation.entries())
+      .concat([[token, { factory }]])
+      .map(([token, { factory }]) => this._createDependencyEntryLog(token, factory))
+      .join('\n')
     ;
+    return `dependency cycle detected:${dependencyPath}\n\n`;
   }
 }
-
-const startOfCycle = 'startOfCycle' as const;
-
-/**
- * Every class can get an InjectableClass by adding a static injectConfig property.
- *
- * For classes that can get instantiated without constructor arguments it
- * is *not* required to add an injectConfig. An injectConfig is required to
- * tell the TypedInjector to use a constructor with arguments to create a
- * class instance.
- *
- * @see {@link InjectConfig InjectConfig}
- */
-export type InjectableClass<T> = (new (..._args: any[]) => T) & {
-  injectConfig: InjectConfig;
-}
-
-export interface InjectConfig {
-  /**
-   * Inject tokens for all arguments required to create an injectable value.
-   *
-   * - For classes the dependencies have to match the consturctor parameters
-   * - For all other functions (like factories) the tokens have to match the parameters
-   *
-   * In both cases "match" means that the inject tokens return the right types of
-   * all parameters in the same order as they are needed for the function/constructor call.
-   *
-   * The dependencies of an inject token are not created before the inject token
-   * itself gets created.
-   */
-  deps: InjectToken<unknown>[];
-}
-
-export interface InjectFactory<T> extends InjectConfig {
-  create: (...args: any[]) => T,
-}
-
-export type ConstructorWithoutArguments<T> = new () => T;
-
-export type InjectToken<T> = ConstructorWithoutArguments<T> | InjectableClass<T> | symbol;
-
-type Initiator = InjectToken<unknown> | typeof startOfCycle;
 
 function hasInjectConfig<T>(token: unknown): token is InjectableClass<T> {
   return !!(token as Partial<InjectableClass<T>>).injectConfig;

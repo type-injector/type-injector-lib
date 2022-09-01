@@ -77,6 +77,7 @@ expect(result).to.equal(givenBooleanValue);
 * [Inject tokens](./src/type-injector-1-inject-token.spec.ts)
 * [Variants of provide](./src/type-injector-2-provide-variants.spec.ts)
 * [Scopes](./src/type-injector-3-scopes.spec.ts)
+* [Logging](./src/logger.spec.ts)
 
 ## Motivation
 There are plenty of inject libraries out there. For me the best of them is [typed-inject](https://github.com/nicojs/typed-inject) and in their documentation they lists some other awesome injection libraries. It provides compile time dependency checks which is a very strong point esp. for large projects. But as a trade-off you have to configure all indirect dependencies, even simple injection rules - you can't have one without the other.  
