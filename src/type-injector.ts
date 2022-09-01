@@ -13,7 +13,7 @@ export class TypeInjector {
    * @param type can be an abstract class or a simple string
    * @returns a token that can be used to first provide then inject anything
    */
-  static createToken<T>(type: (T & (abstract new (...params: any[]) => any) & { name: string }) | string): InjectToken<T extends abstract new (...args: any[]) => infer U ? U : T> {
+  static createToken<T>(type: (T & (abstract new (...args: any[]) => any) & { name: string }) | string): InjectToken<T extends abstract new (...args: any[]) => infer U ? U : T> {
     return Symbol.for(`TypeInjectorToken: ${typeof type === 'string' ? type : type.name}`) as symbol & { description: string };
   }
 
@@ -112,7 +112,7 @@ export class TypeInjector {
       return {
         ...config,
         label: `${token.name}.injectConfig`,
-        create: (...params: any[]) => new token(...params) as any as T,
+        create: (...args: any[]) => new token(...args) as any as T,
       }
     }
   }
@@ -151,8 +151,8 @@ export class TypeInjector {
     const factory = this._getFactory(token);
     this._markAsInCreation(token, factory);
 
-    const params = factory.deps.map((dep) => this.get(dep));
-    const created = factory.create(...params);
+    const args = factory.deps.map((dep) => this.get(dep));
+    const created = factory.create(...args);
     this._instances.set(token, created);
 
     this._finishedCreation(token);

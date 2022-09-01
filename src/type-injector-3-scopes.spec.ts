@@ -4,27 +4,29 @@ import { ChildInjector, InjectConfig, Logger, TypeInjector } from './index';
 /**
  * Scopes
  *
- * There are many examples where it's useful to create child injectors for different
- * scopes:
+ * There are many examples where it's useful to create a child injector for an encapsulated
+ * context which group values, instances and providers. We will call this "scope".
+ *
+ * Examples for scopes:
  * - creating an injector for a request context
  * - creating an injector for a component context
  * - creating an injector for a session context
  * - creating an injector for an authenticated context
  *
  * Disadvantages:
- * - Scopes increase complexity in resolving factories
+ * - scopes increase complexity in resolving factories
  *   so it takes more time to create new instances.
- * - Scopes increase complexity in debugging and finding errors
- * - Scopes increase the difficulty to predict runtime behavior
+ * - scopes increase complexity in debugging and finding errors
+ * - scopes increase the difficulty to predict runtime behavior
  *
  * Advantages:
- * - Scopes can provide more specific informations like:
+ * - scopes can provide more specific informations like:
  *   * auth tokens
  *   * logged in user id
  *   * request urls / parameters
- * - Scopes can change general behavior
- *   * Debug-Scope --> verbose Logging
- * - Scopes can get clean up so all objects that contain informations
+ * - scopes can change general behavior
+ *   * debug scope --> verbose logging
+ * - scopes can get clean up so all objects that contain informations
  *   of that scopes will get destroyed (e.g. auth/user)
  *
  * Summary:
@@ -32,7 +34,7 @@ import { ChildInjector, InjectConfig, Logger, TypeInjector } from './index';
  * you need. They add much complexity but might have large advantages, too.
  *
  * Remark:
- * 99% of scope implementation is in child-injector.ts. If you do not use
+ * 99% of the scope implementation is in child-injector.ts. If you do not require
  * scopes at all and you use some kind of tree shaking, your tree shaking
  * should be able to exclude this code from your compilation unit.
  */
@@ -88,8 +90,8 @@ describe('scopes', () => {
   });
 
   /**
-   * If you create a scope you will get an child injector which
-   * might provide additional informations
+   * If you create a scope you will get a child injector which
+   * might provide additional information
    */
   describe('child injector', () => {
     it('should be possible to create a child injector', () => {
@@ -120,14 +122,14 @@ describe('scopes', () => {
         ) {}
       }
 
-      // the authorized injector will combine its own information (authToken)
+      // The authorized injector will combine its own information (authToken)
       // with the information of the parent injector (base url)
       const instance = authorizedInjector.get(ServiceA);
       expect(instance.baseUrl).to.equal(givenBaseUrl);
       expect(instance.authToken).to.equal(givenAuthToken);
 
       try {
-        // the parent injector will still not know anything about the auth token
+        // The parent injector will still not know anything about the auth token
         // and it won't hold any objects that need the auth token
         parentInjector.get(ServiceA);
         expect.fail('did not throw');
@@ -138,7 +140,7 @@ describe('scopes', () => {
   });
 
   /**
-   * Choosing the scope to create an instance.
+   * Chosing the scope to create an instance.
    *
    * Constraints:
    * - never create a 2nd instance if there's an instance which can get reused
@@ -182,7 +184,7 @@ describe('scopes', () => {
       expect(instanceFromChildScope.isSpecial).to.be.true;
     });
 
-    it('should create separate instances if there are dependency to instances in its own scope', () => {
+    it('should create separate instances if there is at least one dependency to an instance in its own scope', () => {
       // GIVEN:
       // There's a SimpleService that depends on Logger:
       class SimpleService {
@@ -379,7 +381,7 @@ describe('scopes', () => {
       expect(businessServiceFromChild.extLogger.logger instanceof SpecialLogger).to.be.true;
     });
 
-    it('should lookup parnet factory recursively', () => {
+    it('should lookup parent factory recursively', () => {
       const givenContent = { desc: 'given content' };
       const contentToken = TypeInjector.createToken<typeof givenContent>('content token');
       const topLevelInjector = new TypeInjector()
@@ -394,9 +396,9 @@ describe('scopes', () => {
     });
 
     it('should detect dependency cycles across different scopes', () => {
-      const serviceC = TypeInjector.createToken<ServiceC>('ServiceC');
+      const injectToken = { serviceC: TypeInjector.createToken<ServiceC>('ServiceC') };
       class ServiceA {
-        static injectConfig: InjectConfig = { deps: [serviceC] };
+        static injectConfig: InjectConfig = { deps: [injectToken.serviceC] };
         constructor(
           public serviceC: ServiceC,
         ) {}
@@ -407,7 +409,7 @@ describe('scopes', () => {
       const loggerCalls = [] as Parameters<Logger['error']>[];
       const topLevelInjector = new TypeInjector()
         .provideValue(Logger, { error: (...args) => { loggerCalls.push(args) } } as Logger)
-        .provideImplementation(serviceC, ServiceC)
+        .provideImplementation(injectToken.serviceC, ServiceC)
       ;
 
       class SpecialServiceC extends ServiceC {
@@ -419,7 +421,7 @@ describe('scopes', () => {
         }
       }
       const midLevelInjector = ChildInjector.withIdent(Symbol.for('mid level')).from(topLevelInjector)
-        .provideImplementation(serviceC, SpecialServiceC)
+        .provideImplementation(injectToken.serviceC, SpecialServiceC)
       ;
 
       class SpecialServiceB extends ServiceB {
@@ -464,7 +466,7 @@ describe('scopes', () => {
       }
     });
 
-    it('should be possible to use a custom logger implementation to log the scope decission', () => {
+    it('should be possible to use a custom logger implementation to log the scope decision', () => {
       // GIVEN:
       const givenBaseUrl = 'https://base.url';
       const injectToken = { baseUrl: TypeInjector.createToken<string>('base url') };

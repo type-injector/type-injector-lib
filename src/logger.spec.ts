@@ -5,7 +5,7 @@ import { InjectConfig, Logger, TypeInjector } from './index';
  * Logger and its replacement.
  *
  * This small interface is used to send log messages from the Injector.
- * The implementation can get replaced as every other injected value.
+ * The implementation can get replaced like every other injected value.
  * You might replace it to:
  * - get a more verbose logging
  * - connect it to a central logging system instead of using console
@@ -17,7 +17,7 @@ describe('logger', () => {
     const givenErrorMessage = 'test error message';
 
     /**
-     * In it's default configuration, the logger will only log errors to the console (stderr)
+     * In its default configuration, the logger will only log errors to the console (stderr)
      */
     it('should log errors to console', () => {
       const injector = new TypeInjector();
@@ -61,7 +61,7 @@ describe('logger', () => {
   });
 
   /**
-   * injector tries to use a provided Logger to log error messages.
+   * Injector tries to use a provided Logger to log error messages.
    * Unfortunately it might cause a dependency error to inject the
    * Logger to log the error... -> ∞-Loop.
    * So it won't log info messages or warnings before the logger
@@ -88,8 +88,7 @@ describe('logger', () => {
 
     const origError = console.error;
     let msg: string | false = false;
-    // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-    console.error = (error) => msg = '' + error;
+    console.error = (error) => msg = String(error);
     try {
       injector.get(BusinessService);
       expect.fail('no error thrown');
