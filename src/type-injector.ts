@@ -136,8 +136,8 @@ export class TypeInjectorImpl implements TypeInjector {
   }
 
   constructor(
-    protected _factories = new Map<InjectToken<any>, InjectFactory<any>>(),
-    protected _instances = new Map<InjectToken<any>, any>(),
+    protected _factories: Map<InjectToken<any>, InjectFactory<any>>,
+    protected _instances: Map<InjectToken<any>, any>,
   ) {}
 
   private _instancesInCreation = new Map<InjectToken<unknown>, {
