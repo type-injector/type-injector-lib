@@ -1,5 +1,6 @@
 import { InjectFactory, InjectToken } from './type-injector.model';
 import { TypeInjector } from './type-injector';
+import { Logger } from './logger';
 
 export class ChildInjector extends TypeInjector {
   static withIdent(ident: symbol) {
@@ -82,12 +83,14 @@ export class ChildInjector extends TypeInjector {
    * @param initiator
    */
   private _hasOwnDependencies(token: InjectToken<unknown>, factory: InjectFactory<unknown>): boolean {
+    token !== Logger && this.logger.info?.(`start dependency check of ${this._nameOf(token)} in '${this.ident.description || this.ident.toString()}'`);
     this._markAsInCreation(token, factory);
     const hasOwnDependencies = factory.deps.some((dep) => {
       const instance = this.get(dep);
       return this._ownInstances.includes(instance);
     });
-    this._finishedCreation(token);
+    this._abortedCreation(token);
+    token !== Logger && this.logger.info?.(`dependency check result: has${hasOwnDependencies ? ' ' : ' *no*'} overridden dependencies in '${this.ident.description || this.ident.toString()}'`);
     return hasOwnDependencies;
   }
 
@@ -105,8 +108,8 @@ export class ChildInjector extends TypeInjector {
     }
   }
 
-  protected _createDependencyErrorEntry(token: InjectToken<unknown>, factory: InjectFactory<unknown>): string {
-    let text = super._createDependencyErrorEntry(token, factory);
+  protected _createDependencyEntryLog(token: InjectToken<unknown>, factory: InjectFactory<unknown>): string {
+    let text = super._createDependencyEntryLog(token, factory);
 
     const factoryScope = factory.scope?.description || 'top level injector';
     if (factoryScope) {

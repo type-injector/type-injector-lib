@@ -140,42 +140,4 @@ describe('type injector basics', () => {
       expect(loggerCalls[0][0]).to.equal(expectedMessage);
     }
   });
-
-  /**
-   * injector tries to use a provided Logger to log error messages.
-   * Unfortunately it might cause a dependency error to inject the
-   * Logger to log the error... -> ∞-Loop
-   */
-  it('should show cyclic errors during the creation of Logger (at least on console)', () => {
-    class HttpService {
-      static injectConfig: InjectConfig = { deps: [HttpService] };
-      constructor( public self: HttpService ) {}
-    }
-    class BuggyLogger extends Logger {
-      static injectConfig: InjectConfig = { deps: [HttpService] };
-      constructor( public httpService: HttpService ) { super(); }
-    }
-    class BusinessService {
-      static injectConfig: InjectConfig = { deps: [Logger] };
-      constructor( public logger: Logger ) {}
-    }
-
-    const injector = new TypeInjector()
-      .provideImplementation(Logger, BuggyLogger)
-    ;
-
-    const origError = console.error;
-    let msg: string | false = false;
-    // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-    console.error = (error) => msg = '' + error;
-    try {
-      injector.get(BusinessService);
-      expect.fail('no error thrown');
-    } catch (e) {
-      expect((e as { message: string }).message).to.include('dependency cycle detected');
-      expect(msg).to.include('dependency cycle detected');
-    } finally {
-      console.error = origError;
-    }
-  });
 });

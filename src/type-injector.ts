@@ -90,7 +90,16 @@ export class TypeInjector {
   protected _instances = new Map<InjectToken<any>, any>();
   private _instancesInCreation = new Map<InjectToken<unknown>, {
     factory: InjectFactory<unknown>,
-  }>()
+  }>();
+  private _initialLogger = new Logger();
+  protected get logger(): Logger {
+    if (this._instancesInCreation.has(Logger)) {
+      return this._initialLogger;
+    }
+    const logger = this.get(Logger);
+    Object.defineProperty(this, 'logger', { value: logger });
+    return logger;
+  }
 
   getFactory<T>(token: InjectToken<T>): InjectFactory<T> {
     const providedFactory = this._factories.get(token);
@@ -113,14 +122,21 @@ export class TypeInjector {
   protected _markAsInCreation(token: InjectToken<unknown>, factory: InjectFactory<unknown>) {
     if (this._instancesInCreation.has(token)) {
       const errorMessage = this._createCyclicErrorMessage(token, factory);
-      this.get(Logger).error(errorMessage);
+      this.logger.error(errorMessage);
       throw new Error(errorMessage);
     }
     this._instancesInCreation.set(token, { factory });
+    this.logger.info?.(`start creation of ${this._createDependencyEntryLog(token, factory)}`);
   }
 
   protected _finishedCreation(token: InjectToken<unknown>) {
     this._instancesInCreation.delete(token);
+    this.logger.info?.(`finished creation of ${this._nameOf(token)}`)
+  }
+
+  protected _abortedCreation(token: InjectToken<unknown>) {
+    this._instancesInCreation.delete(token);
+    token !== Logger && this.logger.info?.(`aborted creation of ${this._nameOf(token)}`)
   }
 
   protected _create<T>(token: InjectToken<T>): T {
@@ -135,16 +151,18 @@ export class TypeInjector {
     return created;
   }
 
-  private _nameOf = (token: InjectToken<unknown>): string => {
+  protected _nameOf = (token: InjectToken<unknown>): string => {
     switch (typeof token) {
       case 'symbol':
-        return token.description || token.toString() || 'unknown';
+        return token.description
+          || /* istanbul ignore next */ token.toString() // needed because description is declared as optional
+        ;
       case 'function':
         return token.name;
     }
   };
 
-  protected _createDependencyErrorEntry(token: InjectToken<unknown>, factory: InjectFactory<unknown>) {
+  protected _createDependencyEntryLog(token: InjectToken<unknown>, factory: InjectFactory<unknown>) {
     const tokenName = this._nameOf(token);
     const factoryName = factory.label || factory.create.name;
 
@@ -154,12 +172,9 @@ export class TypeInjector {
   }
 
   private _createCyclicErrorMessage(token: InjectToken<unknown>, factory: InjectFactory<unknown>) {
-    if (token === Logger) {
-      this.provideValue(Logger, new Logger());
-    }
     const dependencyPath = Array.from(this._instancesInCreation.entries())
       .concat([[token, { factory }]])
-      .map(([token, { factory }]) => this._createDependencyErrorEntry(token, factory))
+      .map(([token, { factory }]) => this._createDependencyEntryLog(token, factory))
       .join('\n')
     ;
     return `dependency cycle detected:${dependencyPath}\n\n`;

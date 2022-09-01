@@ -63,7 +63,7 @@ describe('scopes', () => {
 
       let lastLoggedInfo: string | false = false;
       class MockedLogger extends Logger {
-        info(message: string): void {
+        info = (message: string) => {
           lastLoggedInfo = message;
         }
       }
@@ -72,7 +72,7 @@ describe('scopes', () => {
       // 1. provide a function that is using the logger
       injector.provideFactory(injectToken.logFn, {
         deps: [injectToken.logger],
-        create: (logger: Logger) => (msg: string) => logger.info(msg),
+        create: (logger: Logger) => (msg: string) => logger.info?.(msg),
       });
 
       // 2. change the used logger
@@ -462,6 +462,40 @@ describe('scopes', () => {
         expect(e).to.include({ message: expectedMessage });
         expect(loggerCalls[0][0]).to.equal(expectedMessage);
       }
+    });
+
+    it.only('should be possible to use a custom logger implementation to log the scope decission', () => {
+      // GIVEN:
+      const injectToken = { baseUrl: TypeInjector.createToken<string>('base url') };
+      class SimpleService {
+        static injectConfig: InjectConfig = { deps: [injectToken.baseUrl]}
+        constructor( public baseUrl: string ) {}
+      }
+      const loggedInfo = [] as string[];
+      class VerboseLogger extends Logger {
+        info = (message: string, ..._details: any[]) => {
+          loggedInfo.push(message);
+          console.log(message, _details);
+        };
+      }
+
+      /**
+       topLevelInjector (Logger -> VerboseLogger)
+        ├── midLevelInjector (baseUrl -> 'https://base.url')
+        │   └── verySpecialInjector
+        └── branchBInjector
+      */
+      const topLevelInjector = new TypeInjector()
+        .provideImplementation(Logger, VerboseLogger)
+      ;
+
+      const midLevelInjector = ChildInjector.withIdent(Symbol.for('mid level')).from(topLevelInjector)
+        .provideValue(injectToken.baseUrl, 'https://base.url')
+      ;
+      const verySpecialInjector = ChildInjector.withIdent(Symbol.for('very special')).from(midLevelInjector);
+
+      verySpecialInjector.get(SimpleService);
+      console.log(loggedInfo.join('\n\n'));
     });
   });
 });
