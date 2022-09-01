@@ -50,7 +50,7 @@ describe('inject tokens', () => {
     }
     const thirdPartyLibraryService = TypeInjector.createToken(ThirdPartyLibraryService)
 
-    const injector = TypeInjector.create()
+    const injector = TypeInjector.construct()
       .provideFactory(thirdPartyLibraryService, {
         deps: [SimpleClass],
         create: (simpleClass) => new ThirdPartyLibraryService(simpleClass),
@@ -67,7 +67,7 @@ describe('inject tokens', () => {
       const givenBooleanValue = false;
       const tokenForBoolean = TypeInjector.createToken<boolean>('any unique string');
 
-      const injector = TypeInjector.create()
+      const injector = TypeInjector.construct()
         .provideValue(tokenForBoolean, givenBooleanValue)
         .build()
       ;
@@ -81,7 +81,7 @@ describe('inject tokens', () => {
       const providedFunction = () => expectedResult;
       const tokenForFunction = TypeInjector.createToken<() => string>('any unique string');
 
-      const injector = TypeInjector.create()
+      const injector = TypeInjector.construct()
         .provideValue(tokenForFunction, providedFunction)
         .build()
       ;
@@ -96,7 +96,7 @@ describe('inject tokens', () => {
       const providedObject = { prop: 'initial value' };
       const tokenForObject = TypeInjector.createToken<{ prop: string }>('any unique string');
 
-      const injector = TypeInjector.create()
+      const injector = TypeInjector.construct()
         .provideValue(tokenForObject, providedObject)
         .build()
       ;

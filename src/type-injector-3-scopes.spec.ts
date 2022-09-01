@@ -61,7 +61,7 @@ describe('scopes', () => {
         logger: TypeInjector.createToken<Logger>('logger'),
         logFn: TypeInjector.createToken<(msg: string) => void>('log fn'),
       };
-      const injectorBuilder = TypeInjector.create();
+      const injectorBuilder = TypeInjector.construct();
 
       let lastLoggedInfo: string | false = false;
       class MockedLogger extends Logger {
@@ -104,7 +104,7 @@ describe('scopes', () => {
       const authToken = TypeInjector.createToken<string>('auth token');
       const baseUrl = TypeInjector.createToken<string>('base url');
 
-      const parentInjector = TypeInjector.create()
+      const parentInjector = TypeInjector.construct()
         .provideFactory(baseUrl, {
           deps: [],
           create: () => givenBaseUrl,
@@ -395,7 +395,7 @@ describe('scopes', () => {
     it('should lookup parent factory recursively', () => {
       const givenContent = { desc: 'given content' };
       const contentToken = TypeInjector.createToken<typeof givenContent>('content token');
-      const topLevelInjector = TypeInjector.create()
+      const topLevelInjector = TypeInjector.construct()
         .provideFactory(contentToken, { deps: [], create: () => givenContent})
         .build()
       ;
@@ -419,7 +419,7 @@ describe('scopes', () => {
       class ServiceC {}
 
       const loggerCalls = [] as Parameters<Logger['error']>[];
-      const topLevelInjector = TypeInjector.create()
+      const topLevelInjector = TypeInjector.construct()
         .provideValue(Logger, { error: (...args) => { loggerCalls.push(args) } } as Logger)
         .provideImplementation(injectToken.serviceC, ServiceC)
         .build()
@@ -503,7 +503,7 @@ describe('scopes', () => {
         │   └── verySpecialInjector
         └── branchBInjector
       */
-      const topLevelInjector = TypeInjector.create()
+      const topLevelInjector = TypeInjector.construct()
         .provideImplementation(Logger, VerboseLogger)
         .build()
       ;

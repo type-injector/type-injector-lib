@@ -110,7 +110,7 @@ export namespace TypeInjector {
     return Symbol.for(`TypeInjectorToken: ${typeof type === 'string' ? type : type.name}`) as symbol & { description: string };
   }
 
-  export function create(): TypeInjectorBuilder {
+  export function construct(): TypeInjectorBuilder {
     return new TypeInjectorBuilder();
   }
 

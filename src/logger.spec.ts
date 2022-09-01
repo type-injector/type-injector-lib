@@ -47,7 +47,7 @@ describe('logger', () => {
         info = (message: string, ..._details: any[]) => infoMsgs.push(message);
       }
       const injectToken = { baseUrl: TypeInjector.createToken('base url') };
-      const injector = TypeInjector.create()
+      const injector = TypeInjector.construct()
         .provideImplementation(Logger, VerboseLogger)
         .provideFactory(injectToken.baseUrl, { deps: [], create: () => 'https://base.url/' })
         .build()
@@ -83,7 +83,7 @@ describe('logger', () => {
       constructor( public logger: Logger ) {}
     }
 
-    const injector = TypeInjector.create()
+    const injector = TypeInjector.construct()
       .provideImplementation(Logger, BuggyLogger)
       .build()
     ;

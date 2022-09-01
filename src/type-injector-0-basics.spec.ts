@@ -79,7 +79,7 @@ describe('type injector basics', () => {
     }
 
     const givenBaseUrl = 'http://given-base.url' as const;
-    const injectorBuilder = TypeInjector.create();
+    const injectorBuilder = TypeInjector.construct();
     injectorBuilder.provideValue(injectTokens.baseUrl, givenBaseUrl)
     const injector = injectorBuilder.build();
 
@@ -88,7 +88,7 @@ describe('type injector basics', () => {
   });
 
   it('should not be possible to continue configuration after build', () => {
-    const injectorBuilder = TypeInjector.create();
+    const injectorBuilder = TypeInjector.construct();
     injectorBuilder.build();
     try {
       injectorBuilder.provideValue(Logger, new Logger());
@@ -99,7 +99,7 @@ describe('type injector basics', () => {
   });
 
   it('should not be possible to build more than one injector from one configuration', () => {
-    const injectorBuilder = TypeInjector.create();
+    const injectorBuilder = TypeInjector.construct();
     injectorBuilder.build();
     try {
       injectorBuilder.build();
@@ -133,7 +133,7 @@ describe('type injector basics', () => {
     }
 
     const loggerCalls = [] as Parameters<Logger['error']>[];
-    const injector = TypeInjector.create()
+    const injector = TypeInjector.construct()
       .provideValue(Logger, { error: (...args) => {
         loggerCalls.push(args);
       } } as Logger)
