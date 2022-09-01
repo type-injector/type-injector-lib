@@ -101,7 +101,7 @@ export class TypeInjector {
     return logger;
   }
 
-  getFactory<T>(token: InjectToken<T>): InjectFactory<T> {
+  getOptFactory<T>(token: InjectToken<T>): InjectFactory<T> | undefined {
     const providedFactory = this._factories.get(token);
     if (providedFactory) {
       return providedFactory as InjectFactory<T>;
@@ -115,8 +115,14 @@ export class TypeInjector {
         create: (...params: any[]) => new token(...params) as any as T,
       }
     }
+  }
 
-    throw new Error('could not find a factory to create token: ' + this._nameOf(token));
+  private _getFactory<T>(token: InjectToken<T>): InjectFactory<T> {
+    const factory = this.getOptFactory(token);
+    if (!factory) {
+      throw new Error('could not find a factory to create token: ' + this._nameOf(token));
+    }
+    return factory;
   }
 
   protected _markAsInCreation(token: InjectToken<unknown>, factory: InjectFactory<unknown>) {
@@ -140,7 +146,7 @@ export class TypeInjector {
   }
 
   protected _create<T>(token: InjectToken<T>): T {
-    const factory = this.getFactory(token);
+    const factory = this._getFactory(token);
     this._markAsInCreation(token, factory);
 
     const params = factory.deps.map((dep) => this.get(dep));

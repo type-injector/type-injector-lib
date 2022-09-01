@@ -29,8 +29,8 @@ export class ChildInjector extends TypeInjector {
     return super.provideFactory(token, {...factory, scope: this.ident });
   }
 
-  getFactory<T>(token: InjectToken<T>): InjectFactory<T> {
-    return this._factories.get(token) as InjectFactory<T> || this._parent.getFactory(token);
+  getOptFactory<T>(token: InjectToken<T>): InjectFactory<T> {
+    return this._factories.get(token) as InjectFactory<T> || this._parent.getOptFactory(token);
   }
 
   private _createInOwnScope<T>(token: InjectToken<T>, factory: InjectFactory<T>): InstanceWithSource<T> {
@@ -100,8 +100,8 @@ export class ChildInjector extends TypeInjector {
       return this._createInOwnScope<T>(token, providedFactory);
     }
 
-    const parentFactory = this._parent.getFactory<T>(token);
-    if (this._hasOwnDependencies(token, parentFactory)) {
+    const parentFactory = this._parent.getOptFactory<T>(token);
+    if (parentFactory && this._hasOwnDependencies(token, parentFactory)) {
       return this._createInOwnScope(token, parentFactory);
     } else {
       return this._useInstanceFromParentScope(token);

@@ -464,7 +464,7 @@ describe('scopes', () => {
       }
     });
 
-    it.only('should be possible to use a custom logger implementation to log the scope decission', () => {
+    it('should be possible to use a custom logger implementation to log the scope decission', () => {
       // GIVEN:
       const injectToken = { baseUrl: TypeInjector.createToken<string>('base url') };
       class SimpleService {
