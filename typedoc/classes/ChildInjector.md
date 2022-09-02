@@ -28,7 +28,7 @@
 
 #### Defined in
 
-[child-injector.ts:34](https://github.com/e-hein/type-inject/blob/4e7c44a/src/child-injector.ts#L34)
+[child-injector.ts:34](https://github.com/e-hein/type-inject/blob/ae9b59e/src/child-injector.ts#L34)
 
 ## Methods
 
@@ -58,7 +58,7 @@ TypeInjectorImpl.get
 
 #### Defined in
 
-[type-injector.ts:160](https://github.com/e-hein/type-inject/blob/4e7c44a/src/type-injector.ts#L160)
+[type-injector.ts:160](https://github.com/e-hein/type-inject/blob/ae9b59e/src/type-injector.ts#L160)
 
 ___
 
@@ -88,7 +88,7 @@ TypeInjectorImpl.getOptFactory
 
 #### Defined in
 
-[child-injector.ts:43](https://github.com/e-hein/type-inject/blob/4e7c44a/src/child-injector.ts#L43)
+[child-injector.ts:43](https://github.com/e-hein/type-inject/blob/ae9b59e/src/child-injector.ts#L43)
 
 ___
 
@@ -112,4 +112,4 @@ ___
 
 #### Defined in
 
-[child-injector.ts:6](https://github.com/e-hein/type-inject/blob/4e7c44a/src/child-injector.ts#L6)
+[child-injector.ts:6](https://github.com/e-hein/type-inject/blob/ae9b59e/src/child-injector.ts#L6)

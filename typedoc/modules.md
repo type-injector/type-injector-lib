@@ -40,7 +40,7 @@
 
 #### Defined in
 
-[type-injector.model.ts:37](https://github.com/e-hein/type-inject/blob/4e7c44a/src/type-injector.model.ts#L37)
+[type-injector.model.ts:37](https://github.com/e-hein/type-inject/blob/ae9b59e/src/type-injector.model.ts#L37)
 
 ___
 
@@ -56,7 +56,7 @@ ___
 
 #### Defined in
 
-[type-injector.model.ts:39](https://github.com/e-hein/type-inject/blob/4e7c44a/src/type-injector.model.ts#L39)
+[type-injector.model.ts:39](https://github.com/e-hein/type-inject/blob/ae9b59e/src/type-injector.model.ts#L39)
 
 ___
 
@@ -83,4 +83,4 @@ class instance.
 
 #### Defined in
 
-[type-injector.model.ts:11](https://github.com/e-hein/type-inject/blob/4e7c44a/src/type-injector.model.ts#L11)
+[type-injector.model.ts:11](https://github.com/e-hein/type-inject/blob/ae9b59e/src/type-injector.model.ts#L11)

@@ -47,7 +47,7 @@ Might create a new instance or return an existing one.
 
 #### Defined in
 
-[type-injector.ts:105](https://github.com/e-hein/type-inject/blob/4e7c44a/src/type-injector.ts#L105)
+[type-injector.ts:105](https://github.com/e-hein/type-inject/blob/ae9b59e/src/type-injector.ts#L105)
 
 ___
 
@@ -69,7 +69,7 @@ TypeInjector
 
 #### Defined in
 
-[type-injector.ts:151](https://github.com/e-hein/type-inject/blob/4e7c44a/src/type-injector.ts#L151)
+[type-injector.ts:151](https://github.com/e-hein/type-inject/blob/ae9b59e/src/type-injector.ts#L151)
 
 ___
 
@@ -94,7 +94,7 @@ TypeInjectorBuilder
 
 #### Defined in
 
-[type-injector.ts:141](https://github.com/e-hein/type-inject/blob/4e7c44a/src/type-injector.ts#L141)
+[type-injector.ts:141](https://github.com/e-hein/type-inject/blob/ae9b59e/src/type-injector.ts#L141)
 
 ___
 
@@ -129,4 +129,4 @@ a token that can be used to first provide then inject anything
 
 #### Defined in
 
-[type-injector.ts:128](https://github.com/e-hein/type-inject/blob/4e7c44a/src/type-injector.ts#L128)
+[type-injector.ts:128](https://github.com/e-hein/type-inject/blob/ae9b59e/src/type-injector.ts#L128)
