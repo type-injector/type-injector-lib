@@ -10,7 +10,7 @@ module.exports = {
   ],
   overrides: [
     {
-      files: ['*.ts'],
+      files: ['src/**/*.ts'],
       extends: [
         'eslint:recommended',
         'plugin:@typescript-eslint/recommended',
@@ -23,8 +23,12 @@ module.exports = {
         tsconfigRootDir: __dirname,
         project: ['./tsconfig.json'],
       },
-      plugins: ['@typescript-eslint'],
+      plugins: [
+        '@typescript-eslint',
+        'eslint-plugin-tsdoc',
+      ],
       rules: {
+        '@typescript-eslint/no-namespace': 'off',
         '@typescript-eslint/no-explicit-any': 'off',
         '@typescript-eslint/no-unsafe-argument': 'off',
         '@typescript-eslint/no-unsafe-call': 'off',
@@ -34,6 +38,7 @@ module.exports = {
         'no-unused-vars': ['error', {
           'argsIgnorePattern': '^_',
         }],
+        'tsdoc/syntax': 'warn',
       },
     }
   ],

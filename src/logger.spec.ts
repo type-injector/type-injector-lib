@@ -64,7 +64,7 @@ describe('logger', () => {
   /**
    * Injector tries to use a provided Logger to log error messages.
    * Unfortunately it might cause a dependency error to inject the
-   * Logger to log the error... -> ∞-Loop.
+   * Logger to log the error... ∞-Loop.
    * So it won't log info messages or warnings before the logger
    * is created successfully. Errors that occur during the instantiation of the logger will get
    * logged to console (stderr)

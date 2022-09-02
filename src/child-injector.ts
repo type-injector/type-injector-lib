@@ -67,7 +67,7 @@ export class ChildInjector extends TypeInjectorImpl {
    * This instance is linked into _instances to prevent further calls with the same
    * token to repeat all dependency checks.
    *
-   * @param token
+   * @param token - {@link InjectToken} identifying the value to inject
    * @returns instance from parent + flag that it is from parent
    */
   private _useInstanceFromParentScope<T>(token: InjectToken<T>): InstanceWithSource<T> {
@@ -94,8 +94,8 @@ export class ChildInjector extends TypeInjectorImpl {
    * Even if it does not create the requested value it's important
    * to add it to the values in creation to detect dependency cycles.
    *
-   * @param token
-   * @param initiator
+   * @param token - {@link InjectToken} identifying the value to inject
+   * @param factory - {@link InjectFactory} providing the dependencies to check
    */
   private _hasOwnDependencies(token: InjectToken<unknown>, factory: InjectFactory<unknown>): boolean {
     token !== Logger && this.logger.info?.(`start dependency check of ${this._nameOf(token)} in '${this.ident.description}'`);

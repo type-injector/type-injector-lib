@@ -6,7 +6,7 @@
  * tell the TypedInjector to use a constructor with arguments to create a
  * class instance.
  *
- * @see {@link InjectConfig InjectConfig}
+ * @see {@link InjectConfig | InjectConfig}
  */
 export type InjectableClass<T> = (new (..._args: any[]) => T) & {
   injectConfig: InjectConfig;

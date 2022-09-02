@@ -25,7 +25,7 @@ import { ChildInjector, InjectConfig, Logger, TypeInjector } from './index';
  *   * logged in user id
  *   * request urls / parameters
  * - scopes can change general behavior
- *   * debug scope --> verbose logging
+ *   * debug scope --&gt; verbose logging
  * - scopes can get clean up so all objects that contain informations
  *   of that scopes will get destroyed (e.g. auth/user)
  *
@@ -291,7 +291,7 @@ describe('scopes', () => {
 
       /**
        topLevelInjector
-        ├── midLevelInjector (SimpleService -> SpecialService)
+        ├── midLevelInjector (SimpleService: SpecialService)
         │   └── verySpecialInjector
         └── branchBInjector
       */
@@ -326,8 +326,8 @@ describe('scopes', () => {
 
       /**
        topLevelInjector
-        ├── branchAInjector (SimpleService -> SpecialService)
-        └── branchBInjector (SimpleService -> SpecialService)
+        ├── branchAInjector (SimpleService: SpecialService)
+        └── branchBInjector (SimpleService: SpecialService)
       */
       const topLevelInjector = TypeInjector.build();
 
@@ -498,8 +498,8 @@ describe('scopes', () => {
       }
 
       /**
-       topLevelInjector (Logger -> VerboseLogger)
-        ├── midLevelInjector (baseUrl -> givenBaseUrl)
+       topLevelInjector (Logger: VerboseLogger)
+        ├── midLevelInjector (baseUrl: givenBaseUrl)
         │   └── verySpecialInjector
         └── branchBInjector
       */

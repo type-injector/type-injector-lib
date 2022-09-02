@@ -1,6 +1,11 @@
 import { Logger } from './logger';
 import { ConstructorWithoutArguments, InjectableClass, InjectFactory, InjectToken } from './type-injector.model';
 
+/**
+ * Configuration phase of an injector.
+ *
+ * use {@link build | .build()} to finish configuration.
+ */
 export class TypeInjectorBuilder {
   protected _instances = new Map<InjectToken<any>, any>();
   protected _factories = new Map<InjectToken<any>, InjectFactory<any>>();
@@ -12,8 +17,8 @@ export class TypeInjectorBuilder {
    * service class, simple values like flags or configuration objects
    * from the environment.
    *
-   * @param token which is used to inject the value
-   * @param value that will get returned for the token
+   * @param token - which will get used to inject the value
+   * @param value - that will get returned for the token
    * @returns the Injector itself to allow chaining provides
    */
   provideValue<T>(token: InjectToken<T>, value: T): TypeInjectorBuilder {
@@ -26,8 +31,8 @@ export class TypeInjectorBuilder {
    *
    * The provided function will be called the first time the token is requested.
    *
-   * @param token which is used to inject the value
-   * @param factory that creates something that matches the type of the token
+   * @param token - which will get used to inject the value
+   * @param factory - that creates something that matches the type of the token
    * @returns the Injector itself to allow chaining provides
    */
    provideFactory<T>(token: InjectToken<T>, factory: InjectFactory<T>): TypeInjectorBuilder {
@@ -42,8 +47,8 @@ export class TypeInjectorBuilder {
    * that is injectable itself (has no constructor args / static inject config).
    * Like every factory it's called lazily on the first request of the token.
    *
-   * @param token general class or created inject token for an interface
-   * @param impl to instanciate as soon as it's requested the first time
+   * @param token - which will get used to inject the value
+   * @param impl - to instanciate as soon as it's requested the first time
    * @returns the Injector itself to allow chaining provides
    */
   provideImplementation<T>(token: InjectToken<T>, impl: ConstructorWithoutArguments<T> | InjectableClass<T>): TypeInjectorBuilder {
@@ -87,13 +92,12 @@ export interface TypeInjector {
    *
    * Might create a new instance or return an existing one.
    *
-   * @param token
+   * @param token - {@link InjectToken} identifying the value to inject
    * @returns
    */
   get<T>(token: InjectToken<T>): T;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace TypeInjector {
    /**
    * Create a typed inject token for anything.
@@ -103,7 +107,7 @@ export namespace TypeInjector {
    * Because the TypeInjector has no information how to create this symbol,
    * it has to be provided before it gets injected the first time.
    *
-   * @param type can be an abstract class or a simple string
+   * @param type - can be an abstract class or a simple string
    * @returns a token that can be used to first provide then inject anything
    */
   export function createToken<T>(type: (T & (abstract new (...args: any[]) => any) & { name: string }) | string): InjectToken<T extends abstract new (...args: any[]) => infer U ? U : T> {
@@ -117,7 +121,7 @@ export namespace TypeInjector {
    * configure the injector before you finally .build() it.
    *
    * @returns TypeInjectorBuilder
-   * @see {@link build()} - a shortcut to create an injector without configuration
+   * @see {@link build | TypeInjector.build()} - a shortcut to create an injector without configuration
    */
   export function construct(): TypeInjectorBuilder {
     return new TypeInjectorBuilder();
@@ -127,7 +131,7 @@ export namespace TypeInjector {
    * Shortcut to create an injector without configuration.
    *
    * @returns TypeInjector
-   * @see {@link construct()} - if you need to provide values, factories or override implementations
+   * @see {@link construct | TypeInjector.construct()} - if you need to provide values, factories or override implementations
    */
   export function build(): TypeInjector {
     return new TypeInjectorBuilder().build();
@@ -140,8 +144,8 @@ export class TypeInjectorImpl implements TypeInjector {
    *
    * Might create a new instance or return an existing one.
    *
-   * @param token
-   * @returns
+   * @param token - {@link InjectToken} identifying the value to inject
+   * @returns always the same instance of the value valid for this scope
    */
   get<T>(token: InjectToken<T>): T {
     return this._instances.has(token)
