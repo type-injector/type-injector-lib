@@ -79,7 +79,7 @@ expect(result).to.equal(givenBooleanValue);
 * [Variants of provide](./src/type-injector-builder.spec.ts)
 * [Scopes](./src/injector-scope.spec.ts)
 * [Logging](./src/logger.spec.ts)
-* [API](./typedoc/modules.md)
+* [API](./typedoc/README.md)
 
 ## Motivation
 There are plenty of inject libraries out there. Most of them are part of a larger framework so they are only usable in a browser frontend or a server backend.

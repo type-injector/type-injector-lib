@@ -1,4 +1,4 @@
-[type-inject](../README.md) / [Exports](../modules.md) / InjectorScope
+[type-inject - v1.0.0-alpha](../README.md) / InjectorScope
 
 # Class: InjectorScope
 
@@ -28,7 +28,7 @@
 
 #### Defined in
 
-injector-scope.ts:37
+[injector-scope.ts:37](https://github.com/e-hein/type-inject/blob/be2ba80/src/injector-scope.ts#L37)
 
 ## Methods
 
@@ -46,7 +46,7 @@ injector-scope.ts:37
 
 | Name | Type |
 | :------ | :------ |
-| `token` | [`InjectToken`](../modules.md#injecttoken)<`T`\> |
+| `token` | [`InjectToken`](../README.md#injecttoken)<`T`\> |
 
 #### Returns
 
@@ -58,7 +58,7 @@ TypeInjectorImpl.get
 
 #### Defined in
 
-type-injector-impl.ts:10
+[type-injector-impl.ts:10](https://github.com/e-hein/type-inject/blob/be2ba80/src/type-injector-impl.ts#L10)
 
 ___
 
@@ -76,7 +76,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `token` | [`InjectToken`](../modules.md#injecttoken)<`T`\> |
+| `token` | [`InjectToken`](../README.md#injecttoken)<`T`\> |
 
 #### Returns
 
@@ -88,7 +88,7 @@ TypeInjectorImpl.getOptFactory
 
 #### Defined in
 
-injector-scope.ts:46
+[injector-scope.ts:46](https://github.com/e-hein/type-inject/blob/be2ba80/src/injector-scope.ts#L46)
 
 ___
 
@@ -112,4 +112,4 @@ ___
 
 #### Defined in
 
-injector-scope.ts:9
+[injector-scope.ts:9](https://github.com/e-hein/type-inject/blob/be2ba80/src/injector-scope.ts#L9)

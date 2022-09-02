@@ -1,4 +1,4 @@
-[type-inject](../README.md) / [Exports](../modules.md) / InjectFactory
+[type-inject - v1.0.0-alpha](../README.md) / InjectFactory
 
 # Interface: InjectFactory<T\>
 
@@ -47,13 +47,13 @@ Define a factory method with dependencies to create an injectable value.
 
 #### Defined in
 
-inject-factory.ts:9
+[inject-factory.ts:9](https://github.com/e-hein/type-inject/blob/be2ba80/src/inject-factory.ts#L9)
 
 ___
 
 ### deps
 
-• **deps**: [`InjectToken`](../modules.md#injecttoken)<`unknown`\>[]
+• **deps**: [`InjectToken`](../README.md#injecttoken)<`unknown`\>[]
 
 Inject tokens for all arguments required to create an injectable value.
 
@@ -72,7 +72,7 @@ itself gets created.
 
 #### Defined in
 
-inject-token.ts:19
+[inject-token.ts:19](https://github.com/e-hein/type-inject/blob/be2ba80/src/inject-token.ts#L19)
 
 ___
 
@@ -82,7 +82,7 @@ ___
 
 #### Defined in
 
-inject-factory.ts:7
+[inject-factory.ts:7](https://github.com/e-hein/type-inject/blob/be2ba80/src/inject-factory.ts#L7)
 
 ___
 
@@ -92,4 +92,4 @@ ___
 
 #### Defined in
 
-inject-factory.ts:8
+[inject-factory.ts:8](https://github.com/e-hein/type-inject/blob/be2ba80/src/inject-factory.ts#L8)

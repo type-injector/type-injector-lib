@@ -1,4 +1,4 @@
-[type-inject](../README.md) / [Exports](../modules.md) / InjectConfig
+[type-inject - v1.0.0-alpha](../README.md) / InjectConfig
 
 # Interface: InjectConfig
 
@@ -18,7 +18,7 @@
 
 ### deps
 
-• **deps**: [`InjectToken`](../modules.md#injecttoken)<`unknown`\>[]
+• **deps**: [`InjectToken`](../README.md#injecttoken)<`unknown`\>[]
 
 Inject tokens for all arguments required to create an injectable value.
 
@@ -33,4 +33,4 @@ itself gets created.
 
 #### Defined in
 
-inject-token.ts:19
+[inject-token.ts:19](https://github.com/e-hein/type-inject/blob/be2ba80/src/inject-token.ts#L19)

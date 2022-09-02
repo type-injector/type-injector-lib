@@ -1,4 +1,4 @@
-[type-inject](../README.md) / [Exports](../modules.md) / TypeInjectorBuilder
+[type-inject - v1.0.0-alpha](../README.md) / TypeInjectorBuilder
 
 # Class: TypeInjectorBuilder
 
@@ -39,7 +39,7 @@ Finish configuration of the TypeInjector
 
 #### Defined in
 
-type-injector-builder.ts:84
+[type-injector-builder.ts:84](https://github.com/e-hein/type-inject/blob/be2ba80/src/type-injector-builder.ts#L84)
 
 ___
 
@@ -61,7 +61,7 @@ The provided function will be called the first time the token is requested.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `token` | [`InjectToken`](../modules.md#injecttoken)<`T`\> | which will get used to inject the value |
+| `token` | [`InjectToken`](../README.md#injecttoken)<`T`\> | which will get used to inject the value |
 | `factory` | [`InjectFactory`](../interfaces/InjectFactory.md)<`T`\> | that creates something that matches the type of the token |
 
 #### Returns
@@ -72,7 +72,7 @@ the Injector itself to allow chaining provides
 
 #### Defined in
 
-type-injector-builder.ts:40
+[type-injector-builder.ts:40](https://github.com/e-hein/type-inject/blob/be2ba80/src/type-injector-builder.ts#L40)
 
 ___
 
@@ -96,8 +96,8 @@ Like every factory it's called lazily on the first request of the token.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `token` | [`InjectToken`](../modules.md#injecttoken)<`T`\> | which will get used to inject the value |
-| `impl` | [`ConstructorWithoutArguments`](../modules.md#constructorwithoutarguments)<`T`\> \| [`InjectableClass`](../modules.md#injectableclass)<`T`\> | to instanciate as soon as it's requested the first time |
+| `token` | [`InjectToken`](../README.md#injecttoken)<`T`\> | which will get used to inject the value |
+| `impl` | [`ConstructorWithoutArguments`](../README.md#constructorwithoutarguments)<`T`\> \| [`InjectableClass`](../README.md#injectableclass)<`T`\> | to instanciate as soon as it's requested the first time |
 
 #### Returns
 
@@ -107,7 +107,7 @@ the Injector itself to allow chaining provides
 
 #### Defined in
 
-type-injector-builder.ts:56
+[type-injector-builder.ts:56](https://github.com/e-hein/type-inject/blob/be2ba80/src/type-injector-builder.ts#L56)
 
 ___
 
@@ -131,7 +131,7 @@ from the environment.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `token` | [`InjectToken`](../modules.md#injecttoken)<`T`\> | which will get used to inject the value |
+| `token` | [`InjectToken`](../README.md#injecttoken)<`T`\> | which will get used to inject the value |
 | `value` | `T` | that will get returned for the token |
 
 #### Returns
@@ -142,4 +142,4 @@ the Injector itself to allow chaining provides
 
 #### Defined in
 
-type-injector-builder.ts:26
+[type-injector-builder.ts:26](https://github.com/e-hein/type-inject/blob/be2ba80/src/type-injector-builder.ts#L26)

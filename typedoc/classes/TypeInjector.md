@@ -1,4 +1,4 @@
-[type-inject](../README.md) / [Exports](../modules.md) / TypeInjector
+[type-inject - v1.0.0-alpha](../README.md) / TypeInjector
 
 # Class: TypeInjector
 
@@ -37,7 +37,7 @@ Might create a new instance or return an existing one.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `token` | [`InjectToken`](../modules.md#injecttoken)<`T`\> | [InjectToken](../modules.md#injecttoken) identifying the value to inject |
+| `token` | [`InjectToken`](../README.md#injecttoken)<`T`\> | [InjectToken](../README.md#injecttoken) identifying the value to inject |
 
 #### Returns
 
@@ -45,7 +45,7 @@ Might create a new instance or return an existing one.
 
 #### Defined in
 
-[type-injector.ts:19](https://github.com/e-hein/type-inject/blob/51d9756/src/type-injector.ts#L19)
+[type-injector.ts:19](https://github.com/e-hein/type-inject/blob/be2ba80/src/type-injector.ts#L19)
 
 ___
 
@@ -67,7 +67,7 @@ TypeInjector
 
 #### Defined in
 
-[type-injector.ts:50](https://github.com/e-hein/type-inject/blob/51d9756/src/type-injector.ts#L50)
+[type-injector.ts:50](https://github.com/e-hein/type-inject/blob/be2ba80/src/type-injector.ts#L50)
 
 ___
 
@@ -92,4 +92,4 @@ TypeInjectorBuilder
 
 #### Defined in
 
-[type-injector.ts:40](https://github.com/e-hein/type-inject/blob/51d9756/src/type-injector.ts#L40)
+[type-injector.ts:40](https://github.com/e-hein/type-inject/blob/be2ba80/src/type-injector.ts#L40)
