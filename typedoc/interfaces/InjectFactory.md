@@ -2,6 +2,8 @@
 
 # Interface: InjectFactory<T\>
 
+Define a factory method with dependencies to create an injectable value.
+
 ## Type parameters
 
 | Name |
@@ -45,7 +47,7 @@
 
 #### Defined in
 
-[type-injector.model.ts:34](https://github.com/e-hein/type-inject/blob/ae9b59e/src/type-injector.model.ts#L34)
+inject-factory.ts:9
 
 ___
 
@@ -70,7 +72,7 @@ itself gets created.
 
 #### Defined in
 
-[type-injector.model.ts:28](https://github.com/e-hein/type-inject/blob/ae9b59e/src/type-injector.model.ts#L28)
+inject-token.ts:19
 
 ___
 
@@ -80,7 +82,7 @@ ___
 
 #### Defined in
 
-[type-injector.model.ts:32](https://github.com/e-hein/type-inject/blob/ae9b59e/src/type-injector.model.ts#L32)
+inject-factory.ts:7
 
 ___
 
@@ -90,4 +92,4 @@ ___
 
 #### Defined in
 
-[type-injector.model.ts:33](https://github.com/e-hein/type-inject/blob/ae9b59e/src/type-injector.model.ts#L33)
+inject-factory.ts:8

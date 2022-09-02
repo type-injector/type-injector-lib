@@ -1,4 +1,6 @@
-export * from './child-injector';
-export * from './type-injector.model';
+export * from './injector-scope';
+export * from './inject-token';
+export * from './inject-factory';
 export * from './logger';
-export { TypeInjector, type TypeInjectorBuilder } from './type-injector';
+export { TypeInjector } from './type-injector';
+export { type TypeInjectorBuilder } from './type-injector-builder';

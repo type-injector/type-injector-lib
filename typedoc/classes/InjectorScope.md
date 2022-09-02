@@ -1,24 +1,24 @@
-[type-inject](../README.md) / [Exports](../modules.md) / ChildInjector
+[type-inject](../README.md) / [Exports](../modules.md) / InjectorScope
 
-# Class: ChildInjector
+# Class: InjectorScope
 
 ## Hierarchy
 
 - `TypeInjectorImpl`
 
-  ↳ **`ChildInjector`**
+  ↳ **`InjectorScope`**
 
 ## Table of contents
 
 ### Properties
 
-- [ident](ChildInjector.md#ident)
+- [ident](InjectorScope.md#ident)
 
 ### Methods
 
-- [get](ChildInjector.md#get)
-- [getOptFactory](ChildInjector.md#getoptfactory)
-- [withIdent](ChildInjector.md#withident)
+- [get](InjectorScope.md#get)
+- [getOptFactory](InjectorScope.md#getoptfactory)
+- [withIdent](InjectorScope.md#withident)
 
 ## Properties
 
@@ -28,7 +28,7 @@
 
 #### Defined in
 
-[child-injector.ts:34](https://github.com/e-hein/type-inject/blob/ae9b59e/src/child-injector.ts#L34)
+injector-scope.ts:37
 
 ## Methods
 
@@ -58,7 +58,7 @@ TypeInjectorImpl.get
 
 #### Defined in
 
-[type-injector.ts:160](https://github.com/e-hein/type-inject/blob/ae9b59e/src/type-injector.ts#L160)
+type-injector-impl.ts:10
 
 ___
 
@@ -88,7 +88,7 @@ TypeInjectorImpl.getOptFactory
 
 #### Defined in
 
-[child-injector.ts:43](https://github.com/e-hein/type-inject/blob/ae9b59e/src/child-injector.ts#L43)
+injector-scope.ts:46
 
 ___
 
@@ -112,4 +112,4 @@ ___
 
 #### Defined in
 
-[child-injector.ts:6](https://github.com/e-hein/type-inject/blob/ae9b59e/src/child-injector.ts#L6)
+injector-scope.ts:9

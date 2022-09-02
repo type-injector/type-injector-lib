@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { InjectConfig, TypeInjector } from './index';
+import { declareInjectToken, InjectConfig, TypeInjector } from './index';
 
 describe('inject tokens', () => {
   it('should be possible to use any constructor without arguments as inject token', () => {
@@ -48,7 +48,7 @@ describe('inject tokens', () => {
         this.simpleClass = simpleClass;
       }
     }
-    const thirdPartyLibraryService = TypeInjector.createToken(ThirdPartyLibraryService)
+    const thirdPartyLibraryService = declareInjectToken(ThirdPartyLibraryService)
 
     const injector = TypeInjector.construct()
       .provideFactory(thirdPartyLibraryService, {
@@ -65,7 +65,7 @@ describe('inject tokens', () => {
   describe('create inject token for anyting', () => {
     it('should be possible to inject boolean values', () => {
       const givenBooleanValue = false;
-      const tokenForBoolean = TypeInjector.createToken<boolean>('any unique string');
+      const tokenForBoolean = declareInjectToken<boolean>('any unique string');
 
       const injector = TypeInjector.construct()
         .provideValue(tokenForBoolean, givenBooleanValue)
@@ -79,7 +79,7 @@ describe('inject tokens', () => {
     it('should be possible to inject functions', () => {
       let expectedResult = 'initial value';
       const providedFunction = () => expectedResult;
-      const tokenForFunction = TypeInjector.createToken<() => string>('any unique string');
+      const tokenForFunction = declareInjectToken<() => string>('any unique string');
 
       const injector = TypeInjector.construct()
         .provideValue(tokenForFunction, providedFunction)
@@ -94,7 +94,7 @@ describe('inject tokens', () => {
 
     it('should be possible to inject any object', () => {
       const providedObject = { prop: 'initial value' };
-      const tokenForObject = TypeInjector.createToken<{ prop: string }>('any unique string');
+      const tokenForObject = declareInjectToken<{ prop: string }>('any unique string');
 
       const injector = TypeInjector.construct()
         .provideValue(tokenForObject, providedObject)
@@ -107,7 +107,7 @@ describe('inject tokens', () => {
   });
 
   it('will throw an error for tokens that are not provided (yet)', () => {
-    const unknownToken = TypeInjector.createToken('unknown');
+    const unknownToken = declareInjectToken('unknown');
     const injector = TypeInjector.build();
 
     try {

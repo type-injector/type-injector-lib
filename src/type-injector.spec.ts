@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { InjectConfig, Logger, TypeInjector } from './index';
+import { declareInjectToken, InjectConfig, Logger, TypeInjector } from './index';
 
 describe('type injector basics', () => {
   it('should get instantiated by the builder pattern', () => {
@@ -62,7 +62,7 @@ describe('type injector basics', () => {
    */
   it('should be possible to configure the injector during construction time to inject objects by token', () => {
     const injectTokens = {
-      baseUrl: TypeInjector.createToken<string>('ServiceBaseUrl'),
+      baseUrl: declareInjectToken<string>('ServiceBaseUrl'),
     }
 
     class ConfigurableService {
@@ -118,7 +118,7 @@ describe('type injector basics', () => {
    * the issue.
    */
   it('should show cyclic errors', () => {
-    const serviceC = TypeInjector.createToken<ServiceC>('ServiceC');
+    const serviceC = declareInjectToken<ServiceC>('ServiceC');
     class ServiceA {
       static injectConfig: InjectConfig = { deps: [serviceC] };
       constructor( public serviceC: ServiceC ) {}

@@ -1,8 +1,11 @@
-import { InjectFactory, InjectToken } from './type-injector.model';
-import { TypeInjector, TypeInjectorBuilder, TypeInjectorImpl } from './type-injector';
+import { InjectFactory } from './inject-factory';
+import { InjectToken } from './inject-token';
 import { Logger } from './logger';
+import { TypeInjector } from './type-injector';
+import { TypeInjectorBuilder } from './type-injector-builder';
+import { TypeInjectorImpl } from './type-injector-impl';
 
-export class ChildInjector extends TypeInjectorImpl {
+export class InjectorScope extends TypeInjectorImpl {
   static withIdent(ident: symbol) {
     return {
       from(parent: TypeInjector): TypeInjectorBuilder {
@@ -14,7 +17,7 @@ export class ChildInjector extends TypeInjectorImpl {
             )
           }
           build() {
-            const childInjector = new ChildInjector(
+            const childInjector = new InjectorScope(
               ident as symbol & { description: string },
               parent as TypeInjectorImpl,
               this._factories,

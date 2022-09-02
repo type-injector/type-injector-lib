@@ -2,13 +2,12 @@
 
 # Class: TypeInjector
 
-Entrypoint to create TypeInjectors and InjectTokens.
+Entrypoint to create TypeInjectors.
 
 **`See`**
 
  - [TypeInjector.build()](TypeInjector.md#build) - fastest way to create a TypeInjector that can create simple or statically configured classes.
  - [TypeInjector.construct()](TypeInjector.md#construct) - to manually provide values, factories or implementations before building the injector.
- - [TypeInjector.createToken()](TypeInjector.md#createtoken) - to create type safe inject tokens used to provide values or factories
 
 ## Table of contents
 
@@ -17,7 +16,6 @@ Entrypoint to create TypeInjectors and InjectTokens.
 - [get](TypeInjector.md#get)
 - [build](TypeInjector.md#build)
 - [construct](TypeInjector.md#construct)
-- [createToken](TypeInjector.md#createtoken)
 
 ## Methods
 
@@ -47,7 +45,7 @@ Might create a new instance or return an existing one.
 
 #### Defined in
 
-[type-injector.ts:105](https://github.com/e-hein/type-inject/blob/ae9b59e/src/type-injector.ts#L105)
+[type-injector.ts:19](https://github.com/e-hein/type-inject/blob/51d9756/src/type-injector.ts#L19)
 
 ___
 
@@ -69,7 +67,7 @@ TypeInjector
 
 #### Defined in
 
-[type-injector.ts:151](https://github.com/e-hein/type-inject/blob/ae9b59e/src/type-injector.ts#L151)
+[type-injector.ts:50](https://github.com/e-hein/type-inject/blob/51d9756/src/type-injector.ts#L50)
 
 ___
 
@@ -94,39 +92,4 @@ TypeInjectorBuilder
 
 #### Defined in
 
-[type-injector.ts:141](https://github.com/e-hein/type-inject/blob/ae9b59e/src/type-injector.ts#L141)
-
-___
-
-### createToken
-
-▸ `Static` **createToken**<`T`\>(`type`): [`InjectToken`](../modules.md#injecttoken)<`T` extends (...`args`: `any`[]) => `U` ? `U` : `T`\>
-
-Create a typed inject token for anything.
-
-This helper binds type information to a symbol so you can use that
-symbol to inject a typed value.
-Because the TypeInjector has no information how to create this symbol,
-it has to be provided before it gets injected the first time.
-
-#### Type parameters
-
-| Name |
-| :------ |
-| `T` |
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `type` | `string` \| `T` & (...`args`: `any`[]) => `any` & { `name`: `string`  } | can be an abstract class or a simple string |
-
-#### Returns
-
-[`InjectToken`](../modules.md#injecttoken)<`T` extends (...`args`: `any`[]) => `U` ? `U` : `T`\>
-
-a token that can be used to first provide then inject anything
-
-#### Defined in
-
-[type-injector.ts:128](https://github.com/e-hein/type-inject/blob/ae9b59e/src/type-injector.ts#L128)
+[type-injector.ts:40](https://github.com/e-hein/type-inject/blob/51d9756/src/type-injector.ts#L40)

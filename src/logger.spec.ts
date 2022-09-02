@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { InjectConfig, Logger, TypeInjector } from './index';
+import { declareInjectToken, InjectConfig, Logger, TypeInjector } from './index';
 
 /**
  * Logger and its replacement.
@@ -46,7 +46,7 @@ describe('logger', () => {
       class VerboseLogger extends Logger {
         info = (message: string, ..._details: any[]) => infoMsgs.push(message);
       }
-      const injectToken = { baseUrl: TypeInjector.createToken('base url') };
+      const injectToken = { baseUrl: declareInjectToken('base url') };
       const injector = TypeInjector.construct()
         .provideImplementation(Logger, VerboseLogger)
         .provideFactory(injectToken.baseUrl, { deps: [], create: () => 'https://base.url/' })

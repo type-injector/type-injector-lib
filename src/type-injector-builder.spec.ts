@@ -1,10 +1,10 @@
 import { expect } from 'chai';
-import { TypeInjector } from './type-injector';
+import { declareInjectToken, TypeInjector } from './index';
 
 describe('provide variants', () => {
   describe('provide value', () => {
     it('should be possible to provide a value', () => {
-      const injectToken = TypeInjector.createToken<{ name: string}>('TestInjectToken');
+      const injectToken = declareInjectToken<{ name: string}>('TestInjectToken');
       const givenValue = { name: 'givenValue' };
       const injector = TypeInjector.construct()
         .provideValue(injectToken, givenValue)
@@ -59,7 +59,7 @@ describe('provide variants', () => {
       interface MyService {
         typeName: string;
       }
-      const myServiceInjectToken = TypeInjector.createToken<MyService>('MyService');
+      const myServiceInjectToken = declareInjectToken<MyService>('MyService');
 
       class MyServiceImpl implements MyService {
         readonly typeName = 'SpecialImpl';

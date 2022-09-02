@@ -73,12 +73,12 @@ const result = injector.get(tokenForBoolean);
 expect(result).to.equal(givenBooleanValue);
 ```
 # Further documentation:
-* [Basics](./src/type-injector-0-basics.spec.ts)
-* [Inject tokens](./src/type-injector-1-inject-token.spec.ts)
-* [Variants of provide](./src/type-injector-2-provide-variants.spec.ts)
-* [Scopes](./src/type-injector-3-scopes.spec.ts)
+* [Basics](./src/type-injector.spec.ts)
+* [Inject tokens](./src/inject-token.spec.ts)
+* [Variants of provide](./src/type-injector-builder.spec.ts)
+* [Scopes](./src/injector-scope.spec.ts)
 * [Logging](./src/logger.spec.ts)
-* [API](./typedoc/classes/TypeInjector.md)
+* [API](./typedoc/modules.md)
 
 ## Motivation
 There are plenty of inject libraries out there. Most of them are part of a larger framework so they are only usable in a browser frontend or a server backend.
