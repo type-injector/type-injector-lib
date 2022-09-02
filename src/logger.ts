@@ -4,7 +4,7 @@
  * Will only log errors to console. Provide an alternative implementation
  * to log more details / log in a different was.
  *
- * @see {@link file://./logger.spec.ts} for more details
+ * @see ./logger.spec.ts for more details
  */
 export class Logger {
   info?: (message: string, ...details: any[]) => void;

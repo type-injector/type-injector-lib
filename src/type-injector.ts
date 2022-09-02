@@ -86,7 +86,14 @@ export class TypeInjectorBuilder {
   }
 }
 
-export interface TypeInjector {
+/**
+ * Entrypoint to create TypeInjectors and InjectTokens.
+ *
+ * @see {@link build | TypeInjector.build()} - fastest way to create a TypeInjector that can create simple or statically configured classes.
+ * @see {@link construct | TypeInjector.construct()} - to manually provide values, factories or implementations before building the injector.
+ * @see {@link createToken | TypeInjector.createToken()} - to create type safe inject tokens used to provide values or factories
+ */
+export abstract class TypeInjector {
   /**
    * Get something from the cdi.
    *
@@ -95,11 +102,19 @@ export interface TypeInjector {
    * @param token - {@link InjectToken} identifying the value to inject
    * @returns
    */
-  get<T>(token: InjectToken<T>): T;
-}
+  abstract get<T>(token: InjectToken<T>): T;
 
-export namespace TypeInjector {
-   /**
+  /**
+   * Never create an instance of this class!
+   *
+   * It's only used as an interface and provides static
+   * methods to create TypeInjectors
+   */
+  private constructor() {
+    // prevent creating an instance of this class directly
+  }
+
+  /**
    * Create a typed inject token for anything.
    *
    * This helper binds type information to a symbol so you can use that
@@ -110,7 +125,7 @@ export namespace TypeInjector {
    * @param type - can be an abstract class or a simple string
    * @returns a token that can be used to first provide then inject anything
    */
-  export function createToken<T>(type: (T & (abstract new (...args: any[]) => any) & { name: string }) | string): InjectToken<T extends abstract new (...args: any[]) => infer U ? U : T> {
+  static createToken<T>(type: (T & (abstract new (...args: any[]) => any) & { name: string }) | string): InjectToken<T extends abstract new (...args: any[]) => infer U ? U : T> {
     return Symbol.for(`TypeInjectorToken: ${typeof type === 'string' ? type : type.name}`) as symbol & { description: string };
   }
 
@@ -123,7 +138,7 @@ export namespace TypeInjector {
    * @returns TypeInjectorBuilder
    * @see {@link build | TypeInjector.build()} - a shortcut to create an injector without configuration
    */
-  export function construct(): TypeInjectorBuilder {
+  static construct(): TypeInjectorBuilder {
     return new TypeInjectorBuilder();
   }
 
@@ -133,20 +148,15 @@ export namespace TypeInjector {
    * @returns TypeInjector
    * @see {@link construct | TypeInjector.construct()} - if you need to provide values, factories or override implementations
    */
-  export function build(): TypeInjector {
+  static build(): TypeInjector {
     return new TypeInjectorBuilder().build();
   }
 }
 
+/**
+ * @internal
+ */
 export class TypeInjectorImpl implements TypeInjector {
-  /**
-   * Get something from the cdi.
-   *
-   * Might create a new instance or return an existing one.
-   *
-   * @param token - {@link InjectToken} identifying the value to inject
-   * @returns always the same instance of the value valid for this scope
-   */
   get<T>(token: InjectToken<T>): T {
     return this._instances.has(token)
       ? this._instances.get(token) as T

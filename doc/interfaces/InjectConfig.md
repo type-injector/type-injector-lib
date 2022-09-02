@@ -1,0 +1,36 @@
+[type-inject](../README.md) / [Exports](../modules.md) / InjectConfig
+
+# Interface: InjectConfig
+
+## Hierarchy
+
+- **`InjectConfig`**
+
+  ↳ [`InjectFactory`](InjectFactory.md)
+
+## Table of contents
+
+### Properties
+
+- [deps](InjectConfig.md#deps)
+
+## Properties
+
+### deps
+
+• **deps**: [`InjectToken`](../modules.md#injecttoken)<`unknown`\>[]
+
+Inject tokens for all arguments required to create an injectable value.
+
+- For classes the dependencies have to match the consturctor parameters
+- For all other functions (like factories) the tokens have to match the parameters
+
+In both cases "match" means that the inject tokens return the right types of
+all parameters in the same order as they are needed for the function/constructor call.
+
+The dependencies of an inject token are not created before the inject token
+itself gets created.
+
+#### Defined in
+
+[type-injector.model.ts:28](https://github.com/e-hein/type-inject/blob/4e7c44a/src/type-injector.model.ts#L28)
