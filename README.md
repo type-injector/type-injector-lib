@@ -15,7 +15,7 @@ A simple class is a class that has a constructor without arguments (or no constr
   }
 
   it('should be able to inject a type without further configuration', () => {
-    const injector = new TypeInjector();
+    const injector = TypeInjector.build();
     const baseService = injector.get(BaseService);
     expect(baseService.isBaseService).to.equal(true);
   });
@@ -60,13 +60,14 @@ The ```injectConfig``` uses the ```BaseService``` as a value, so it's preserved 
 ### Inject Tokens
 Every class that provides an empty constructor or an ```InjectConfig``` and ```Symbol```s can get used as inject token directly. If you use symbols, you lose type-safty. Therefore you can create inject tokens for everything that is not directly usable as inject token (like simple values or configuration objects or functions):
 ```typescript
-import { TypeInjector } from 'type-injector';
+import { declareInjectToken, TypeInjector } from 'type-injector';
 
 const givenBooleanValue = false;
-const tokenForBoolean = TypeInjector.createToken<boolean>('any unique string');
+const tokenForBoolean = declareInjectToken<boolean>('any unique string');
 
-const injector = new TypeInjector()
+const injector = TypeInjector.construct()
   .provideValue(tokenForBoolean, givenBooleanValue)
+  .build()
 ;
 const result = injector.get(tokenForBoolean);
 
