@@ -35,9 +35,9 @@ type-inject - v1.0.0-alpha
 
 #### Type parameters
 
-| Name |
-| :------ |
-| `T` |
+| Name | Description |
+| :------ | :------ |
+| `T` | defines that InstanceType of the constructor. |
 
 #### Type declaration
 
@@ -47,7 +47,7 @@ Every class that has an constructor without parameters can get used as Inject to
 
 #### Defined in
 
-[inject-token.ts:4](https://github.com/e-hein/type-inject/blob/be2ba80/src/inject-token.ts#L4)
+[inject-token.ts:6](https://github.com/e-hein/type-inject/blob/3c5f497/src/inject-token.ts#L6)
 
 ___
 
@@ -63,7 +63,7 @@ ___
 
 #### Defined in
 
-[inject-token.ts:40](https://github.com/e-hein/type-inject/blob/be2ba80/src/inject-token.ts#L40)
+[inject-token.ts:42](https://github.com/e-hein/type-inject/blob/3c5f497/src/inject-token.ts#L42)
 
 ___
 
@@ -73,13 +73,13 @@ ___
 
 #### Type parameters
 
-| Name |
-| :------ |
-| `T` |
+| Name | Description |
+| :------ | :------ |
+| `T` | defines the required type of the value to inject with that token. |
 
 #### Defined in
 
-[inject-token.ts:42](https://github.com/e-hein/type-inject/blob/be2ba80/src/inject-token.ts#L42)
+[inject-token.ts:47](https://github.com/e-hein/type-inject/blob/3c5f497/src/inject-token.ts#L47)
 
 ___
 
@@ -106,7 +106,7 @@ class instance.
 
 #### Defined in
 
-[inject-token.ts:32](https://github.com/e-hein/type-inject/blob/be2ba80/src/inject-token.ts#L32)
+[inject-token.ts:34](https://github.com/e-hein/type-inject/blob/3c5f497/src/inject-token.ts#L34)
 
 ## Functions
 
@@ -123,9 +123,9 @@ it has to be provided before it gets injected the first time.
 
 #### Type parameters
 
-| Name |
-| :------ |
-| `T` |
+| Name | Description |
+| :------ | :------ |
+| `T` | defines the required type of the value to inject with that token. |
 
 #### Parameters
 
@@ -141,4 +141,4 @@ a token that can be used to first provide then inject anything
 
 #### Defined in
 
-[inject-token.ts:55](https://github.com/e-hein/type-inject/blob/be2ba80/src/inject-token.ts#L55)
+[inject-token.ts:61](https://github.com/e-hein/type-inject/blob/3c5f497/src/inject-token.ts#L61)

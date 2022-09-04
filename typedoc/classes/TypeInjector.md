@@ -9,6 +9,10 @@ Entrypoint to create TypeInjectors.
  - [TypeInjector.build()](TypeInjector.md#build) - fastest way to create a TypeInjector that can create simple or statically configured classes.
  - [TypeInjector.construct()](TypeInjector.md#construct) - to manually provide values, factories or implementations before building the injector.
 
+## Implemented by
+
+- [`InjectorScope`](InjectorScope.md)
+
 ## Table of contents
 
 ### Methods
@@ -29,9 +33,9 @@ Might create a new instance or return an existing one.
 
 #### Type parameters
 
-| Name |
-| :------ |
-| `T` |
+| Name | Description |
+| :------ | :------ |
+| `T` | type defined by the token. Will match the type of the returned value. |
 
 #### Parameters
 
@@ -43,9 +47,11 @@ Might create a new instance or return an existing one.
 
 `T`
 
+a value that implements the type defined by the token.
+
 #### Defined in
 
-[type-injector.ts:19](https://github.com/e-hein/type-inject/blob/be2ba80/src/type-injector.ts#L19)
+[type-injector.ts:20](https://github.com/e-hein/type-inject/blob/3c5f497/src/type-injector.ts#L20)
 
 ___
 
@@ -67,7 +73,7 @@ TypeInjector
 
 #### Defined in
 
-[type-injector.ts:50](https://github.com/e-hein/type-inject/blob/be2ba80/src/type-injector.ts#L50)
+[type-injector.ts:53](https://github.com/e-hein/type-inject/blob/3c5f497/src/type-injector.ts#L53)
 
 ___
 
@@ -77,8 +83,11 @@ ___
 
 Starts the construction of a new injector.
 
-After calling construct you can chain several methods to
-configure the injector before you finally .build() it.
+```typescript
+TypeInjector.construct()
+  [...provide...]
+.build();
+```
 
 **`See`**
 
@@ -92,4 +101,4 @@ TypeInjectorBuilder
 
 #### Defined in
 
-[type-injector.ts:40](https://github.com/e-hein/type-inject/blob/be2ba80/src/type-injector.ts#L40)
+[type-injector.ts:43](https://github.com/e-hein/type-inject/blob/3c5f497/src/type-injector.ts#L43)

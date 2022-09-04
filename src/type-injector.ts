@@ -13,8 +13,9 @@ export abstract class TypeInjector {
    *
    * Might create a new instance or return an existing one.
    *
+   * @typeParam T - type defined by the token. Will match the type of the returned value.
    * @param token - {@link InjectToken} identifying the value to inject
-   * @returns
+   * @returns a value that implements the type defined by the token.
    */
   abstract get<T>(token: InjectToken<T>): T;
 
@@ -31,9 +32,11 @@ export abstract class TypeInjector {
   /**
    * Starts the construction of a new injector.
    *
-   * After calling construct you can chain several methods to
-   * configure the injector before you finally .build() it.
-   *
+   * ```typescript
+   * TypeInjector.construct()
+   *   [...provide...]
+   * .build();
+   * ```
    * @returns TypeInjectorBuilder
    * @see {@link build | TypeInjector.build()} - a shortcut to create an injector without configuration
    */

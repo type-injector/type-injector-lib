@@ -39,7 +39,7 @@ Finish configuration of the TypeInjector
 
 #### Defined in
 
-[type-injector-builder.ts:84](https://github.com/e-hein/type-inject/blob/be2ba80/src/type-injector-builder.ts#L84)
+[type-injector-builder.ts:87](https://github.com/e-hein/type-inject/blob/3c5f497/src/type-injector-builder.ts#L87)
 
 ___
 
@@ -53,9 +53,9 @@ The provided function will be called the first time the token is requested.
 
 #### Type parameters
 
-| Name |
-| :------ |
-| `T` |
+| Name | Description |
+| :------ | :------ |
+| `T` | type defined by the token. Has to match the return type of the factory. |
 
 #### Parameters
 
@@ -72,7 +72,7 @@ the Injector itself to allow chaining provides
 
 #### Defined in
 
-[type-injector-builder.ts:40](https://github.com/e-hein/type-inject/blob/be2ba80/src/type-injector-builder.ts#L40)
+[type-injector-builder.ts:42](https://github.com/e-hein/type-inject/blob/3c5f497/src/type-injector-builder.ts#L42)
 
 ___
 
@@ -88,9 +88,9 @@ Like every factory it's called lazily on the first request of the token.
 
 #### Type parameters
 
-| Name |
-| :------ |
-| `T` |
+| Name | Description |
+| :------ | :------ |
+| `T` | type defined by the token. Has to match the type of the implementation. |
 
 #### Parameters
 
@@ -107,7 +107,7 @@ the Injector itself to allow chaining provides
 
 #### Defined in
 
-[type-injector-builder.ts:56](https://github.com/e-hein/type-inject/blob/be2ba80/src/type-injector-builder.ts#L56)
+[type-injector-builder.ts:59](https://github.com/e-hein/type-inject/blob/3c5f497/src/type-injector-builder.ts#L59)
 
 ___
 
@@ -123,9 +123,9 @@ from the environment.
 
 #### Type parameters
 
-| Name |
-| :------ |
-| `T` |
+| Name | Description |
+| :------ | :------ |
+| `T` | type defined by the token. Has to match the type of the value. |
 
 #### Parameters
 
@@ -142,4 +142,4 @@ the Injector itself to allow chaining provides
 
 #### Defined in
 
-[type-injector-builder.ts:26](https://github.com/e-hein/type-inject/blob/be2ba80/src/type-injector-builder.ts#L26)
+[type-injector-builder.ts:27](https://github.com/e-hein/type-inject/blob/3c5f497/src/type-injector-builder.ts#L27)

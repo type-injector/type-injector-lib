@@ -1,5 +1,7 @@
 /**
  * Every class that has an constructor without parameters can get used as Inject token.
+ *
+ * @typeParam T - defines that InstanceType of the constructor.
  */
 export type ConstructorWithoutArguments<T> = new () => T;
 
@@ -34,11 +36,20 @@ export interface InjectConfig {
 }
 
 /**
- * @typeParam T - type of the value to get injected with this token
+ * To configure any dependency type safe you can {@link declareInjectToken | declare an inject token}.
+ *
+ * @typeParam T - type of the value to get injected with this token.
  */
+// T is used when using the token.
 // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
 export type DeclaredInjectToken<T> = symbol & { description: string };
 
+/**
+ * An InjectToken can be a {@link ConstructorWithoutArguments}, {@link InjectableClass} or a {@link DeclaredInjectToken}.
+ *
+ * @typeParam T - defines the required type of the value to inject with that token.
+ * @see {@link declareInjectToken}
+ */
 export type InjectToken<T> = ConstructorWithoutArguments<T> | InjectableClass<T> | DeclaredInjectToken<T>;
 
 /**
@@ -49,6 +60,7 @@ export type InjectToken<T> = ConstructorWithoutArguments<T> | InjectableClass<T>
  * Because the TypeInjector has no information how to create this symbol,
  * it has to be provided before it gets injected the first time.
  *
+ * @typeParam T - defines the required type of the value to inject with that token.
  * @param type - can be an abstract class or a simple string
  * @returns a token that can be used to first provide then inject anything
  */

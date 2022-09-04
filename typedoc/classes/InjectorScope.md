@@ -2,11 +2,17 @@
 
 # Class: InjectorScope
 
+A scope is a child injector that might provide additional values or override implementations.
+
 ## Hierarchy
 
 - `TypeInjectorImpl`
 
   ↳ **`InjectorScope`**
+
+## Implements
+
+- [`TypeInjector`](TypeInjector.md)
 
 ## Table of contents
 
@@ -17,8 +23,7 @@
 ### Methods
 
 - [get](InjectorScope.md#get)
-- [getOptFactory](InjectorScope.md#getoptfactory)
-- [withIdent](InjectorScope.md#withident)
+- [construct](InjectorScope.md#construct)
 
 ## Properties
 
@@ -28,7 +33,7 @@
 
 #### Defined in
 
-[injector-scope.ts:37](https://github.com/e-hein/type-inject/blob/be2ba80/src/injector-scope.ts#L37)
+[injector-scope.ts:61](https://github.com/e-hein/type-inject/blob/3c5f497/src/injector-scope.ts#L61)
 
 ## Methods
 
@@ -36,21 +41,31 @@
 
 ▸ **get**<`T`\>(`token`): `T`
 
+Get something from the cdi.
+
+Might create a new instance or return an existing one.
+
 #### Type parameters
 
-| Name |
-| :------ |
-| `T` |
+| Name | Description |
+| :------ | :------ |
+| `T` | type defined by the token. Will match the type of the returned value. |
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `token` | [`InjectToken`](../README.md#injecttoken)<`T`\> |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `token` | [`InjectToken`](../README.md#injecttoken)<`T`\> | [InjectToken](../README.md#injecttoken) identifying the value to inject |
 
 #### Returns
 
 `T`
+
+a value that implements the type defined by the token.
+
+#### Implementation of
+
+[TypeInjector](TypeInjector.md).[get](TypeInjector.md#get)
 
 #### Inherited from
 
@@ -58,49 +73,23 @@ TypeInjectorImpl.get
 
 #### Defined in
 
-[type-injector-impl.ts:10](https://github.com/e-hein/type-inject/blob/be2ba80/src/type-injector-impl.ts#L10)
+[type-injector-impl.ts:13](https://github.com/e-hein/type-inject/blob/3c5f497/src/type-injector-impl.ts#L13)
 
 ___
 
-### getOptFactory
+### construct
 
-▸ **getOptFactory**<`T`\>(`token`): [`InjectFactory`](../interfaces/InjectFactory.md)<`T`\>
+▸ `Static` **construct**(): `Object`
 
-#### Type parameters
+fluent construction of InejectorScopes.
 
-| Name |
-| :------ |
-| `T` |
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `token` | [`InjectToken`](../README.md#injecttoken)<`T`\> |
-
-#### Returns
-
-[`InjectFactory`](../interfaces/InjectFactory.md)<`T`\>
-
-#### Overrides
-
-TypeInjectorImpl.getOptFactory
-
-#### Defined in
-
-[injector-scope.ts:46](https://github.com/e-hein/type-inject/blob/be2ba80/src/injector-scope.ts#L46)
-
-___
-
-### withIdent
-
-▸ `Static` **withIdent**(`ident`): `Object`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `ident` | `symbol` |
+```typescript
+InjectorScope.construct()
+  .withIdent(Symbol.for('scope name'))
+  .fromParent(parentScope)
+  [...provide...]
+.build();
+```
 
 #### Returns
 
@@ -108,8 +97,8 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `from` | (`parent`: [`TypeInjector`](TypeInjector.md)) => [`TypeInjectorBuilder`](TypeInjectorBuilder.md) |
+| `withIdent` | (`ident`: `symbol`) => { `fromParent`: (`parent`: [`TypeInjector`](TypeInjector.md)) => [`TypeInjectorBuilder`](TypeInjectorBuilder.md)  } |
 
 #### Defined in
 
-[injector-scope.ts:9](https://github.com/e-hein/type-inject/blob/be2ba80/src/injector-scope.ts#L9)
+[injector-scope.ts:25](https://github.com/e-hein/type-inject/blob/3c5f497/src/injector-scope.ts#L25)

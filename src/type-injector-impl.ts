@@ -7,6 +7,9 @@ import { TypeInjector } from './type-injector';
  * @internal
  */
  export class TypeInjectorImpl implements TypeInjector {
+  /**
+   * {@inheritDoc TypeInjector.get}
+   */
   get<T>(token: InjectToken<T>): T {
     return this._instances.has(token)
       ? this._instances.get(token) as T
@@ -32,6 +35,9 @@ import { TypeInjector } from './type-injector';
     return logger;
   }
 
+  /**
+   * @internal
+   */
   getOptFactory<T>(token: InjectToken<T>): InjectFactory<T> | undefined {
     const providedFactory = this._factories.get(token);
     if (providedFactory) {

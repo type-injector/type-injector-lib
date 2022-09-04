@@ -5,10 +5,34 @@ import { TypeInjector } from './type-injector';
 import { TypeInjectorBuilder } from './type-injector-builder';
 import { TypeInjectorImpl } from './type-injector-impl';
 
-export class InjectorScope extends TypeInjectorImpl {
-  static withIdent(ident: symbol) {
+/**
+ * A scope is a child injector that might provide additional values or override implementations.
+ */
+export class InjectorScope extends TypeInjectorImpl implements TypeInjector {
+  /**
+   * fluent construction of InejectorScopes.
+   *
+   * ```typescript
+   * InjectorScope.construct()
+   *   .withIdent(Symbol.for('scope name'))
+   *   .fromParent(parentScope)
+   *   [...provide...]
+   * .build();
+   * ```
+   *
+   * @returns
+   */
+  static construct() {
     return {
-      from(parent: TypeInjector): TypeInjectorBuilder {
+      /**
+       * @param ident - unique identifier of the scope
+       */
+      withIdent: (ident: symbol) => ({
+      /**
+       * @param parent - that is used as fallback
+       * @returns
+       */
+      fromParent: (parent: TypeInjector): TypeInjectorBuilder => {
         return new class extends TypeInjectorBuilder {
           provideFactory<T>(token: InjectToken<T>, factory: InjectFactory<T>): TypeInjectorBuilder {
             return super.provideFactory(
@@ -28,7 +52,7 @@ export class InjectorScope extends TypeInjectorImpl {
           }
         }
       }
-    };
+    }) };
   }
 
   private _ownInstances: any[];
@@ -43,6 +67,9 @@ export class InjectorScope extends TypeInjectorImpl {
     this._ownInstances = Array.from(_instances.values());
   }
 
+  /**
+   * @internal
+   */
   getOptFactory<T>(token: InjectToken<T>): InjectFactory<T> {
     return this._factories.get(token) as InjectFactory<T> || this._parent.getOptFactory(token);
   }
@@ -70,6 +97,7 @@ export class InjectorScope extends TypeInjectorImpl {
    * This instance is linked into _instances to prevent further calls with the same
    * token to repeat all dependency checks.
    *
+   * @typeParam T - type defined by the token. Will match the instance type returned by the parent scope.
    * @param token - {@link InjectToken} identifying the value to inject
    * @returns instance from parent + flag that it is from parent
    */

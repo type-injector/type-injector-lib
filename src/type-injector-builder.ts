@@ -19,6 +19,7 @@ import { hasInjectConfig, TypeInjectorImpl } from './type-injector-impl';
    * service class, simple values like flags or configuration objects
    * from the environment.
    *
+   * @typeParam T - type defined by the token. Has to match the type of the value.
    * @param token - which will get used to inject the value
    * @param value - that will get returned for the token
    * @returns the Injector itself to allow chaining provides
@@ -33,6 +34,7 @@ import { hasInjectConfig, TypeInjectorImpl } from './type-injector-impl';
    *
    * The provided function will be called the first time the token is requested.
    *
+   * @typeParam T - type defined by the token. Has to match the return type of the factory.
    * @param token - which will get used to inject the value
    * @param factory - that creates something that matches the type of the token
    * @returns the Injector itself to allow chaining provides
@@ -49,6 +51,7 @@ import { hasInjectConfig, TypeInjectorImpl } from './type-injector-impl';
    * that is injectable itself (has no constructor args / static inject config).
    * Like every factory it's called lazily on the first request of the token.
    *
+   * @typeParam T - type defined by the token. Has to match the type of the implementation.
    * @param token - which will get used to inject the value
    * @param impl - to instanciate as soon as it's requested the first time
    * @returns the Injector itself to allow chaining provides

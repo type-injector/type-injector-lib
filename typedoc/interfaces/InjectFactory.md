@@ -47,7 +47,7 @@ Define a factory method with dependencies to create an injectable value.
 
 #### Defined in
 
-[inject-factory.ts:9](https://github.com/e-hein/type-inject/blob/be2ba80/src/inject-factory.ts#L9)
+[inject-factory.ts:9](https://github.com/e-hein/type-inject/blob/3c5f497/src/inject-factory.ts#L9)
 
 ___
 
@@ -72,7 +72,7 @@ itself gets created.
 
 #### Defined in
 
-[inject-token.ts:19](https://github.com/e-hein/type-inject/blob/be2ba80/src/inject-token.ts#L19)
+[inject-token.ts:21](https://github.com/e-hein/type-inject/blob/3c5f497/src/inject-token.ts#L21)
 
 ___
 
@@ -82,7 +82,7 @@ ___
 
 #### Defined in
 
-[inject-factory.ts:7](https://github.com/e-hein/type-inject/blob/be2ba80/src/inject-factory.ts#L7)
+[inject-factory.ts:7](https://github.com/e-hein/type-inject/blob/3c5f497/src/inject-factory.ts#L7)
 
 ___
 
@@ -92,4 +92,4 @@ ___
 
 #### Defined in
 
-[inject-factory.ts:8](https://github.com/e-hein/type-inject/blob/be2ba80/src/inject-factory.ts#L8)
+[inject-factory.ts:8](https://github.com/e-hein/type-inject/blob/3c5f497/src/inject-factory.ts#L8)

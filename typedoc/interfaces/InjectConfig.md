@@ -33,4 +33,4 @@ itself gets created.
 
 #### Defined in
 
-[inject-token.ts:19](https://github.com/e-hein/type-inject/blob/be2ba80/src/inject-token.ts#L19)
+[inject-token.ts:21](https://github.com/e-hein/type-inject/blob/3c5f497/src/inject-token.ts#L21)
