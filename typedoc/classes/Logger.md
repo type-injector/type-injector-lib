@@ -1,4 +1,4 @@
-[type-inject - v1.0.0-alpha](../README.md) / Logger
+[type-injector - v1.0.0-alpha](../README.md) / Logger
 
 # Class: Logger
 
@@ -55,7 +55,7 @@ to log more details / log in a different was.
 
 #### Defined in
 
-[logger.ts:10](https://github.com/e-hein/type-inject/blob/cdff06c/src/logger.ts#L10)
+[logger.ts:10](https://github.com/e-hein/type-injector/blob/cdff06c/src/logger.ts#L10)
 
 ___
 
@@ -80,7 +80,7 @@ ___
 
 #### Defined in
 
-[logger.ts:11](https://github.com/e-hein/type-inject/blob/cdff06c/src/logger.ts#L11)
+[logger.ts:11](https://github.com/e-hein/type-injector/blob/cdff06c/src/logger.ts#L11)
 
 ## Methods
 
@@ -101,4 +101,4 @@ ___
 
 #### Defined in
 
-[logger.ts:12](https://github.com/e-hein/type-inject/blob/cdff06c/src/logger.ts#L12)
+[logger.ts:12](https://github.com/e-hein/type-injector/blob/cdff06c/src/logger.ts#L12)

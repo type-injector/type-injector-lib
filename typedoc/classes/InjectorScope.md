@@ -1,4 +1,4 @@
-[type-inject - v1.0.0-alpha](../README.md) / InjectorScope
+[type-injector - v1.0.0-alpha](../README.md) / InjectorScope
 
 # Class: InjectorScope
 
@@ -29,7 +29,7 @@ A scope is a child injector that might provide additional values or override imp
 
 #### Defined in
 
-[injector-scope.ts:62](https://github.com/e-hein/type-inject/blob/cdff06c/src/injector-scope.ts#L62)
+[injector-scope.ts:62](https://github.com/e-hein/type-injector/blob/cdff06c/src/injector-scope.ts#L62)
 
 ## Methods
 
@@ -65,7 +65,7 @@ a value that implements the Type defined by the token.
 
 #### Defined in
 
-[basic-type-injector.ts:23](https://github.com/e-hein/type-inject/blob/cdff06c/src/basic-type-injector.ts#L23)
+[basic-type-injector.ts:23](https://github.com/e-hein/type-injector/blob/cdff06c/src/basic-type-injector.ts#L23)
 
 ___
 
@@ -93,4 +93,4 @@ InjectorScope.construct()
 
 #### Defined in
 
-[injector-scope.ts:24](https://github.com/e-hein/type-inject/blob/cdff06c/src/injector-scope.ts#L24)
+[injector-scope.ts:24](https://github.com/e-hein/type-injector/blob/cdff06c/src/injector-scope.ts#L24)
