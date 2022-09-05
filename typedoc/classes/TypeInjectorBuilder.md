@@ -39,7 +39,7 @@ Finish configuration of the TypeInjector
 
 #### Defined in
 
-[type-injector-builder.ts:87](https://github.com/e-hein/type-inject/blob/3c5f497/src/type-injector-builder.ts#L87)
+[type-injector.ts:105](https://github.com/e-hein/type-inject/blob/dbcc852/src/type-injector.ts#L105)
 
 ___
 
@@ -72,7 +72,7 @@ the Injector itself to allow chaining provides
 
 #### Defined in
 
-[type-injector-builder.ts:42](https://github.com/e-hein/type-inject/blob/3c5f497/src/type-injector-builder.ts#L42)
+[type-injector.ts:60](https://github.com/e-hein/type-inject/blob/dbcc852/src/type-injector.ts#L60)
 
 ___
 
@@ -107,7 +107,7 @@ the Injector itself to allow chaining provides
 
 #### Defined in
 
-[type-injector-builder.ts:59](https://github.com/e-hein/type-inject/blob/3c5f497/src/type-injector-builder.ts#L59)
+[type-injector.ts:77](https://github.com/e-hein/type-inject/blob/dbcc852/src/type-injector.ts#L77)
 
 ___
 
@@ -142,4 +142,4 @@ the Injector itself to allow chaining provides
 
 #### Defined in
 
-[type-injector-builder.ts:27](https://github.com/e-hein/type-inject/blob/3c5f497/src/type-injector-builder.ts#L27)
+[type-injector.ts:45](https://github.com/e-hein/type-inject/blob/dbcc852/src/type-injector.ts#L45)

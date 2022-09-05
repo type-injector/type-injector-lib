@@ -6,13 +6,9 @@ A scope is a child injector that might provide additional values or override imp
 
 ## Hierarchy
 
-- `TypeInjectorImpl`
+- [`BasicTypeInjector`](BasicTypeInjector.md)
 
   ↳ **`InjectorScope`**
-
-## Implements
-
-- [`TypeInjector`](TypeInjector.md)
 
 ## Table of contents
 
@@ -33,7 +29,7 @@ A scope is a child injector that might provide additional values or override imp
 
 #### Defined in
 
-[injector-scope.ts:61](https://github.com/e-hein/type-inject/blob/3c5f497/src/injector-scope.ts#L61)
+[injector-scope.ts:62](https://github.com/e-hein/type-inject/blob/dbcc852/src/injector-scope.ts#L62)
 
 ## Methods
 
@@ -63,17 +59,13 @@ Might create a new instance or return an existing one.
 
 a value that implements the type defined by the token.
 
-#### Implementation of
-
-[TypeInjector](TypeInjector.md).[get](TypeInjector.md#get)
-
 #### Inherited from
 
-TypeInjectorImpl.get
+[BasicTypeInjector](BasicTypeInjector.md).[get](BasicTypeInjector.md#get)
 
 #### Defined in
 
-[type-injector-impl.ts:13](https://github.com/e-hein/type-inject/blob/3c5f497/src/type-injector-impl.ts#L13)
+[basic-type-injector.ts:23](https://github.com/e-hein/type-inject/blob/dbcc852/src/basic-type-injector.ts#L23)
 
 ___
 
@@ -101,4 +93,4 @@ InjectorScope.construct()
 
 #### Defined in
 
-[injector-scope.ts:25](https://github.com/e-hein/type-inject/blob/3c5f497/src/injector-scope.ts#L25)
+[injector-scope.ts:24](https://github.com/e-hein/type-inject/blob/dbcc852/src/injector-scope.ts#L24)

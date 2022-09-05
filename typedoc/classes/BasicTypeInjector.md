@@ -1,31 +1,39 @@
-[type-inject - v1.0.0-alpha](../README.md) / TypeInjector
+[type-inject - v1.0.0-alpha](../README.md) / BasicTypeInjector
 
-# Class: TypeInjector
+# Class: BasicTypeInjector
 
-Stable DI-Container that can be used everywhere.
+Minimalistic TypeInjector.
+
+If you don't want to use the builder pattern or subscopes you could use the BasicTypeInjector
+to further reduce runtime bundle size.
+
+**`See`**
+
+[construct](TypeInjector.md#construct) - using the builder pattern to configure your injector.
 
 ## Hierarchy
 
-- [`BasicTypeInjector`](BasicTypeInjector.md)
+- **`BasicTypeInjector`**
 
-  ↳ **`TypeInjector`**
+  ↳ [`TypeInjector`](TypeInjector.md)
+
+  ↳ [`InjectorScope`](InjectorScope.md)
 
 ## Table of contents
 
 ### Constructors
 
-- [constructor](TypeInjector.md#constructor)
+- [constructor](BasicTypeInjector.md#constructor)
 
 ### Methods
 
-- [get](TypeInjector.md#get)
-- [construct](TypeInjector.md#construct)
+- [get](BasicTypeInjector.md#get)
 
 ## Constructors
 
 ### constructor
 
-• **new TypeInjector**(`__namedParameters?`)
+• **new BasicTypeInjector**(`__namedParameters?`)
 
 Create a simple new top level injector.
 
@@ -38,10 +46,6 @@ Create a simple new top level injector.
 | Name | Type |
 | :------ | :------ |
 | `__namedParameters` | [`InjectorConfig`](../interfaces/InjectorConfig.md) |
-
-#### Inherited from
-
-[BasicTypeInjector](BasicTypeInjector.md).[constructor](BasicTypeInjector.md#constructor)
 
 #### Defined in
 
@@ -75,34 +79,6 @@ Might create a new instance or return an existing one.
 
 a value that implements the type defined by the token.
 
-#### Inherited from
-
-[BasicTypeInjector](BasicTypeInjector.md).[get](BasicTypeInjector.md#get)
-
 #### Defined in
 
 [basic-type-injector.ts:23](https://github.com/e-hein/type-inject/blob/dbcc852/src/basic-type-injector.ts#L23)
-
-___
-
-### construct
-
-▸ `Static` **construct**(): [`TypeInjectorBuilder`](TypeInjectorBuilder.md)
-
-Starts the construction of a new injector.
-
-```typescript
-TypeInjector.construct()
-  [...provide...]
-.build();
-```
-
-#### Returns
-
-[`TypeInjectorBuilder`](TypeInjectorBuilder.md)
-
-TypeInjectorBuilder
-
-#### Defined in
-
-[type-injector.ts:19](https://github.com/e-hein/type-inject/blob/dbcc852/src/type-injector.ts#L19)

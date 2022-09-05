@@ -6,6 +6,7 @@ type-inject - v1.0.0-alpha
 
 ### Classes
 
+- [BasicTypeInjector](classes/BasicTypeInjector.md)
 - [InjectorScope](classes/InjectorScope.md)
 - [Logger](classes/Logger.md)
 - [TypeInjector](classes/TypeInjector.md)
@@ -15,6 +16,7 @@ type-inject - v1.0.0-alpha
 
 - [InjectConfig](interfaces/InjectConfig.md)
 - [InjectFactory](interfaces/InjectFactory.md)
+- [InjectorConfig](interfaces/InjectorConfig.md)
 
 ### Type Aliases
 
@@ -47,7 +49,7 @@ Every class that has an constructor without parameters can get used as Inject to
 
 #### Defined in
 
-[inject-token.ts:6](https://github.com/e-hein/type-inject/blob/3c5f497/src/inject-token.ts#L6)
+[inject-token.ts:6](https://github.com/e-hein/type-inject/blob/dbcc852/src/inject-token.ts#L6)
 
 ___
 
@@ -55,21 +57,29 @@ ___
 
 Ƭ **DeclaredInjectToken**<`T`\>: `symbol` & { `description`: `string`  }
 
+To configure any dependency type safe you can [declare an inject token](README.md#declareinjecttoken).
+
 #### Type parameters
 
 | Name | Description |
 | :------ | :------ |
-| `T` | type of the value to get injected with this token |
+| `T` | type of the value to get injected with this token. |
 
 #### Defined in
 
-[inject-token.ts:42](https://github.com/e-hein/type-inject/blob/3c5f497/src/inject-token.ts#L42)
+[inject-token.ts:45](https://github.com/e-hein/type-inject/blob/dbcc852/src/inject-token.ts#L45)
 
 ___
 
 ### InjectToken
 
 Ƭ **InjectToken**<`T`\>: [`ConstructorWithoutArguments`](README.md#constructorwithoutarguments)<`T`\> \| [`InjectableClass`](README.md#injectableclass)<`T`\> \| [`DeclaredInjectToken`](README.md#declaredinjecttoken)<`T`\>
+
+An InjectToken can be a [ConstructorWithoutArguments](README.md#constructorwithoutarguments), [InjectableClass](README.md#injectableclass) or a [DeclaredInjectToken](README.md#declaredinjecttoken).
+
+**`See`**
+
+[declareInjectToken](README.md#declareinjecttoken)
 
 #### Type parameters
 
@@ -79,7 +89,7 @@ ___
 
 #### Defined in
 
-[inject-token.ts:47](https://github.com/e-hein/type-inject/blob/3c5f497/src/inject-token.ts#L47)
+[inject-token.ts:53](https://github.com/e-hein/type-inject/blob/dbcc852/src/inject-token.ts#L53)
 
 ___
 
@@ -106,7 +116,7 @@ class instance.
 
 #### Defined in
 
-[inject-token.ts:34](https://github.com/e-hein/type-inject/blob/3c5f497/src/inject-token.ts#L34)
+[inject-token.ts:34](https://github.com/e-hein/type-inject/blob/dbcc852/src/inject-token.ts#L34)
 
 ## Functions
 
@@ -141,4 +151,4 @@ a token that can be used to first provide then inject anything
 
 #### Defined in
 
-[inject-token.ts:61](https://github.com/e-hein/type-inject/blob/3c5f497/src/inject-token.ts#L61)
+[inject-token.ts:67](https://github.com/e-hein/type-inject/blob/dbcc852/src/inject-token.ts#L67)
