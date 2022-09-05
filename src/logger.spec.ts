@@ -20,7 +20,7 @@ describe('logger', () => {
      * In its default configuration, the logger will only log errors to the console (stderr)
      */
     it('should log errors to console', () => {
-      const injector = TypeInjector.build();
+      const injector = new TypeInjector();
       const logger = injector.get(Logger);
 
       logger.error(givenErrorMessage);
@@ -29,7 +29,7 @@ describe('logger', () => {
     });
 
     it('will not log warnings nor info', () => {
-      const injector = TypeInjector.build();
+      const injector = new TypeInjector();
       const logger = injector.get(Logger);
 
       logger.warn?.(givenErrorMessage);

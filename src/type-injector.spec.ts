@@ -3,7 +3,7 @@ import { declareInjectToken, InjectConfig, Logger, TypeInjector } from './index'
 
 describe('type injector basics', () => {
   it('should get instantiated by the builder pattern', () => {
-    const injector = TypeInjector.build();
+    const injector = new TypeInjector();
     expect(injector).to.exist;
   });
 
@@ -15,7 +15,7 @@ describe('type injector basics', () => {
   }
 
   it('should be able to inject a type without further configuration', () => {
-    const injector = TypeInjector.build();
+    const injector = new TypeInjector();
     const baseService = injector.get(BaseService);
     expect(baseService.isBaseService).to.equal(true);
   });
@@ -34,7 +34,7 @@ describe('type injector basics', () => {
   }
 
   it('should show compile error for classes that do not have an empty constructor nor an inject config', () => {
-    const injector = TypeInjector.build();
+    const injector = new TypeInjector();
 
     // @ts-expect-error shown by api
     injector.get(NotInjectable);
@@ -51,7 +51,7 @@ describe('type injector basics', () => {
   }
 
   it('should be able to inject types with an inject config', () => {
-    const injector = TypeInjector.build();
+    const injector = new TypeInjector();
 
     const composedService = injector.get(ComposedService);
     expect(composedService.baseService.isBaseService).to.equal(true);

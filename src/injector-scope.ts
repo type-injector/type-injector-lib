@@ -1,14 +1,13 @@
 import { InjectFactory } from './inject-factory';
 import { InjectToken } from './inject-token';
+import { BasicTypeInjector, InjectorConfig } from './basic-type-injector';
 import { Logger } from './logger';
-import { TypeInjector } from './type-injector';
-import { TypeInjectorBuilder } from './type-injector-builder';
-import { TypeInjectorImpl } from './type-injector-impl';
+import { TypeInjector, TypeInjectorBuilder } from './type-injector';
 
 /**
  * A scope is a child injector that might provide additional values or override implementations.
  */
-export class InjectorScope extends TypeInjectorImpl implements TypeInjector {
+export class InjectorScope extends BasicTypeInjector {
   /**
    * fluent construction of InejectorScopes.
    *
@@ -43,9 +42,11 @@ export class InjectorScope extends TypeInjectorImpl implements TypeInjector {
           build() {
             const childInjector = new InjectorScope(
               ident as symbol & { description: string },
-              parent as TypeInjectorImpl,
-              this._factories,
-              this._instances,
+              parent,
+              {
+                instances: this._instances,
+                factories: this._factories,
+              },
             );
             this._closeBuilder();
             return childInjector;
@@ -59,12 +60,11 @@ export class InjectorScope extends TypeInjectorImpl implements TypeInjector {
 
   private constructor(
     public readonly ident: symbol & { description: string },
-    private _parent: TypeInjectorImpl,
-    _factories: Map<InjectToken<any>, InjectFactory<any>>,
-    _instances: Map<InjectToken<any>, any>,
+    private _parent: TypeInjector,
+    config?: InjectorConfig,
   ) {
-    super(_factories, _instances);
-    this._ownInstances = Array.from(_instances.values());
+    super(config);
+    this._ownInstances = Array.from(this._instances.values());
   }
 
   /**

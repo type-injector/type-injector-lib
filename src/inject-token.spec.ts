@@ -8,7 +8,7 @@ describe('inject tokens', () => {
       prop = simpleClassPropValue;
     }
 
-    const injector = TypeInjector.build();
+    const injector = new TypeInjector();
     const instance = injector.get(SimpleClass);
 
     expect(instance.prop).to.equal(simpleClassPropValue);
@@ -30,7 +30,7 @@ describe('inject tokens', () => {
       }
     }
 
-    const injector = TypeInjector.build();
+    const injector = new TypeInjector();
     const instance = injector.get(ComposedClassWithConfiguration);
 
     expect(instance.simpleClass.prop).to.equal(givenSimpleClassPropValue);
@@ -108,7 +108,7 @@ describe('inject tokens', () => {
 
   it('will throw an error for tokens that are not provided (yet)', () => {
     const unknownToken = declareInjectToken('unknown');
-    const injector = TypeInjector.build();
+    const injector = new TypeInjector();
 
     try {
       injector.get(unknownToken);

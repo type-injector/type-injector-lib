@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { declareInjectToken, TypeInjector } from './index';
 
-describe('provide variants', () => {
+describe('injector builder provide variants', () => {
   describe('provide value', () => {
     it('should be possible to provide a value', () => {
       const injectToken = declareInjectToken<{ name: string}>('TestInjectToken');

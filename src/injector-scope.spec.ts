@@ -48,7 +48,7 @@ describe('scopes', () => {
         readonly isBaseService = true;
       }
 
-      const injector = TypeInjector.build();
+      const injector = new TypeInjector();
       const base1 = injector.get(BaseService);
       const base2 = injector.get(BaseService);
 
@@ -161,7 +161,7 @@ describe('scopes', () => {
         isSpecial = false;
       }
       // The topLevelInjector has no special configuration:
-      const topLevelInjector = TypeInjector.build();
+      const topLevelInjector = new TypeInjector();
 
       // There's a SpecialSimpleService that is special:
       class SpecialSimpleService extends SimpleService {
@@ -204,7 +204,7 @@ describe('scopes', () => {
         ) {}
       }
       // The topLevelInjector has no special configuration:
-      const topLevelInjector = TypeInjector.build()
+      const topLevelInjector = new TypeInjector()
 
       // There's a SpecialLogger implementation:
       class SpecialLogger extends Logger {
@@ -248,7 +248,7 @@ describe('scopes', () => {
         ) {}
       }
       // The topLevelInjector has no special configuration:
-      const topLevelInjector = TypeInjector.build();
+      const topLevelInjector = new TypeInjector();
       // The childInjector has no special configuration either:
       const childInjector = InjectorScope.construct()
         .withIdent(Symbol.for('child injector'))
@@ -272,7 +272,7 @@ describe('scopes', () => {
     it('should skip intermediate layers', () => {
       // GIVEN:
       class SimpleService {}
-      const topLevelInjector = TypeInjector.build();
+      const topLevelInjector = new TypeInjector();
 
       /**
        topLevelInjector
@@ -314,7 +314,7 @@ describe('scopes', () => {
         │   └── verySpecialInjector
         └── branchBInjector
       */
-      const topLevelInjector = TypeInjector.build();
+      const topLevelInjector = new TypeInjector();
 
       const midLevelInjector = InjectorScope.construct()
         .withIdent(Symbol.for('mid level'))
@@ -355,7 +355,7 @@ describe('scopes', () => {
         ├── branchAInjector (SimpleService: SpecialService)
         └── branchBInjector (SimpleService: SpecialService)
       */
-      const topLevelInjector = TypeInjector.build();
+      const topLevelInjector = new TypeInjector();
 
       const branchAInjector = InjectorScope.construct()
         .withIdent(Symbol.for('branch a'))
@@ -401,7 +401,7 @@ describe('scopes', () => {
           public extLogger: ExtendedLogger,
         ) {}
       }
-      const topLevelInjector = TypeInjector.build();
+      const topLevelInjector = new TypeInjector();
 
       class SpecialLogger extends Logger {}
       const childInjector = InjectorScope.construct()
@@ -564,7 +564,7 @@ describe('scopes', () => {
   });
 
   it('should not be possible to build multiple child injectors with one factory', () => {
-    const topLevelInjector = TypeInjector.build();
+    const topLevelInjector = new TypeInjector();
     const childInjectorBuilder = InjectorScope.construct()
       .withIdent(Symbol.for('child scope'))
       .fromParent(topLevelInjector)

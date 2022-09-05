@@ -1,14 +1,24 @@
 import { InjectFactory } from './inject-factory';
-import { InjectableClass, InjectToken } from './inject-token';
+import { DeclaredInjectToken, InjectableClass, InjectToken } from './inject-token';
 import { Logger } from './logger';
-import { TypeInjector } from './type-injector';
 
 /**
- * @internal
+ * Minimalistic TypeInjector.
+ *
+ * If you don't want to use the builder pattern or subscopes you could use the BasicTypeInjector
+ * to further reduce runtime bundle size.
+ *
+ * @see {@link TypeInjector.construct} - using the builder pattern to configure your injector.
  */
- export class TypeInjectorImpl implements TypeInjector {
+ export class BasicTypeInjector {
   /**
-   * {@inheritDoc TypeInjector.get}
+   * Get something from the cdi.
+   *
+   * Might create a new instance or return an existing one.
+   *
+   * @typeParam T - type defined by the token. Will match the type of the returned value.
+   * @param token - {@link InjectToken} identifying the value to inject
+   * @returns a value that implements the type defined by the token.
    */
   get<T>(token: InjectToken<T>): T {
     return this._instances.has(token)
@@ -17,14 +27,22 @@ import { TypeInjector } from './type-injector';
     ;
   }
 
-  constructor(
-    protected _factories = new Map<InjectToken<any>, InjectFactory<any>>(),
-    protected _instances = new Map<InjectToken<any>, any>(),
-  ) {}
+  /**
+   * Create a simple new top level injector.
+   *
+   * @see {@link TypeInjector.construct} - to create a preconfigured injector
+   */
+  constructor({ instances, factories }: InjectorConfig = {}) {
+    this._instances = cloneMap(instances);
+    this._factories = cloneMap(factories);
+  }
 
+  protected _factories = new Map<InjectToken<any>, InjectFactory<any>>();
+  protected _instances = new Map<InjectToken<any>, any>();
   private _instancesInCreation = new Map<InjectToken<unknown>, {
     factory: InjectFactory<unknown>,
   }>();
+
   private _initialLogger = new Logger();
   protected get logger(): Logger {
     if (this._instancesInCreation.has(Logger)) {
@@ -127,6 +145,29 @@ import { TypeInjector } from './type-injector';
 /**
  * @internal
  */
-export function hasInjectConfig<T>(token: unknown): token is InjectableClass<T> {
+ export function hasInjectConfig<T>(token: unknown): token is InjectableClass<T> {
   return !!(token as Partial<InjectableClass<T>>).injectConfig;
+}
+
+export interface InjectorConfig {
+  instances?: Map<InjectToken<any>, any> | { [key: DeclaredInjectToken<any>]: any },
+  factories?: Map<InjectToken<any>, InjectFactory<any>> | { [key: DeclaredInjectToken<any>]: InjectFactory<any> },
+}
+
+/**
+ * @internal
+ */
+function cloneMap<K, V>(map?: Map<K, V> | { [key: DeclaredInjectToken<any>]: any }): Map<K, V> {
+  const clone = new Map<K, V>();
+  if (map) {
+    if (map instanceof Map) {
+      map.forEach((value, key) => clone.set(key, value));
+    } else {
+      Object.getOwnPropertySymbols(map).forEach((key) => {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        clone.set(key as any, (map as any)[key]);
+      });
+    }
+  }
+  return clone;
 }
