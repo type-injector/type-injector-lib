@@ -29,7 +29,7 @@ A scope is a child injector that might provide additional values or override imp
 
 #### Defined in
 
-[injector-scope.ts:62](https://github.com/e-hein/type-inject/blob/dbcc852/src/injector-scope.ts#L62)
+[injector-scope.ts:62](https://github.com/e-hein/type-inject/blob/cdff06c/src/injector-scope.ts#L62)
 
 ## Methods
 
@@ -45,7 +45,7 @@ Might create a new instance or return an existing one.
 
 | Name | Description |
 | :------ | :------ |
-| `T` | type defined by the token. Will match the type of the returned value. |
+| `T` | Type defined by the token. Will match the type of the returned value. |
 
 #### Parameters
 
@@ -57,7 +57,7 @@ Might create a new instance or return an existing one.
 
 `T`
 
-a value that implements the type defined by the token.
+a value that implements the Type defined by the token.
 
 #### Inherited from
 
@@ -65,7 +65,7 @@ a value that implements the type defined by the token.
 
 #### Defined in
 
-[basic-type-injector.ts:23](https://github.com/e-hein/type-inject/blob/dbcc852/src/basic-type-injector.ts#L23)
+[basic-type-injector.ts:23](https://github.com/e-hein/type-inject/blob/cdff06c/src/basic-type-injector.ts#L23)
 
 ___
 
@@ -73,7 +73,7 @@ ___
 
 ▸ `Static` **construct**(): `Object`
 
-fluent construction of InejectorScopes.
+Fluent construction of InejectorScopes.
 
 ```typescript
 InjectorScope.construct()
@@ -93,4 +93,4 @@ InjectorScope.construct()
 
 #### Defined in
 
-[injector-scope.ts:24](https://github.com/e-hein/type-inject/blob/dbcc852/src/injector-scope.ts#L24)
+[injector-scope.ts:24](https://github.com/e-hein/type-inject/blob/cdff06c/src/injector-scope.ts#L24)

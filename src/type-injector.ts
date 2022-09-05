@@ -22,9 +22,29 @@ export class TypeInjector extends BasicTypeInjector {
 }
 
 /**
- * Configuration phase of an injector.
+ * Start configuration phase of a type injector.
  *
- * use {@link build | .build()} to finish configuration.
+ * ```typescript
+ * import { declareInjectToken, TypeInjector } from 'type-inject';
+ *
+ * const injectToken = {
+ *   simpleValue: declareInjectToken<string>('simple value'),
+ *   createdValue: declareInjectToken<string>('created value'),
+ * }
+ *
+ * const injector = TypeInjector.construct()
+ *   .provideValue(injectToken.simpleValue, 'Hello World!')
+ *   .provideFactory(injectToken.createdValue, {
+ *      deps: [injectToken.simpleValue],
+ *      create: (greeting: string) => `${greeting} Now it's: ${new Date()}`,
+ *   })
+ *   .provideImplementation(Logger, RemoteLogger)
+ * .build();
+ * ```
+ *
+ * @see {@link TypeInjectorBuilder.provideValue}
+ * @see {@link TypeInjectorBuilder.provideFactory}
+ * @see {@link TypeInjectorBuilder.provideImplementation}
  */
  export class TypeInjectorBuilder {
   protected _instances = new Map<InjectToken<any>, any>();
@@ -37,7 +57,7 @@ export class TypeInjector extends BasicTypeInjector {
    * service class, simple values like flags or configuration objects
    * from the environment.
    *
-   * @typeParam T - type defined by the token. Has to match the type of the value.
+   * @typeParam T - Type defined by the token. Has to match the type of the value.
    * @param token - which will get used to inject the value
    * @param value - that will get returned for the token
    * @returns the Injector itself to allow chaining provides
@@ -52,7 +72,7 @@ export class TypeInjector extends BasicTypeInjector {
    *
    * The provided function will be called the first time the token is requested.
    *
-   * @typeParam T - type defined by the token. Has to match the return type of the factory.
+   * @typeParam T - Type defined by the token. Has to match the return type of the factory.
    * @param token - which will get used to inject the value
    * @param factory - that creates something that matches the type of the token
    * @returns the Injector itself to allow chaining provides
@@ -69,7 +89,7 @@ export class TypeInjector extends BasicTypeInjector {
    * that is injectable itself (has no constructor args / static inject config).
    * Like every factory it's called lazily on the first request of the token.
    *
-   * @typeParam T - type defined by the token. Has to match the type of the implementation.
+   * @typeParam T - Type defined by the token. Has to match the type of the implementation.
    * @param token - which will get used to inject the value
    * @param impl - to instanciate as soon as it's requested the first time
    * @returns the Injector itself to allow chaining provides

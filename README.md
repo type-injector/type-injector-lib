@@ -15,7 +15,7 @@ A simple class is a class that has a constructor without arguments (or no constr
   }
 
   it('should be able to inject a type without further configuration', () => {
-    const injector = TypeInjector.build();
+    const injector = new TypeInjector();
     const baseService = injector.get(BaseService);
     expect(baseService.isBaseService).to.equal(true);
   });

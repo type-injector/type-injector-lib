@@ -2,9 +2,31 @@
 
 # Class: TypeInjectorBuilder
 
-Configuration phase of an injector.
+Start configuration phase of a type injector.
 
-use [.build()](TypeInjectorBuilder.md#build) to finish configuration.
+```typescript
+import { declareInjectToken, TypeInjector } from 'type-inject';
+
+const injectToken = {
+  simpleValue: declareInjectToken<string>('simple value'),
+  createdValue: declareInjectToken<string>('created value'),
+}
+
+const injector = TypeInjector.construct()
+  .provideValue(injectToken.simpleValue, 'Hello World!')
+  .provideFactory(injectToken.createdValue, {
+     deps: [injectToken.simpleValue],
+     create: (greeting: string) => `${greeting} Now it's: ${new Date()}`,
+  })
+  .provideImplementation(Logger, RemoteLogger)
+.build();
+```
+
+**`See`**
+
+ - [provideValue](TypeInjectorBuilder.md#providevalue)
+ - [provideFactory](TypeInjectorBuilder.md#providefactory)
+ - [provideImplementation](TypeInjectorBuilder.md#provideimplementation)
 
 ## Table of contents
 
@@ -39,7 +61,7 @@ Finish configuration of the TypeInjector
 
 #### Defined in
 
-[type-injector.ts:105](https://github.com/e-hein/type-inject/blob/dbcc852/src/type-injector.ts#L105)
+[type-injector.ts:125](https://github.com/e-hein/type-inject/blob/cdff06c/src/type-injector.ts#L125)
 
 ___
 
@@ -55,7 +77,7 @@ The provided function will be called the first time the token is requested.
 
 | Name | Description |
 | :------ | :------ |
-| `T` | type defined by the token. Has to match the return type of the factory. |
+| `T` | Type defined by the token. Has to match the return type of the factory. |
 
 #### Parameters
 
@@ -72,7 +94,7 @@ the Injector itself to allow chaining provides
 
 #### Defined in
 
-[type-injector.ts:60](https://github.com/e-hein/type-inject/blob/dbcc852/src/type-injector.ts#L60)
+[type-injector.ts:80](https://github.com/e-hein/type-inject/blob/cdff06c/src/type-injector.ts#L80)
 
 ___
 
@@ -90,7 +112,7 @@ Like every factory it's called lazily on the first request of the token.
 
 | Name | Description |
 | :------ | :------ |
-| `T` | type defined by the token. Has to match the type of the implementation. |
+| `T` | Type defined by the token. Has to match the type of the implementation. |
 
 #### Parameters
 
@@ -107,7 +129,7 @@ the Injector itself to allow chaining provides
 
 #### Defined in
 
-[type-injector.ts:77](https://github.com/e-hein/type-inject/blob/dbcc852/src/type-injector.ts#L77)
+[type-injector.ts:97](https://github.com/e-hein/type-inject/blob/cdff06c/src/type-injector.ts#L97)
 
 ___
 
@@ -125,7 +147,7 @@ from the environment.
 
 | Name | Description |
 | :------ | :------ |
-| `T` | type defined by the token. Has to match the type of the value. |
+| `T` | Type defined by the token. Has to match the type of the value. |
 
 #### Parameters
 
@@ -142,4 +164,4 @@ the Injector itself to allow chaining provides
 
 #### Defined in
 
-[type-injector.ts:45](https://github.com/e-hein/type-inject/blob/dbcc852/src/type-injector.ts#L45)
+[type-injector.ts:65](https://github.com/e-hein/type-inject/blob/cdff06c/src/type-injector.ts#L65)

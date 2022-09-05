@@ -9,7 +9,7 @@ import { TypeInjector, TypeInjectorBuilder } from './type-injector';
  */
 export class InjectorScope extends BasicTypeInjector {
   /**
-   * fluent construction of InejectorScopes.
+   * Fluent construction of InejectorScopes.
    *
    * ```typescript
    * InjectorScope.construct()
@@ -97,7 +97,7 @@ export class InjectorScope extends BasicTypeInjector {
    * This instance is linked into _instances to prevent further calls with the same
    * token to repeat all dependency checks.
    *
-   * @typeParam T - type defined by the token. Will match the instance type returned by the parent scope.
+   * @typeParam T - Type defined by the token. Will match the instance type returned by the parent scope.
    * @param token - {@link InjectToken} identifying the value to inject
    * @returns instance from parent + flag that it is from parent
    */

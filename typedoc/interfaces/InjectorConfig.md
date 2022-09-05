@@ -17,7 +17,7 @@
 
 #### Defined in
 
-[basic-type-injector.ts:154](https://github.com/e-hein/type-inject/blob/dbcc852/src/basic-type-injector.ts#L154)
+[basic-type-injector.ts:154](https://github.com/e-hein/type-inject/blob/cdff06c/src/basic-type-injector.ts#L154)
 
 ___
 
@@ -27,4 +27,4 @@ ___
 
 #### Defined in
 
-[basic-type-injector.ts:153](https://github.com/e-hein/type-inject/blob/dbcc852/src/basic-type-injector.ts#L153)
+[basic-type-injector.ts:153](https://github.com/e-hein/type-inject/blob/cdff06c/src/basic-type-injector.ts#L153)

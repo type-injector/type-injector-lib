@@ -49,7 +49,7 @@ Create a simple new top level injector.
 
 #### Defined in
 
-[basic-type-injector.ts:35](https://github.com/e-hein/type-inject/blob/dbcc852/src/basic-type-injector.ts#L35)
+[basic-type-injector.ts:35](https://github.com/e-hein/type-inject/blob/cdff06c/src/basic-type-injector.ts#L35)
 
 ## Methods
 
@@ -65,7 +65,7 @@ Might create a new instance or return an existing one.
 
 | Name | Description |
 | :------ | :------ |
-| `T` | type defined by the token. Will match the type of the returned value. |
+| `T` | Type defined by the token. Will match the type of the returned value. |
 
 #### Parameters
 
@@ -77,8 +77,8 @@ Might create a new instance or return an existing one.
 
 `T`
 
-a value that implements the type defined by the token.
+a value that implements the Type defined by the token.
 
 #### Defined in
 
-[basic-type-injector.ts:23](https://github.com/e-hein/type-inject/blob/dbcc852/src/basic-type-injector.ts#L23)
+[basic-type-injector.ts:23](https://github.com/e-hein/type-inject/blob/cdff06c/src/basic-type-injector.ts#L23)

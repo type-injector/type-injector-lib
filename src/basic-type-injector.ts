@@ -16,9 +16,9 @@ import { Logger } from './logger';
    *
    * Might create a new instance or return an existing one.
    *
-   * @typeParam T - type defined by the token. Will match the type of the returned value.
+   * @typeParam T - Type defined by the token. Will match the type of the returned value.
    * @param token - {@link InjectToken} identifying the value to inject
-   * @returns a value that implements the type defined by the token.
+   * @returns a value that implements the Type defined by the token.
    */
   get<T>(token: InjectToken<T>): T {
     return this._instances.has(token)

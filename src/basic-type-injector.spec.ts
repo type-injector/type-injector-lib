@@ -2,6 +2,12 @@ import { expect } from 'chai';
 import { BasicTypeInjector } from './basic-type-injector';
 import { InjectConfig, Logger, declareInjectToken } from './index';
 
+/**
+ * Thats the common base of TypeInjector and InjectorScope.
+ *
+ * It can also get used standalone in very basic setups.
+ * For more complex setups you should use file://./type-injector.ts#TypeInjector.
+ */
 describe('basic type injector', () => {
   it('should allow you to create a basic type injector', () => {
     class SimpleService {
