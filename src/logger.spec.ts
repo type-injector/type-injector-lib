@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { InjectConfig, Logger, TypeInjector } from './index';
+import { declareInjectToken, InjectConfig, Logger, TypeInjector } from './index';
 
 /**
  * Logger and its replacement.
@@ -20,7 +20,7 @@ describe('logger', () => {
      * In its default configuration, the logger will only log errors to the console (stderr)
      */
     it('should log errors to console', () => {
-      const injector = TypeInjector.build();
+      const injector = new TypeInjector();
       const logger = injector.get(Logger);
 
       logger.error(givenErrorMessage);
@@ -29,7 +29,7 @@ describe('logger', () => {
     });
 
     it('will not log warnings nor info', () => {
-      const injector = TypeInjector.build();
+      const injector = new TypeInjector();
       const logger = injector.get(Logger);
 
       logger.warn?.(givenErrorMessage);
@@ -46,7 +46,7 @@ describe('logger', () => {
       class VerboseLogger extends Logger {
         info = (message: string, ..._details: any[]) => infoMsgs.push(message);
       }
-      const injectToken = { baseUrl: TypeInjector.createToken('base url') };
+      const injectToken = { baseUrl: declareInjectToken('base url') };
       const injector = TypeInjector.construct()
         .provideImplementation(Logger, VerboseLogger)
         .provideFactory(injectToken.baseUrl, { deps: [], create: () => 'https://base.url/' })
@@ -64,7 +64,7 @@ describe('logger', () => {
   /**
    * Injector tries to use a provided Logger to log error messages.
    * Unfortunately it might cause a dependency error to inject the
-   * Logger to log the error... -> ∞-Loop.
+   * Logger to log the error... ∞-Loop.
    * So it won't log info messages or warnings before the logger
    * is created successfully. Errors that occur during the instantiation of the logger will get
    * logged to console (stderr)

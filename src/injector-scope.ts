@@ -1,11 +1,37 @@
-import { InjectFactory, InjectToken } from './type-injector.model';
-import { TypeInjector, TypeInjectorBuilder, TypeInjectorImpl } from './type-injector';
+import { InjectFactory } from './inject-factory';
+import { InjectToken } from './inject-token';
+import { BasicTypeInjector, InjectorConfig } from './basic-type-injector';
 import { Logger } from './logger';
+import { TypeInjector, TypeInjectorBuilder } from './type-injector';
 
-export class ChildInjector extends TypeInjectorImpl {
-  static withIdent(ident: symbol) {
+/**
+ * A scope is a child injector that might provide additional values or override implementations.
+ */
+export class InjectorScope extends BasicTypeInjector {
+  /**
+   * Fluent construction of InjectorScopes.
+   *
+   * ```typescript
+   * InjectorScope.construct()
+   *   .withIdent(Symbol.for('scope name'))
+   *   .fromParent(parentScope)
+   *   [...provide...]
+   * .build();
+   * ```
+   *
+   * @returns
+   */
+  static construct() {
     return {
-      from(parent: TypeInjector): TypeInjectorBuilder {
+      /**
+       * @param ident - unique identifier of the scope
+       */
+      withIdent: (ident: symbol) => ({
+      /**
+       * @param parent - is used as fallback
+       * @returns
+       */
+      fromParent: (parent: TypeInjector): TypeInjectorBuilder => {
         return new class extends TypeInjectorBuilder {
           provideFactory<T>(token: InjectToken<T>, factory: InjectFactory<T>): TypeInjectorBuilder {
             return super.provideFactory(
@@ -14,32 +40,36 @@ export class ChildInjector extends TypeInjectorImpl {
             )
           }
           build() {
-            const childInjector = new ChildInjector(
+            const childInjector = new InjectorScope(
               ident as symbol & { description: string },
-              parent as TypeInjectorImpl,
-              this._factories,
-              this._instances,
+              parent,
+              {
+                instances: this._instances,
+                factories: this._factories,
+              },
             );
             this._closeBuilder();
             return childInjector;
           }
         }
       }
-    };
+    }) };
   }
 
   private _ownInstances: any[];
 
   private constructor(
     public readonly ident: symbol & { description: string },
-    private _parent: TypeInjectorImpl,
-    _factories: Map<InjectToken<any>, InjectFactory<any>>,
-    _instances: Map<InjectToken<any>, any>,
+    private _parent: TypeInjector,
+    config?: InjectorConfig,
   ) {
-    super(_factories, _instances);
-    this._ownInstances = Array.from(_instances.values());
+    super(config);
+    this._ownInstances = Array.from(this._instances.values());
   }
 
+  /**
+   * @internal
+   */
   getOptFactory<T>(token: InjectToken<T>): InjectFactory<T> {
     return this._factories.get(token) as InjectFactory<T> || this._parent.getOptFactory(token);
   }
@@ -67,7 +97,8 @@ export class ChildInjector extends TypeInjectorImpl {
    * This instance is linked into _instances to prevent further calls with the same
    * token to repeat all dependency checks.
    *
-   * @param token
+   * @typeParam T - Type defined by the token. Will match the instance type returned by the parent scope.
+   * @param token - {@link InjectToken} identifying the value to inject
    * @returns instance from parent + flag that it is from parent
    */
   private _useInstanceFromParentScope<T>(token: InjectToken<T>): InstanceWithSource<T> {
@@ -94,8 +125,8 @@ export class ChildInjector extends TypeInjectorImpl {
    * Even if it does not create the requested value it's important
    * to add it to the values in creation to detect dependency cycles.
    *
-   * @param token
-   * @param initiator
+   * @param token - {@link InjectToken} identifying the value to inject
+   * @param factory - {@link InjectFactory} providing the dependencies to check
    */
   private _hasOwnDependencies(token: InjectToken<unknown>, factory: InjectFactory<unknown>): boolean {
     token !== Logger && this.logger.info?.(`start dependency check of ${this._nameOf(token)} in '${this.ident.description}'`);
