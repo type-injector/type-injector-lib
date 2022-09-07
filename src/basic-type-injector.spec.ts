@@ -3,7 +3,7 @@ import { BasicTypeInjector } from './basic-type-injector';
 import { InjectConfig, Logger, declareInjectToken } from './index';
 
 /**
- * Thats the common base of TypeInjector and InjectorScope.
+ * That's the common base of TypeInjector and InjectorScope.
  *
  * It can also get used standalone in very basic setups.
  * For more complex setups you should use file://./type-injector.ts#TypeInjector.

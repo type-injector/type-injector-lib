@@ -1,4 +1,4 @@
-export * from './basic-type-injector';
+export { BasicTypeInjector, InjectorConfig } from './basic-type-injector';
 export * from './inject-factory';
 export * from './inject-token';
 export * from './injector-scope';

@@ -1,5 +1,5 @@
 /**
- * Every class that has an constructor without parameters can get used as Inject token.
+ * Every class that has a constructor without parameters can get used as InjectToken.
  *
  * @typeParam T - defines that InstanceType of the constructor.
  */
@@ -24,7 +24,7 @@ export interface InjectConfig {
 /**
  * Every class can get an InjectableClass by adding a static injectConfig property.
  *
- * For classes that can get instantiated without constructor arguments it
+ * For classes that can get instantiated without constructor arguments, it
  * is *not* required to add an injectConfig. An injectConfig is required to
  * tell the TypedInjector to use a constructor with arguments to create a
  * class instance.
@@ -36,7 +36,7 @@ export interface InjectConfig {
 }
 
 /**
- * To configure any dependency type safe you can {@link declareInjectToken | declare an inject token}.
+ * To configure any dependency type-safe you can {@link declareInjectToken | declare an inject token}.
  *
  * @typeParam T - type of the value to get injected with this token.
  */

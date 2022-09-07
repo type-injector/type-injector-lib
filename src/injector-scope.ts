@@ -9,7 +9,7 @@ import { TypeInjector, TypeInjectorBuilder } from './type-injector';
  */
 export class InjectorScope extends BasicTypeInjector {
   /**
-   * Fluent construction of InejectorScopes.
+   * Fluent construction of InjectorScopes.
    *
    * ```typescript
    * InjectorScope.construct()
@@ -28,7 +28,7 @@ export class InjectorScope extends BasicTypeInjector {
        */
       withIdent: (ident: symbol) => ({
       /**
-       * @param parent - that is used as fallback
+       * @param parent - is used as fallback
        * @returns
        */
       fromParent: (parent: TypeInjector): TypeInjectorBuilder => {

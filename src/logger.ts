@@ -2,7 +2,7 @@
  * Simple Logger implementation.
  *
  * Will only log errors to console. Provide an alternative implementation
- * to log more details / log in a different was.
+ * to log more details / log in a different way.
  *
  * @see ./logger.spec.ts for more details
  */
