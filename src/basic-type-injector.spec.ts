@@ -1,6 +1,5 @@
 import { expect } from 'chai';
-import { BasicTypeInjector } from './basic-type-injector';
-import { InjectConfig, Logger, declareInjectToken } from './index';
+import { BasicTypeInjector, InjectConfig, Logger, declareInjectToken } from './index';
 
 /**
  * That's the common base of TypeInjector and InjectorScope.
