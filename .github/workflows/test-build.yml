@@ -55,8 +55,17 @@ jobs:
         cache: 'npm'
     - run: npm ci
     - run: npm run bundle
+    - run: npm pack
+    - name: extract version
+      run: echo "PACKAGE_FILENAME=$(ls -1 type-injector*.tgz)" >> $GITHUB_ENV
+    - name: log extracted version
+      run: echo PACKAGE_FILENAME $PACKAGE_FILENAME
     - name: archive build results
       uses: actions/upload-artifact@v3
       with:
         name: build-results
         path: dist/
+    - name: archive npm package
+      uses: actions/upload-artifact@v3
+      with:
+        path: type-injector*.tgz
