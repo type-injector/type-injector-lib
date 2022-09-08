@@ -69,3 +69,12 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         path: type-injector*.tgz
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/download-artifact@v3
+      - name: Display structure of downloaded files
+        run: ls -R
