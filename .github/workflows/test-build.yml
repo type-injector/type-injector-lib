@@ -56,10 +56,6 @@ jobs:
     - run: npm ci
     - run: npm run bundle
     - run: npm pack
-    - name: extract version
-      run: echo "PACKAGE_FILENAME=$(ls -1 type-injector*.tgz)" >> $GITHUB_ENV
-    - name: log extracted version
-      run: echo PACKAGE_FILENAME $PACKAGE_FILENAME
     - name: archive build results
       uses: actions/upload-artifact@v3
       with:
@@ -74,7 +70,31 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
       - uses: actions/download-artifact@v3
       - name: Display structure of downloaded files
         run: ls -R
+      - name: extract version
+        id: extract_version
+        run: |
+          cd artifact
+          echo "::set-output name=packageFile::$(ls -1 type-injector*.tgz)"
+          cd ..
+      - name: create github release
+        uses: actions/create-release@v1
+        id: create_release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: latest
+          release_name: ${{steps.extract_version.outputs.packageFile}}
+          draft: true
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+          asset_name: ${{steps.extract_version.outputs.packageFile}}
+          asset_path: ./artifact/${{steps.extract_version.outputs.packageFile}}
+          asset_content_type: application/zip
