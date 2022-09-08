@@ -10,8 +10,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
-
+  lint:
     runs-on: ubuntu-latest
 
     strategy:
@@ -28,6 +27,52 @@ jobs:
         cache: 'npm'
     - run: npm ci
     - run: npm run lint
-    - run: npm run doc
+
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - run: npm ci
     - run: npm run coverage
+    - name: archive test results
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: coverage-html
+        path: coverage/
+
+  build:
+    needs: [lint, test]
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - run: npm ci
     - run: npm run bundle
+    - name: archive build results
+      uses: actions/upload-artifact@v3
+      with:
+        name: build-results
+        path: dist/
