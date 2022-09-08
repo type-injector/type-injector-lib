@@ -45,11 +45,11 @@ type-injector - v1.0.0-alpha
 
 • ()
 
-Every class that has an constructor without parameters can get used as Inject token.
+Every class that has a constructor without parameters can get used as InjectToken.
 
 #### Defined in
 
-[inject-token.ts:6](https://github.com/e-hein/type-injector/blob/cdff06c/src/inject-token.ts#L6)
+[inject-token.ts:6](https://github.com/e-hein/type-inject/blob/5c37f1b/src/inject-token.ts#L6)
 
 ___
 
@@ -57,7 +57,7 @@ ___
 
 Ƭ **DeclaredInjectToken**<`T`\>: `symbol` & { `description`: `string`  }
 
-To configure any dependency type safe you can [declare an inject token](README.md#declareinjecttoken).
+To configure any dependency type-safe you can [declare an inject token](README.md#declareinjecttoken).
 
 #### Type parameters
 
@@ -67,7 +67,7 @@ To configure any dependency type safe you can [declare an inject token](README.m
 
 #### Defined in
 
-[inject-token.ts:45](https://github.com/e-hein/type-injector/blob/cdff06c/src/inject-token.ts#L45)
+[inject-token.ts:45](https://github.com/e-hein/type-inject/blob/5c37f1b/src/inject-token.ts#L45)
 
 ___
 
@@ -89,7 +89,7 @@ An InjectToken can be a [ConstructorWithoutArguments](README.md#constructorwitho
 
 #### Defined in
 
-[inject-token.ts:53](https://github.com/e-hein/type-injector/blob/cdff06c/src/inject-token.ts#L53)
+[inject-token.ts:53](https://github.com/e-hein/type-inject/blob/5c37f1b/src/inject-token.ts#L53)
 
 ___
 
@@ -99,7 +99,7 @@ ___
 
 Every class can get an InjectableClass by adding a static injectConfig property.
 
-For classes that can get instantiated without constructor arguments it
+For classes that can get instantiated without constructor arguments, it
 is *not* required to add an injectConfig. An injectConfig is required to
 tell the TypedInjector to use a constructor with arguments to create a
 class instance.
@@ -116,7 +116,7 @@ class instance.
 
 #### Defined in
 
-[inject-token.ts:34](https://github.com/e-hein/type-injector/blob/cdff06c/src/inject-token.ts#L34)
+[inject-token.ts:34](https://github.com/e-hein/type-inject/blob/5c37f1b/src/inject-token.ts#L34)
 
 ## Functions
 
@@ -151,4 +151,4 @@ a token that can be used to first provide then inject anything
 
 #### Defined in
 
-[inject-token.ts:67](https://github.com/e-hein/type-injector/blob/cdff06c/src/inject-token.ts#L67)
+[inject-token.ts:67](https://github.com/e-hein/type-inject/blob/5c37f1b/src/inject-token.ts#L67)
