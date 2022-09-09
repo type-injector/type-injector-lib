@@ -1,4 +1,4 @@
-[type-inject - v1.0.0-alpha](../README.md) / BasicTypeInjector
+[type-injector-lib - v1.0.0-alpha](../README.md) / BasicTypeInjector
 
 # Class: BasicTypeInjector
 
@@ -49,7 +49,7 @@ Create a simple new top level injector.
 
 #### Defined in
 
-[basic-type-injector.ts:35](https://github.com/e-hein/type-inject/blob/cdff06c/src/basic-type-injector.ts#L35)
+[basic-type-injector.ts:35](https://github.com/e-hein/type-inject/blob/d186a3a/src/basic-type-injector.ts#L35)
 
 ## Methods
 
@@ -77,8 +77,8 @@ Might create a new instance or return an existing one.
 
 `T`
 
-a value that implements the Type defined by the token.
+a value that implements the type defined by the token.
 
 #### Defined in
 
-[basic-type-injector.ts:23](https://github.com/e-hein/type-inject/blob/cdff06c/src/basic-type-injector.ts#L23)
+[basic-type-injector.ts:23](https://github.com/e-hein/type-inject/blob/d186a3a/src/basic-type-injector.ts#L23)

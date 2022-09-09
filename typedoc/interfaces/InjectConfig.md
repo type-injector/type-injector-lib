@@ -1,4 +1,4 @@
-[type-inject - v1.0.0-alpha](../README.md) / InjectConfig
+[type-injector-lib - v1.0.0-alpha](../README.md) / InjectConfig
 
 # Interface: InjectConfig
 
@@ -33,4 +33,4 @@ itself gets created.
 
 #### Defined in
 
-[inject-token.ts:21](https://github.com/e-hein/type-inject/blob/cdff06c/src/inject-token.ts#L21)
+[inject-token.ts:21](https://github.com/e-hein/type-inject/blob/d186a3a/src/inject-token.ts#L21)

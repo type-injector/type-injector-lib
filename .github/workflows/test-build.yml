@@ -1,0 +1,111 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: test+build type-injector-lib
+
+on:
+  push:
+    branches: [ "main" ]
+    tags: ["v*"]
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  NODE_VERSION: 16
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup node Node.js ${{env.NODE_VERSION}}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{env.NODE_VERSION}}
+        cache: 'npm'
+    - run: npm ci
+    - run: npm run lint
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup node Node.js ${{env.NODE_VERSION}}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{env.NODE_VERSION}}
+        cache: 'npm'
+    - run: npm ci
+    - run: npm run coverage
+    - name: archive test results
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: coverage-html
+        path: coverage/
+
+  build:
+    needs: [lint, test]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup node Node.js ${{env.NODE_VERSION}}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{env.NODE_VERSION}}
+        cache: 'npm'
+    - run: npm ci
+    - run: npm run bundle
+    - run: npm pack
+    - name: archive build results
+      uses: actions/upload-artifact@v3
+      with:
+        name: dist
+        path: dist/
+    - name: archive npm package
+      uses: actions/upload-artifact@v3
+      with:
+        path: type-injector-lib*.tgz
+
+  release:
+    needs: build
+    if: ${{ startsWith(github.ref_name, 'v') && (github.ref_type == 'tag') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/download-artifact@v3
+      - name: Display structure of downloaded files
+        run: ls -R
+      - name: extract version
+        id: extract_version
+        run: |
+          cd artifact
+          echo "::set-output name=package_filename::$(ls -1 type-injector-lib*.tgz)"
+          cd ..
+      - name: create github release
+        uses: actions/create-release@v1
+        id: create_release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: latest
+          release_name: ${{steps.extract_version.outputs.package_filename}}
+          draft: true
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+          asset_name: ${{steps.extract_version.outputs.package_filename}}
+          asset_path: ./artifact/${{steps.extract_version.outputs.package_filename}}
+          asset_content_type: application/zip
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{env.NODE_VERSION}}
+          registry-url: 'https://registry.npmjs.org'
+      - name: publish to npmjs.com
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_PUB_TOKEN }}

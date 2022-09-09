@@ -5,7 +5,7 @@ Use typescript types to get cdi managed instances of objects.
 ### Inject a simple class
 A simple class is a class that has a constructor without arguments (or no constructor at all). This class can get created from the injector without further configuration:
 ```typescript
-  import { TypeInjector } from 'type-injector';
+  import { TypeInjector } from 'type-injector-lib';
 
   /**
    * BaseService without constructor arguments
@@ -60,7 +60,7 @@ The ```injectConfig``` uses the ```BaseService``` as a value, so it's preserved 
 ### Inject Tokens
 Every class that provides an empty constructor or an ```InjectConfig``` and ```Symbol```s can get used as inject token directly. If you use symbols, you lose type-safty. Therefore you can create inject tokens for everything that is not directly usable as inject token (like simple values or configuration objects or functions):
 ```typescript
-import { declareInjectToken, TypeInjector } from 'type-injector';
+import { declareInjectToken, TypeInjector } from 'type-injector-lib';
 
 const givenBooleanValue = false;
 const tokenForBoolean = declareInjectToken<boolean>('any unique string');

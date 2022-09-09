@@ -25,7 +25,7 @@ export class TypeInjector extends BasicTypeInjector {
  * Start configuration phase of a type injector.
  *
  * ```typescript
- * import { declareInjectToken, TypeInjector } from 'type-inject';
+ * import { declareInjectToken, TypeInjector } from 'type-injector';
  *
  * const injectToken = {
  *   simpleValue: declareInjectToken<string>('simple value'),

@@ -1,11 +1,11 @@
-[type-inject - v1.0.0-alpha](../README.md) / Logger
+[type-injector-lib - v1.0.0-alpha](../README.md) / Logger
 
 # Class: Logger
 
 Simple Logger implementation.
 
 Will only log errors to console. Provide an alternative implementation
-to log more details / log in a different was.
+to log more details / log in a different way.
 
 **`See`**
 
@@ -55,7 +55,7 @@ to log more details / log in a different was.
 
 #### Defined in
 
-[logger.ts:10](https://github.com/e-hein/type-inject/blob/cdff06c/src/logger.ts#L10)
+[logger.ts:10](https://github.com/e-hein/type-inject/blob/d186a3a/src/logger.ts#L10)
 
 ___
 
@@ -80,7 +80,7 @@ ___
 
 #### Defined in
 
-[logger.ts:11](https://github.com/e-hein/type-inject/blob/cdff06c/src/logger.ts#L11)
+[logger.ts:11](https://github.com/e-hein/type-inject/blob/d186a3a/src/logger.ts#L11)
 
 ## Methods
 
@@ -101,4 +101,4 @@ ___
 
 #### Defined in
 
-[logger.ts:12](https://github.com/e-hein/type-inject/blob/cdff06c/src/logger.ts#L12)
+[logger.ts:12](https://github.com/e-hein/type-inject/blob/d186a3a/src/logger.ts#L12)
