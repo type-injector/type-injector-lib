@@ -70,10 +70,10 @@
       "default": "./package.json"
     },
     ".": {
-      "default": "./dist/bundles/type-injector-lib.mjs",
-      "types": "./dist/index.d.ts",
       "es2020": "./dist/bundles/type-injector-lib.mjs",
-      "node": "./dist/bundles/type-injector-lib.cjs"
+      "node": "./dist/bundles/type-injector-lib.cjs",
+      "types": "./dist/index.d.ts",
+      "default": "./dist/bundles/type-injector-lib.mjs"
     }
   },
   "sideEffects": false
