@@ -101,6 +101,10 @@ jobs:
           asset_name: ${{steps.extract_version.outputs.package_filename}}
           asset_path: ./artifact/${{steps.extract_version.outputs.package_filename}}
           asset_content_type: application/zip
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{env.NODE_VERSION}}
+          registry-url: 'https://registry.npmjs.org'
       - name: publish to npmjs.com
         run: npm publish
         env:
