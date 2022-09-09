@@ -4,4 +4,4 @@ node_modules
 coverage
 .DS_Store
 tmp
-type-injector-*.tgz
+type-injector-lib-*.tgz

@@ -1,5 +1,5 @@
 {
-  "name": "type-injector",
+  "name": "type-injector-lib",
   "version": "1.0.0-alpha",
   "description": "inject typescript classes recoursively",
   "scripts": {
@@ -25,7 +25,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/e-hein/type-injector.git"
+    "url": "https://github.com/e-hein/type-injector-lib.git"
   },
   "keywords": [
     "typescript",
@@ -61,19 +61,19 @@
   "files": [
     "dist"
   ],
-  "main": "./dist/bundles/type-injector.cjs",
+  "main": "./dist/bundles/type-injector-lib.cjs",
   "types": "./dist/index.d.ts",
   "module": "./dist/index.js",
-  "es2020": "./dist/bundles/type-injector.mjs",
+  "es2020": "./dist/bundles/type-injector-lib.mjs",
   "exports": {
     "./package.json": {
       "default": "./package.json"
     },
     ".": {
-      "default": "./dist/bundles/type-injector.mjs",
+      "default": "./dist/bundles/type-injector-lib.mjs",
       "types": "./dist/index.d.ts",
-      "es2020": "./dist/bundles/type-injector.mjs",
-      "node": "./dist/bundles/type-injector.cjs"
+      "es2020": "./dist/bundles/type-injector-lib.mjs",
+      "node": "./dist/bundles/type-injector-lib.cjs"
     }
   },
   "sideEffects": false

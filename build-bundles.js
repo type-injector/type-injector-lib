@@ -31,7 +31,7 @@ async function buildAll() {
 }
 
 async function buildCommonJsBundle() {
-  const outFile = 'type-injector.cjs';
+  const outFile = 'type-injector-lib.cjs';
   /** @type {import('rollup').OutputOptions} */
   const outputOptions = {
     ...defaultOptions.output,
@@ -43,7 +43,7 @@ async function buildCommonJsBundle() {
 }
 
 async function buildEsmBundle() {
-  const outFile = 'type-injector.mjs';
+  const outFile = 'type-injector-lib.mjs';
   /** @type {import('rollup').OutputOptions} */
   const outputOptions = {
     ...defaultOptions.output,
@@ -55,7 +55,7 @@ async function buildEsmBundle() {
 }
 
 async function buildIifeBundle() {
-  const outFile = 'type-injector.js';
+  const outFile = 'type-injector-lib.js';
   /** @type {import('rollup').OutputOptions} */
   const outputOptions = {
     ...defaultOptions.output,

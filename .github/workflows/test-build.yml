@@ -1,7 +1,7 @@
 # This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
-name: test+build type-injector
+name: test+build type-injector-lib
 
 on:
   push:
@@ -65,7 +65,7 @@ jobs:
     - name: archive npm package
       uses: actions/upload-artifact@v3
       with:
-        path: type-injector*.tgz
+        path: type-injector-lib*.tgz
 
   release:
     needs: build
@@ -80,7 +80,7 @@ jobs:
         id: extract_version
         run: |
           cd artifact
-          echo "::set-output name=package_filename::$(ls -1 type-injector*.tgz)"
+          echo "::set-output name=package_filename::$(ls -1 type-injector-lib*.tgz)"
           cd ..
       - name: create github release
         uses: actions/create-release@v1

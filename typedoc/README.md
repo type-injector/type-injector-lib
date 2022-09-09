@@ -1,6 +1,6 @@
-type-injector - v1.0.0-alpha
+type-injector-lib - v1.0.0-alpha
 
-# type-injector - v1.0.0-alpha
+# type-injector-lib - v1.0.0-alpha
 
 ## Table of contents
 
@@ -49,7 +49,7 @@ Every class that has a constructor without parameters can get used as InjectToke
 
 #### Defined in
 
-[inject-token.ts:6](https://github.com/e-hein/type-inject/blob/5c37f1b/src/inject-token.ts#L6)
+[inject-token.ts:6](https://github.com/e-hein/type-inject/blob/d186a3a/src/inject-token.ts#L6)
 
 ___
 
@@ -67,7 +67,7 @@ To configure any dependency type-safe you can [declare an inject token](README.m
 
 #### Defined in
 
-[inject-token.ts:45](https://github.com/e-hein/type-inject/blob/5c37f1b/src/inject-token.ts#L45)
+[inject-token.ts:45](https://github.com/e-hein/type-inject/blob/d186a3a/src/inject-token.ts#L45)
 
 ___
 
@@ -89,7 +89,7 @@ An InjectToken can be a [ConstructorWithoutArguments](README.md#constructorwitho
 
 #### Defined in
 
-[inject-token.ts:53](https://github.com/e-hein/type-inject/blob/5c37f1b/src/inject-token.ts#L53)
+[inject-token.ts:53](https://github.com/e-hein/type-inject/blob/d186a3a/src/inject-token.ts#L53)
 
 ___
 
@@ -116,7 +116,7 @@ class instance.
 
 #### Defined in
 
-[inject-token.ts:34](https://github.com/e-hein/type-inject/blob/5c37f1b/src/inject-token.ts#L34)
+[inject-token.ts:34](https://github.com/e-hein/type-inject/blob/d186a3a/src/inject-token.ts#L34)
 
 ## Functions
 
@@ -151,4 +151,4 @@ a token that can be used to first provide then inject anything
 
 #### Defined in
 
-[inject-token.ts:67](https://github.com/e-hein/type-inject/blob/5c37f1b/src/inject-token.ts#L67)
+[inject-token.ts:67](https://github.com/e-hein/type-inject/blob/d186a3a/src/inject-token.ts#L67)
