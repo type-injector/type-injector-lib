@@ -1,4 +1,4 @@
-[type-injector-lib - v1.0.0-alpha](../README.md) / InjectorConfig
+[type-injector-lib - v1.0.0-alpha-7](../README.md) / InjectorConfig
 
 # Interface: InjectorConfig
 
@@ -17,7 +17,7 @@
 
 #### Defined in
 
-[basic-type-injector.ts:154](https://github.com/e-hein/type-inject/blob/d186a3a/src/basic-type-injector.ts#L154)
+[basic-type-injector.ts:154](https://github.com/e-hein/type-injector-lib/blob/447ba03/src/basic-type-injector.ts#L154)
 
 ___
 
@@ -27,4 +27,4 @@ ___
 
 #### Defined in
 
-[basic-type-injector.ts:153](https://github.com/e-hein/type-inject/blob/d186a3a/src/basic-type-injector.ts#L153)
+[basic-type-injector.ts:153](https://github.com/e-hein/type-injector-lib/blob/447ba03/src/basic-type-injector.ts#L153)

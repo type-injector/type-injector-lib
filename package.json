@@ -1,6 +1,6 @@
 {
   "name": "type-injector-lib",
-  "version": "1.0.0-alpha",
+  "version": "1.0.0-alpha-7",
   "description": "inject typescript classes recoursively",
   "scripts": {
     "test": "mocha -r ts-node/register ./src/**/*.spec.ts",

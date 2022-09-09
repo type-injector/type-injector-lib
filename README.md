@@ -1,4 +1,4 @@
-# Type Injector
+# Type Injector Lib
 Use typescript types to get cdi managed instances of objects.
 
 ## Basics
