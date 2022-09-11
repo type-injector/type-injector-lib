@@ -81,6 +81,10 @@ expect(result).to.equal(givenBooleanValue);
 * [Logging](./src/logger.spec.ts)
 * [API](./typedoc/README.md)
 
+## Demo and integration examples:
+You can find integration examples for different frameworks (NodeJS, NestJS, Angular, React) in the demo repository:
+[https://github.com/e-hein/type-injector-lib-demo]()
+
 ## Motivation
 There are plenty of inject libraries out there. Most of them are part of a larger framework so they are only usable in a browser frontend or a server backend.
 I'd like to share code between server and client side so I need an **inject library** that is independant, not part of a large framework and **usable in any context**.  
