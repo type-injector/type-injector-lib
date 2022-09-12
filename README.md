@@ -1,5 +1,7 @@
 # Type Injector Lib
 [![npmjs](https://raster.shields.io/npm/v/type-injector-lib/latest.svg)](https://npmjs.org/package/type-injector-lib)
+[![license](https://raster.shields.io/npm/l/type-injector-lib.svg)](http://www.apache.org/licenses/LICENSE-2.0)
+[![build](https://github.com/e-hein/type-injector-lib/actions/workflows/test-build.yml/badge.svg?query=branch%3Amain)](https://github.com/e-hein/type-injector-lib/actions/workflows/test-build.yml?branch=main)
 [![codecov](https://codecov.io/gh/e-hein/type-injector-lib/branch/main/graph/badge.svg?token=VBR29ZX1WC)](https://codecov.io/gh/e-hein/type-injector-lib)
 
 Use types to get cdi managed instances of objects.
