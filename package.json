@@ -1,6 +1,6 @@
 {
   "name": "type-injector-lib",
-  "version": "1.0.0-alpha-7",
+  "version": "1.0.0-beta",
   "description": "inject typescript classes recoursively",
   "scripts": {
     "test": "mocha -r ts-node/register ./src/**/*.spec.ts",
@@ -8,7 +8,7 @@
     "lint": "eslint .eslintrc.cjs .",
     "build": "tsc -P tsconfig.build.json",
     "bundle": "node build-bundles.js",
-    "coverage": "nyc --reporter=html --reporter=text-summary --exclude '**/*.spec.ts' mocha -r ts-node/register ./src/**/*.spec.ts",
+    "coverage": "nyc --reporter=html --reporter=cobertura --reporter=text-summary --exclude '**/*.spec.ts' mocha -r ts-node/register ./src/**/*.spec.ts",
     "doc": "typedoc --plugin typedoc-plugin-markdown --out ./typedoc --excludePrivate --excludeInternal --excludeProtected src/index.ts --includeVersion --readme none"
   },
   "watch": {
