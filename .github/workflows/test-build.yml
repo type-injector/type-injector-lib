@@ -40,6 +40,13 @@ jobs:
       with:
         name: coverage-html
         path: coverage/
+    - name: Upload coverage reports to Codecov
+      run: |
+        # Replace `linux` below with the appropriate OS
+        # Options are `alpine`, `linux`, `macos`, `windows`
+        curl -Os https://uploader.codecov.io/latest/linux/codecov
+        chmod +x codecov
+        ./codecov -t 9e295e75-44da-4748-8e97-1e8fdc73f5fd
 
   build:
     needs: [lint, test]
