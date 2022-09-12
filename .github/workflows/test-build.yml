@@ -12,7 +12,7 @@ env:
 
 jobs:
   lint:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
     - uses: actions/checkout@v3
     - name: Setup node Node.js ${{env.NODE_VERSION}}
@@ -24,7 +24,7 @@ jobs:
     - run: npm run lint
 
   test:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
     - uses: actions/checkout@v3
     - name: Setup node Node.js ${{env.NODE_VERSION}}
@@ -43,7 +43,7 @@ jobs:
 
   build:
     needs: [lint, test]
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
     - uses: actions/checkout@v3
     - name: Setup node Node.js ${{env.NODE_VERSION}}
@@ -67,7 +67,7 @@ jobs:
   release:
     needs: build
     if: ${{ startsWith(github.ref_name, 'v') && (github.ref_type == 'tag') }}
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v3
       - uses: actions/download-artifact@v3
