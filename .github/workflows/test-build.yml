@@ -117,6 +117,6 @@ jobs:
           node-version: ${{env.NODE_VERSION}}
           registry-url: 'https://registry.npmjs.org'
       - name: publish to npmjs.com
-        run: npm publish
+        run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_PUB_TOKEN }}
