@@ -150,8 +150,8 @@ import { Logger } from './logger';
 }
 
 export interface InjectorConfig {
-  instances?: Map<InjectToken<any>, any> | { [key: DeclaredInjectToken<any>]: any },
-  factories?: Map<InjectToken<any>, InjectFactory<any>> | { [key: DeclaredInjectToken<any>]: InjectFactory<any> },
+  instances?: Map<InjectToken<any>, any> | Record<DeclaredInjectToken<any>, any>,
+  factories?: Map<InjectToken<any>, InjectFactory<any>> | Record<DeclaredInjectToken<any>, InjectFactory<any>>,
 }
 
 /**
