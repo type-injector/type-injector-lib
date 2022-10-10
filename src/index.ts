@@ -3,4 +3,5 @@ export * from './inject-factory';
 export * from './inject-token';
 export * from './injector-scope';
 export * from './logger';
-export { TypeInjector, type TypeInjectorBuilder } from './type-injector';
+export { TypeInjector } from './type-injector';
+export type { TypeInjectorBuilder } from './type-injector';
